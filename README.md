@@ -1,6 +1,10 @@
 # RoboCup-Labelstudio
 Labelstudio Implementation for RoboCup SPL Data
 
+start backend and frontend locally:
+```bash
+python manage.py runserver
+```
 
 
 ```
