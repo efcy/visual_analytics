@@ -1,0 +1,52 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+.container-fluid {
+    display: flex;
+    flex-direction: column; /* Stacks vertically by default */
+    height: 100vh;
+}
+.left-container, .right-container {
+    flex: 1;
+    padding: 20px;
+    height: 100%;
+    text-align: center;
+    overflow: hidden; /* Prevents scrolling */
+    align-content: center;
+    
+    
+}
+.left-container {
+    /*https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Box_alignment_in_grid_layout*/
+    background-color: #f8f9fa;
+    display:grid;
+    grid-template-rows: 1fr auto 1fr
+}
+.left-container img {
+    grid-row: 2; /* Center vertically within the first row */
+    justify-self: center; /* Center horizontally */
+    margin-bottom: 200px;
+}
+
+
+
+.left-container .credits {
+    align-self: end; /* Align to the bottom of the parent */
+    grid-row: 3; /* Place in the second row */
+    justify-self: left;
+}
+
+.left-container .credits p {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: .7rem;
+  }
+
+.right-container {
+    background-color: #e9ecef;
+}
+@media (min-width: 768px) {
+    .container-fluid {
+        flex-direction: row; /* Side by side on medium and larger screens */
+    }
+}

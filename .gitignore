@@ -1,0 +1,8 @@
+# ignore python stuff
+__pycache__/
+
+# django
+*.sqlite3
+
+# ignore config settings
+.vscode/
