@@ -1,9 +1,18 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, NoteSerializer
+from .serializers import UserSerializer, NoteSerializer, EventSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Note
+from rest_framework import viewsets
+from .models import Event
+
+class EventViewSet(generics.ListAPIView):
+    serializer_class = EventSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Event.objects.all()
 
 
 class NoteListCreate(generics.ListCreateAPIView):

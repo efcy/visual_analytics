@@ -10,3 +10,10 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
