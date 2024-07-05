@@ -24,22 +24,22 @@ function Home() {
   };
 
   return (
-    <div class="app-container">
+    <div className="app-container">
       <Header />
-      <div class="app-content">
+      <div className="app-content">
         <Sidebar />
-        <div class="projects-section">
-          <div class="projects-section-line">
-            <div class="search-wrapper">
-              <input class="search-input" type="text" placeholder="Search" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-search" viewBox="0 0 24 24">
+        <div className="projects-section">
+          <div className="projects-section-line">
+            <div className="search-wrapper">
+              <input className="search-input" type="text" placeholder="Search" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="feather feather-search" viewBox="0 0 24 24">
                 <defs></defs>
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="M21 21l-4.35-4.35"></path>
               </svg>
             </div>
           </div>
-          <div class="project-boxes jsGridView">
+          <div className="project-boxes jsGridView">
 
 
             {events.map((event) => (
