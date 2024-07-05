@@ -20,7 +20,7 @@ function Event({ event }) {
                     </div>
                 </div>
                 <div class="project-box-content-header">
-                    <p class="box-content-header">{event.name}</p>
+                    <p class="box-content-header">{event ? event.name: "blabla"}</p>
                     <p class="box-content-subheader">Prototyping</p>
                 </div>
                 <div class="box-progress-wrapper">
