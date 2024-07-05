@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/new.css"
 import Event from "../components/Event"
-import Header from "../components/header"
+import Header from "../components/Header"
 import Sidebar from "../components/Sidebar"
 import api from "../api";
 //import { function1 } from '../js/home.js'
