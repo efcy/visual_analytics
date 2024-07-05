@@ -3,8 +3,6 @@ import "../styles/new.css"
 
 
 function Event({ event }) {
-    //const formattedDate = new Date(note.created_at).toLocaleDateString("en-US")
-
     return (
         <div class="project-box-wrapper">
             <div class="project-box">
