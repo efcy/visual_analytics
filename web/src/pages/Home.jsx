@@ -13,14 +13,14 @@ function Home() {
   }, []);
 
   const getEvents = () => {
-      api
-          .get("/api/events/")
-          .then((res) => res.data)
-          .then((data) => {
-              setEvents(data);
-              console.log(data);
-          })
-          .catch((err) => alert(err));
+    api
+      .get("/api/events/")
+      .then((res) => res.data)
+      .then((data) => {
+        setEvents(data);
+        console.log(data);
+      })
+      .catch((err) => alert(err));
   };
 
   return (
@@ -29,11 +29,15 @@ function Home() {
       <div class="app-content">
         <Sidebar />
         <div class="projects-section">
-          <div class="projects-section-header">
-            <p>Projects</p>
-            <p class="time">December, 12</p>
-          </div>
           <div class="projects-section-line">
+            <div class="search-wrapper">
+              <input class="search-input" type="text" placeholder="Search" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-search" viewBox="0 0 24 24">
+                <defs></defs>
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="M21 21l-4.35-4.35"></path>
+              </svg>
+            </div>
             <div class="view-actions">
               <button class="view-btn list-view" title="List View">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list">
@@ -54,8 +58,8 @@ function Home() {
             </div>
           </div>
           <div class="project-boxes jsGridView">
-            
-            
+
+
             {events.map((event) => (
               <Event event={event} key={event.name} />
             ))}
@@ -72,7 +76,7 @@ function Home() {
             <Event />
             <Event />
             <Event />
-            
+
           </div>
         </div>
       </div>

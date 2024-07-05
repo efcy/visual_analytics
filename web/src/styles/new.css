@@ -274,24 +274,7 @@ button, a {
   align-items: center;
   padding-bottom: 32px;
 }
-.projects-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  color: var(--main-color);
-}
-.projects-section-header p {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 700;
-  opacity: 0.9;
-  margin: 0;
-  color: var(--main-color);
-}
-.projects-section-header .time {
-  font-size: 20px;
-}
+
 
 .projects-status {
   display: flex;
@@ -382,7 +365,7 @@ button, a {
   opacity: 1;
   margin-left: 0;
 }
-.messages-section .projects-section-header {
+.messages-section {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -801,11 +784,6 @@ button, a {
 
   .app-header {
     padding: 10px;
-  }
-
-  .projects-section-header p,
-.projects-section-header .time {
-    font-size: 18px;
   }
 
   .status-type {
