@@ -11,14 +11,15 @@ class EventList(generics.ListCreateAPIView):
     queryset = Event.objects.all()
 
     def get_queryset(self):
+        """
+        this is for the event search bar, maybe I can do this better/faster and with less database querying
+        However this should never be that slow since we wont have that many events anyway
+        """
         qs = Event.objects.all()
         name = self.request.query_params.get("name")
-        print(type(name))
-        print(name)
+
         if name is not None:
-            print("\tbla")
             qs = qs.filter(name__icontains=name)
-        print(qs)
         return qs
 
 
