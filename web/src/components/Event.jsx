@@ -5,7 +5,6 @@ import event_image from '../assets/robocup.jpeg';
 
 function Event({ event }) {
     return (
-        <a href="" className="project-box-wrapper">
             <div className="project-box">
                 <img src={event_image} alt='' />
                 <div className="event_title">
@@ -48,7 +47,6 @@ function Event({ event }) {
                     </div>
                 <div className="progress-section-percentage">0%</div></div>
             </div>
-        </a>
     );
 }
 

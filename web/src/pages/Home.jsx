@@ -5,7 +5,7 @@ import Header from "../components/Header"
 import Sidebar from "../components/Sidebar"
 import api from "../api";
 import useDebounce from "../hooks/use_debounce";
-
+import { Link } from 'react-router-dom';
 
 
 function Home() {
@@ -49,7 +49,9 @@ function Home() {
 
 
             {events.map((event) => (
-              <Event event={event} key={event.name} />
+                <Link to={`/events/${event.id}`} className="project-box-wrapper">
+                <Event event={event} key={event.name}></Event>
+                </Link>
             ))}
           </div>
         </div>
