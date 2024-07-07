@@ -10,6 +10,17 @@ class EventList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Event.objects.all()
 
+    def get_queryset(self):
+        qs = Event.objects.all()
+        name = self.request.query_params.get("name")
+        print(type(name))
+        print(name)
+        if name is not None:
+            print("\tbla")
+            qs = qs.filter(name__icontains=name)
+        print(qs)
+        return qs
+
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventSerializer
