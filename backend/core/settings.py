@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "api",  # I see other using api.apps.ApiConfig here
     "rest_framework",
     "corsheaders",
+    "rest_framework_swagger",
 ]
 
 MIDDLEWARE = [

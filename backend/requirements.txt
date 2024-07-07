@@ -8,3 +8,8 @@ pytz
 sqlparse
 psycopg2-binary
 python-dotenv
+# for swagger docs
+django-rest-swagger
+pyyaml
+uritemplate
+inflection
