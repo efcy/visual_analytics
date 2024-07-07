@@ -314,81 +314,6 @@ button, a {
   color: var(--link-color-active);
 }
 
-.messages-section {
-  flex-shrink: 0;
-  padding-bottom: 32px;
-  background-color: var(--projects-section);
-  margin-left: 24px;
-  flex: 1;
-  width: 100%;
-  border-radius: 30px;
-  position: relative;
-  overflow: auto;
-  transition: all 300ms cubic-bezier(0.19, 1, 0.56, 1);
-}
-.messages-section .messages-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 3;
-  border: none;
-  background-color: transparent;
-  color: var(--main-color);
-  display: none;
-}
-.messages-section.show {
-  transform: translateX(0);
-  opacity: 1;
-  margin-left: 0;
-}
-.messages-section {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding: 32px 24px 0 24px;
-  background-color: var(--projects-section);
-}
-
-.message-box {
-  border-top: 1px solid var(--message-box-border);
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-}
-.message-box:hover {
-  background-color: var(--message-box-hover);
-  border-top-color: var(--link-color-hover);
-}
-.message-box:hover + .message-box {
-  border-top-color: var(--link-color-hover);
-}
-.message-box img {
-  border-radius: 50%;
-  -o-object-fit: cover;
-     object-fit: cover;
-  width: 40px;
-  height: 40px;
-}
-
-.message-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-.message-header .name {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 700;
-  color: var(--main-color);
-  margin: 0;
-}
-
-.message-content {
-  padding-left: 16px;
-  width: 100%;
-}
 
 .star-checkbox input {
   opacity: 0;
@@ -415,17 +340,6 @@ button, a {
   transition: 0.2s;
 }
 
-.message-line {
-  font-size: 14px;
-  line-height: 20px;
-  margin: 8px 0;
-  color: var(--secondary-color);
-  opacity: 0.7;
-}
-.message-line.time {
-  text-align: right;
-  margin-bottom: 0;
-}
 
 .project-boxes {
   margin: 0 -8px;
@@ -501,62 +415,11 @@ button, a {
   height: 1px;
 }
 
-.participants {
-  display: flex;
-  align-items: center;
-}
-.participants img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-.participants img:not(:first-child) {
-  margin-left: -8px;
-}
-
-.add-participant {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.6);
-  margin-left: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
-.days-left {
-  background-color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
-  border-radius: 20px;
-  flex-shrink: 0;
-  padding: 6px 16px;
-  font-weight: 700;
-}
-
 .mode-switch.active .moon {
   fill: var(--main-color);
 }
 
-.messages-btn {
-  border-radius: 4px 0 0 4px;
-  position: absolute;
-  right: 0;
-  top: 58px;
-  background-color: var(--message-btn);
-  border: none;
-  color: var(--main-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px;
-  display: none;
-}
+
 
 @media screen and (max-width: 980px) {
   .project-boxes.jsGridView .project-box-wrapper {
@@ -576,24 +439,7 @@ button, a {
     margin-right: 0;
   }
 }
-@media screen and (max-width: 880px) {
-  .messages-section {
-    transform: translateX(100%);
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    z-index: 2;
-    height: 100%;
-    width: 100%;
-  }
-  .messages-section .messages-close {
-    display: block;
-  }
 
-  .messages-btn {
-    display: flex;
-  }
-}
 @media screen and (max-width: 720px) {
   .app-name {
     display: none;
@@ -666,10 +512,6 @@ button, a {
     font-size: 14px;
   }
 
-  .messages-btn {
-    top: 48px;
-  }
-
   .box-content-header {
     font-size: 12px;
     line-height: 16px;
@@ -686,12 +528,6 @@ button, a {
 
   .box-progress-percentage {
     font-size: 10px;
-  }
-
-  .days-left {
-    font-size: 8px;
-    padding: 6px 6px;
-    text-align: center;
   }
 }
 
