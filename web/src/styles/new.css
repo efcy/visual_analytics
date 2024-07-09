@@ -74,6 +74,13 @@ button, a {
   flex-direction: column;
   height: 100%;
   background-color: var(--app-container);
+  background:  radial-gradient(circle at 50% 50%,rgb(159, 232, 253) 20%,transparent 80%),conic-gradient(from 45deg at 50% 50%,
+    rgb(255, 129, 170) 0%,
+    rgb(159, 232, 253) 25%,
+    rgb(255, 129, 170) 50%,
+    rgb(159, 232, 253) 75%,
+    rgb(255, 129, 170) 100%
+  );
   transition: 0.2s;
 }
 .app-container button, .app-container input, .app-container optgroup, .app-container select, .app-container textarea {
@@ -83,6 +90,7 @@ button, a {
   display: flex;
   height: 100%;
   overflow: hidden;
+  
 }
 .app-header {
   display: flex;
