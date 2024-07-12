@@ -8,7 +8,7 @@ import useDebounce from "../hooks/use_debounce";
 import { Link } from 'react-router-dom';
 
 
-function Home() {
+function EventPage() {
   const [events, setEvents] = useState([]);
   const [searchtxt, setsearchtxt] = useState([]);
 
@@ -61,4 +61,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default EventPage;
