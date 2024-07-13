@@ -43,6 +43,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -62,7 +63,8 @@ INSTALLED_APPS = [
     "api",  # I see other using api.apps.ApiConfig here
     "rest_framework",
     "corsheaders",
-    "rest_framework_swagger",
+    'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [

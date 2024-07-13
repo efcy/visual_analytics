@@ -1,10 +1,14 @@
 from django.urls import path
-from .views import EventList, EventDetail, NoteListCreate, NoteDelete
+from . import views
+from .views import EventList,EventDetail
+from rest_framework import routers
+from drf_spectacular.views import SpectacularSwaggerView,SpectacularAPIView
 
 
 urlpatterns = [
-    path("notes/", NoteListCreate.as_view(), name="note-list"),
-    path("notes/delete/<int:pk>/", NoteDelete.as_view(), name="delete-note"),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('schema/swagger-ui/',SpectacularSwaggerView.as_view(url_name='schema'),name='swagger-ui'),
     path('events/', EventList.as_view(), name="event-list"),
     path('events/<int:pk>/', EventDetail.as_view()),
 ]
+
