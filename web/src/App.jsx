@@ -1,6 +1,8 @@
 import react from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Login from "./pages/Login"
+import EventListView from "./components/EventListView"
+import GameListView from "./components/GameListView"
 import Register from "./pages/Register"
 import EventPage from "./pages/EventPage"
 import NotFound from "./pages/NotFound"
@@ -20,15 +22,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <EventPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/events/:id" element={<Login />} />
+        <Route path="/events" element={<ProtectedRoute><EventPage /></ProtectedRoute>}>
+          <Route index element={<EventListView />} />
+          <Route path="/events/" element={<EventListView />} />
+          <Route path="/events/:id" element={<GameListView />} />
+        </Route>
+        
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
