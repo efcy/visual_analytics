@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Event
+from .models import Event,Game,Log
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,4 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
+        fields = '__all__'
+
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = '__all__'
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
         fields = '__all__'
