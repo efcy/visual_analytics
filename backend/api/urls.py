@@ -13,6 +13,9 @@ router = routers.DefaultRouter()
 router.register('events',views.EventViewSet)
 router.register('games', views.GameViewSet)
 router.register('logs',views.LogViewSet)
+router.register('image',views.ImageViewSet)
+router.register('imageannotation',views.ImageAnnotationViewSet)
+router.register('camera_matrix',views.CameraMatrixViewSet)
 
 
 urlpatterns += router.urls

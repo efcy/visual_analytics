@@ -1,20 +1,25 @@
 from django.contrib.auth.models import User
 from rest_framework import generics,viewsets
-from .serializers import UserSerializer, EventSerializer,GameSerializer, LogSerializer
+from . import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Event,Game,Log
+from . import models
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [AllowAny]
 
 class EventViewSet(viewsets.ModelViewSet):
-    serializer_class = EventSerializer
+    serializer_class = serializers.EventSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Event.objects.all()
+    queryset = models.Event.objects.all()
 
     def get_queryset(self):
         """
         this is for the event search bar, maybe I can do this better/faster and with less database querying
         However this should never be that slow since we wont have that many events anyway
         """
-        qs = Event.objects.all()
+        qs = models.Event.objects.all()
         name = self.request.query_params.get("name")
 
         if name is not None:
@@ -23,22 +28,27 @@ class EventViewSet(viewsets.ModelViewSet):
 
 
 class GameViewSet(viewsets.ModelViewSet):
-    queryset = Game.objects.all()
-    serializer_class = GameSerializer
+    queryset = models.Game.objects.all()
+    serializer_class = serializers.GameSerializer    
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
         if event_id is not None:
-            return Game.objects.filter(event=event_id)
+            return models.Game.objects.filter(event=event_id)
         else:
-            return Game.objects.all()
+            return models.Game.objects.all()
         
-
 class LogViewSet(viewsets.ModelViewSet):
-    queryset = Log.objects.all()
-    serializer_class = LogSerializer
+    queryset = models.Log.objects.all()
+    serializer_class = serializers.LogSerializer
 
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = models.Image.objects.all()
+    serializer_class = serializers.ImageSerializer
 
-class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+class CameraMatrixViewSet(viewsets.ModelViewSet):
+    queryset = models.CameraMatrix.objects.all()
+    serializer_class = serializers.CameraMatrixSerializer
+
+class ImageAnnotationViewSet(viewsets.ModelViewSet):
+    queryset = models.ImageAnnotation.objects.all()
+    serializer_class = serializers.ImageAnnotationSerializer
