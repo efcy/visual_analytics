@@ -1,6 +1,6 @@
 from .vaapi import vaapi
 from requests.auth import HTTPBasicAuth
-baseurl = "http://localhost:8000/api/"
+baseurl = "http://127.0.0.1:8000/api/"
 username = "uwer"
 password = "tester1"
 
