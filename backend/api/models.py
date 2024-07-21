@@ -19,13 +19,13 @@ class Log(models.Model):
     player_number = models.IntegerField()
 
 class CameraMatrix(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='camera_matrix')
+    log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='camera_matrix')
     frame_number = models.BigIntegerField()
     
 class Image(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
+    log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
     type = models.CharField(max_length=100)
 
 class ImageAnnotation(models.Model):
-    image_id = models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
+    image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
     type  = models.CharField(max_length=100)

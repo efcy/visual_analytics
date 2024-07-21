@@ -29,7 +29,9 @@ class EventViewSet(viewsets.ModelViewSet):
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
-    serializer_class = serializers.GameSerializer    
+    serializer_class = serializers.GameSerializer
+    """this approach to get games related to events is not really good 
+        see serializers.py for an better example"""    
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
         if event_id is not None:
