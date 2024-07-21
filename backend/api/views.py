@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from rest_framework import generics
-from .serializers import UserSerializer, EventSerializer
+from rest_framework import generics,viewsets
+from .serializers import UserSerializer, EventSerializer,GameSerializer, LogSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Event
+from .models import Event,Game,Log
 
-class EventList(generics.ListCreateAPIView):
+class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
     queryset = Event.objects.all()
@@ -22,10 +22,20 @@ class EventList(generics.ListCreateAPIView):
         return qs
 
 
-class EventDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = EventSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = Event.objects.all()
+class GameViewSet(viewsets.ModelViewSet):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+    def get_queryset(self):
+        event_id = self.request.query_params.get("event")
+        if event_id is not None:
+            return Game.objects.filter(event=event_id)
+        else:
+            return Game.objects.all()
+        
+
+class LogViewSet(viewsets.ModelViewSet):
+    queryset = Log.objects.all()
+    serializer_class = LogSerializer
 
 
 class CreateUserView(generics.CreateAPIView):
