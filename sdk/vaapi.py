@@ -22,7 +22,7 @@ class vaapi:
         
     def post(self,endpoint:str,data:dict):
         try:
-            response = self.session.post(self.base_url+endpoint,data=data, auth=self.auth)
+            response = self.session.post(f"{self.base_url}{endpoint}/",data=data, auth=self.auth)
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -31,8 +31,8 @@ class vaapi:
         
     def patch(self,endpoint:str,data:dict,parameter=None):
         #not sure explicit or implicit would be better
-        #endpoint = f"{endpoint}/{parameter}/"
-        endpoint = f"{endpoint}/{data.get("id")}/"
+        endpoint = f"{endpoint}/{parameter}/"
+        #endpoint = f"{endpoint}/{data.get("id")}/"
         try:
             response = self.session.patch(self.base_url+endpoint,data=data, auth=self.auth)
             response.raise_for_status()  
@@ -40,15 +40,34 @@ class vaapi:
         except requests.exceptions.RequestException as e:
             logging.debug(f"Error making Request:\n{e}")
             return
-
+    #event 
     def get_event(self,id=None): 
         return self.get("events",id)    
     
     def add_event(self,event:dict):
-        return self.post("events/",event)
+        return self.post("events",event)
     
     def change_event(self,event:dict,id=None):
         return self.patch("events",event,id)
-
-
+    
+    #games
+    def get_games(self,id=None): 
+        return self.get("games",id)    
+    
+    def add_games(self,games:dict):
+        return self.post("games",games)
+    
+    def change_games(self,games:dict,id=None):
+        return self.patch("games",games,id)
+    
+    #logs
+    def get_log(self,id=None): 
+        return self.get("logs",id)    
+    
+    def add_log(self,log:dict):
+        return self.post("logs",log)
+    
+    def change_log(self,log:dict,id=None):
+        return self.patch("logs",log,id)
+    
                           
