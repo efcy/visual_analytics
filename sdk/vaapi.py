@@ -6,7 +6,7 @@ class vaapi:
         self.auth = auth
         #we are creating a session to reduce time and resources for each request
         self.session = requests.Session()
-
+        self.headers = {"Connection": "keep-alive" ,"Content-Type": "application/json"}
     def get(self,endpoint):
         try:
             response =self.session.get(self.base_url+endpoint, auth=self.auth)
@@ -24,6 +24,15 @@ class vaapi:
         except requests.exceptions.RequestException as e:
             logging.debug(f"Error making Request:\n{e}")
             return
+        
+    def patch(self,endpoint,data):
+        try:
+            response = self.session.patch(self.base_url+endpoint,data=data, auth=self.auth)
+            response.raise_for_status()  
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logging.debug(f"Error making Request:\n{e}")
+            return
 
     def get_event(self,id=""):
         return self.get("events/"+str(id))    
@@ -31,4 +40,6 @@ class vaapi:
     def add_event(self,event):
         return self.post("events/",{"name":f"{event}"})
     
-    
+    def chng_event(self,id,event):
+        return self.patch(f"events/{id}/",{"id":f"{id}","name":f"{event}"})
+                          
