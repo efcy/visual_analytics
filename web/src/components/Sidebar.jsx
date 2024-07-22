@@ -1,14 +1,15 @@
 import React from "react";
 import "../styles/new.css"
+import { Routes, Route, Link, Outlet } from 'react-router-dom';
 import { MdEvent, MdOutlineSettings  } from "react-icons/md";
 
 function Sidebar() {
     return (
         <div className="app-sidebar">
-            <a href="" className="app-sidebar-link">
+            <Link to="/events" className="app-sidebar-link">
                 <MdEvent />
-                
-            </a>
+            </Link>
+        
             Events
             <a href="" className="app-sidebar-link">
                 <MdOutlineSettings />
