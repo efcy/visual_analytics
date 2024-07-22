@@ -22,7 +22,7 @@ function EventListView() {
             .then((res) => res.data)
             .then((data) => {
                 setEvents(data);
-                console.log(data);
+                console.log("Event List: ", data);
             })
             .catch((err) => alert(err));
     };
@@ -43,8 +43,8 @@ function EventListView() {
 
 
                 {events.map((event) => (
-                    <Link to={`/events/${event.id}`} className="project-box-wrapper">
-                        <Event event={event} key={event.name}></Event>
+                    <Link to={`/events/${event.id}`} className="project-box-wrapper" key={event.name}>
+                        <Event event={event} ></Event>
                     </Link>
                 ))}
             </div>

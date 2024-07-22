@@ -12,24 +12,24 @@ function GameListView() {
     const [searchtxt, setsearchtxt] = useState([]);
 
     const debounce = useDebounce(searchtxt, 300)
-
+    const { id } = useParams();
     useEffect(() => {
         getGames();
     }, [debounce]); // this list is called dependency array
 
     const getGames = () => {
         api
-            .get(`/api/games?name=${searchtxt}`)
+            .get(`/api/games?event=${id}`)
             .then((res) => res.data)
             .then((data) => {
                 setGames(data);
-                console.log(data);
+                console.log("Game List", data);
             })
             .catch((err) => alert(err));
     };
 
 
-    const { id } = useParams();
+    
     return (
         <div className="projects-section">
             <div className="projects-section-line">
@@ -44,7 +44,7 @@ function GameListView() {
             </div>
             <div className="project-boxes jsGridView">
                 {games.map((game) => (
-                    <Link to={`/events/${game.id}`} className="project-box-wrapper">
+                    <Link to={`/events/${game.id}`} className="project-box-wrapper" key={game.id}>
                         <Event event={game} key={game.name}></Event>
                     </Link>
                 ))}
