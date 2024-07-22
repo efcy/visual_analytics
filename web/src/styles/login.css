@@ -1,7 +1,13 @@
 html, body {
     height: 100%;
+    width: 100%;
     margin: 0;
 }
+
+#root {
+    display: block !important;
+  }
+
 .container-fluid {
     display: flex;
     flex-direction: column; /* Stacks vertically by default */

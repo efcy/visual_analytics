@@ -4,16 +4,16 @@ import logo from '../assets/logo.svg';
 
 function Login() {
     return (
-        <div class="container-fluid">
-            <div class="left-container">
+        <div className="container-fluid">
+            <div className="left-container">
                 <img src={logo} height="93" 
                 alt="Berlin United Logo"
                 />
-                <div class="credits">
+                <div className="credits">
                     <p>developed by Stella@Berlin United</p>
                 </div>
             </div>
-            <div class="right-container">
+            <div className="right-container">
                 <Form route="/api/token/" method="login" />
             </div>
         </div>
