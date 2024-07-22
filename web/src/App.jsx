@@ -23,7 +23,6 @@ function App() {
     <BrowserRouter>
       <Routes>
       <Route exact path="/" element={<Navigate to="/events" replace />}/>
-        
         <Route path="/events" element={<ProtectedRoute><EventPage /></ProtectedRoute>}>
           <Route index element={<EventListView />} />
           <Route path="/events/" element={<EventListView />} />

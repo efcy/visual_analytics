@@ -1,11 +1,34 @@
 import { useState, useEffect } from "react";
 import "../styles/new.css"
-import {useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import Event from "../components/Event"
+import api from "../api";
+import useDebounce from "../hooks/use_debounce";
 
 
 function GameListView() {
+    const [games, setGames] = useState([]);
+    const [searchtxt, setsearchtxt] = useState([]);
+
+    const debounce = useDebounce(searchtxt, 300)
+
+    useEffect(() => {
+        getGames();
+    }, [debounce]); // this list is called dependency array
+
+    const getGames = () => {
+        api
+            .get(`/api/games?name=${searchtxt}`)
+            .then((res) => res.data)
+            .then((data) => {
+                setGames(data);
+                console.log(data);
+            })
+            .catch((err) => alert(err));
+    };
+
+
     const { id } = useParams();
     return (
         <div className="projects-section">
@@ -20,7 +43,11 @@ function GameListView() {
                 </div>
             </div>
             <div className="project-boxes jsGridView">
-                <h1>Games for Event {id}</h1>
+                {games.map((game) => (
+                    <Link to={`/events/${game.id}`} className="project-box-wrapper">
+                        <Event event={game} key={game.name}></Event>
+                    </Link>
+                ))}
             </div>
         </div>
 
