@@ -1,0 +1,10 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  # just the public ip address of the goal server for now
+  - 138.201.203.171	- 138.201.203.171
+      
