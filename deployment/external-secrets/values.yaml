@@ -1,0 +1,3 @@
+connect:
+  operator:
+    pollingInterval: 60
