@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
@@ -15,16 +16,30 @@ class Game(models.Model):
     team2 = models.CharField(max_length=100)
 
 class Log(models.Model):
+    # TODO check this foreignkey thing: the related_name stuff looks wrong
     game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='logs')
-    player_number = models.IntegerField()
+    player_number = models.IntegerField(blank=True, null=True)
+    robot_number = models.IntegerField(blank=True, null=True)
+    head_serial = models.CharField(max_length=20, blank=True, null=True)  # TODO is this really the head serial???
+    representations = models.JSONField(blank=True, null=True)
 
 class CameraMatrix(models.Model):
     log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='camera_matrix')
-    frame_number = models.BigIntegerField()
+    frame_number = models.IntegerField()
     
 class Image(models.Model):
+    class Camera(models.TextChoices):
+        TOP = "TOP", _("Top")
+        BOTTOM = "BOTTOM", _("Bottom")
+    class Type(models.TextChoices):
+        raw = "RAW", _("raw")
+        jpeg = "JPEG", _("jpeg")
+    # FIXME playernumber, robotnumber and serial must be part of the foreign key, we can change robots midgame when one robot breaks
     log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
-    type = models.CharField(max_length=100)
+    camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
+    type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
+    frame_number = models.IntegerField()
+    image_url = models.CharField(max_length=200)
 
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')

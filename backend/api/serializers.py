@@ -35,15 +35,21 @@ class LogSerializer(serializers.ModelSerializer):
         model = models.Log
         fields = '__all__'
 
-class GameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Game
-        fields = '__all__'
-
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
         fields = '__all__'
+
+class GameSerializer(serializers.ModelSerializer):
+    #event = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    event = EventSerializer()
+    class Meta:
+        model = models.Game
+        fields = '__all__'
+        # FIXME adding __all__ is bad practice, explicitely say what we send
+
+
+
 
 
 

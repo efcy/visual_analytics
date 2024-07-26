@@ -21,9 +21,12 @@ class EventViewSet(viewsets.ModelViewSet):
         """
         qs = models.Event.objects.all()
         name = self.request.query_params.get("name")
+        id = self.request.query_params.get("id")
 
         if name is not None:
             qs = qs.filter(name__icontains=name)
+        if id is not None:
+            qs = qs.filter(id=id).first()
         return qs
 
 
