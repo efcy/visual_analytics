@@ -1,0 +1,32 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is deploying the sdk 🚀
+on:
+  push:
+    branches: ['main']
+    paths: ['sdk/**']
+
+env:
+  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: python -m pip install --upgrade pip setuptools wheel twine
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}/sdk
+      - name: Deploy sdk to pypi
+        working-directory: ./sdk
+        run: |
+          /bin/bash package_pypi.sh
+      - run: echo "🍏 This job's status is ${{ job.status }}."

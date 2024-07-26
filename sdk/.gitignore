@@ -1,0 +1,7 @@
+# setup.py stuff
+.eggs/
+*.egg-info
+build/
+dist/
+venv/
+.pypirc

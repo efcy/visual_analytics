@@ -1,8 +1,11 @@
-# BerlinUnited Visual Analytics
-
+# Berlin United Visual Analytics Tool
 The goal of of this tool is to make it possible to quickly view, annotate and analyze all of our RoboCup data. This tool is inspired by V7Labs Darwin Tool but we will also add a lot of other features to it as well.
 Access to the V7 tool for inspiration can be given on request.
 
+
+
+## SDK
+Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
 
 ### Old
 Labelstudio Implementation for RoboCup SPL Data
