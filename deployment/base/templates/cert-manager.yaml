@@ -6,7 +6,7 @@ spec:
   project: default
   source:
     repoURL: 'git@github.com:efcy/visual_analytics.git'
-    path: cert-manager
+    path: deployment/cert-manager
     targetRevision: HEAD
     helm:
       releaseName: cert-manager
