@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: local-path-provisioner
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:efcy/visual_analytics.git'
+    path: deployment/local-path-provisioner
+    targetRevision: HEAD
+    helm:
+      releaseName: local-path-provisioner
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: local-path-provisioner
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
