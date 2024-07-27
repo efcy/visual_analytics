@@ -1,0 +1,11 @@
+# maybe the correct values yaml: https://github.com/bitnami/charts/blob/33b8e700bdecedd8e2130d442adc4593bb76816c/bitnami/postgresql/values.yaml
+postgresql:
+  auth:
+    username: naoth
+    database: vat
+    existingSecret: postgres-secret
+    secretKeys:
+      adminPasswordKey: password
+      userPasswordKey: password
+  
+# TODO: no persistence?
