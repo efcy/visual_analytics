@@ -8,6 +8,7 @@ on:
 # This creates an environment variable called `IMAGE_NAME ` with the value `ghtoken_product_demo`.
 env:
   IMAGE_NAME: vite_frontend
+  VITE_API_URL: "https://api.berlin-united.com/"
 #
 jobs:
   # This pushes the image to GitHub Packages.
@@ -23,6 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
+      - name: stuff
+        working-directory: ./web
+        run: echo "VITE_API_URL=\"$VITE_API_URL\"" > .env
       - name: Install dependencies  
         working-directory: ./web
         run: npm install
