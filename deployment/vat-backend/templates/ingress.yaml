@@ -8,17 +8,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: "vat.berlin-united.com"
+    - host: "api.berlin-united.com"
       http:
         paths:
           - path: /
             pathType: ImplementationSpecific
             backend:
               service:
-                name: vat-svc
+                name: api-svc
                 port:
                   number: 80
   tls:
   - hosts:
-    - "vat.berlin-united.com"
-    secretName: tls-cert-vat
+    - "api.berlin-united.com"
+    secretName: tls-cert-api
