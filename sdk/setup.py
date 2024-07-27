@@ -9,7 +9,7 @@ HERE = Path(__file__).parent
 README = (HERE / "README.md").read_text()
 VERSION_STRING = (HERE / "VERSION").read_text()
 
-setup(name='BU-VAT',
+setup(name='vaapi',
       version=VERSION_STRING,
       author='NaoTH Berlin United',
       author_email='nao-team@informatik.hu-berlin.de',

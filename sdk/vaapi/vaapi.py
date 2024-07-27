@@ -1,8 +1,6 @@
 import requests,logging
 
-
-
-class vaapi:
+class client:
     def __init__(self,base_url:str,auth):
         self.base_url = base_url
         self.auth = auth

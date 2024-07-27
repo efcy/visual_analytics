@@ -23,7 +23,7 @@ Image = {"log":2,"type":"JPEG"}
 ImageAnnotation = {"image":1,"type":"boundingbox"}
 
 if __name__ == "__main__":
-    test =   vaapi(baseurl,Hauth)
+    test = vaapi(baseurl,Hauth)
     
     #print(test.get_log())
     #test.add_camera_matrix(CameraMatrix)
