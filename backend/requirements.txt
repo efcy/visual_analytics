@@ -13,3 +13,4 @@ drf-spectacular
 pyyaml
 uritemplate
 inflection
+django-environ
