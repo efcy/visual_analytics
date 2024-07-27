@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vat-backend 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vat-backend
+  template:
+    metadata:
+      labels:
+        app: vat-backend
+    spec:
+      initContainers:
+      - name: django-migrations
+        image: ghcr.io/efcy/django_backend:latest
+        command: 
+        - /bin/sh
+        - -c
+        - |
+          python manage.py makemigrations
+          python manage.py migrate
+        env:
+        - name: USE_POSTGRES
+          value: "true"
+        - name: POSTGRES_DB
+          value: "vat"
+        - name: POSTGRES_USER
+          value: "naoth"
+        - name: POSTGRES_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: "password"
+        - name: POSTGRES_HOST
+          value: "postgres-postgresql.postgres.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
+      containers:
+      - name: backend
+        image: ghcr.io/efcy/django_backend:latest
+        env:
+        - name: USE_POSTGRES
+          value: "true"
+        - name: POSTGRES_DB
+          value: "vat"
+        - name: POSTGRES_USER
+          value: "naoth"
+        - name: POSTGRES_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: "password"
+        - name: POSTGRES_HOST
+          value: "postgres-postgresql.postgres.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
+      imagePullSecrets:
+      - name: github-access

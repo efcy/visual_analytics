@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vat-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: vat-backend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "vat.berlin-united.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: vat-svc
+                port:
+                  number: 80
+  tls:
+  - hosts:
+    - "vat.berlin-united.com"
+    secretName: tls-cert-vat
