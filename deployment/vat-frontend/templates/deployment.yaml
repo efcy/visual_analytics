@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vat-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vat-frontend
+  template:
+    metadata:
+      labels:
+        app: vat-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/efcy/vite_frontend:latest
+      imagePullSecrets:
+      - name: github-access
