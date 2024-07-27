@@ -15,5 +15,12 @@ spec:
       containers:
       - name: frontend
         image: ghcr.io/efcy/vite_frontend:latest
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
       imagePullSecrets:
       - name: github-access
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
