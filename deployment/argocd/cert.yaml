@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-name
+  namespace: argocd
+spec:
+  secretName: argocd-server-tls
+  duration: 2160h
+  renewBefore: 360h
+  commonName: argo.berlin-united.com
+  dnsNames:
+  - argo.berlin-united.com
+  issuerRef:
+    name: letsencrypt-prod-argocd
+    kind: Issuer
