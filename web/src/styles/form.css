@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .form-container {
   margin: 50px auto;
   padding: 20px;

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import api from "../api";
-import "../styles/form.css"
+import api from "@/api";
+import "@/styles/form.css"
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants";
 
 import LoadingIndicator from "./LoadingIndicator";
 

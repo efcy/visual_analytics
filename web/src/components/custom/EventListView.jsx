@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import "../styles/new.css"
+import "@/styles/new.css"
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
 
-import Event from "../components/Event"
-import api from "../api";
-import useDebounce from "../hooks/use_debounce";
+import Event from "./Event"
+import api from "@/api";
+import useDebounce from "@/hooks/use_debounce";
 
 function EventListView() {
     const [events, setEvents] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../styles/new.css"
+import "@/styles/new.css"
 
 
 
