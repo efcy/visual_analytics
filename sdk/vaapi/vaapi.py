@@ -1,17 +1,17 @@
 import requests,logging
 
+
 class client:
-    def __init__(self,base_url:str,auth):
+    def __init__(self,base_url:str,key):
         self.base_url = base_url
-        self.auth = auth
         #we are creating a session to reduce time and resources for each request
         self.session = requests.Session()
-        self.headers = {"Connection": "keep-alive" ,"Content-Type": "application/json"}
+        self.headers = {"Authorization": f"Api-Key {key}","Connection": "keep-alive" ,"Content-Type": "application/json"}
     def get(self,endpoint,parameter):
         endpoint = f"{endpoint}/{parameter}" if parameter is not None else f"{endpoint}/" 
         try:
             logging.debug(self.base_url+endpoint)
-            response =self.session.get(self.base_url+endpoint, auth=self.auth)
+            response =self.session.get(self.base_url+endpoint,headers=self.headers)
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -20,7 +20,7 @@ class client:
         
     def post(self,endpoint:str,data:dict):
         try:
-            response = self.session.post(f"{self.base_url}{endpoint}/",data=data, auth=self.auth)
+            response = self.session.post(f"{self.base_url}{endpoint}/",data=data,headers=self.headers)
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -32,7 +32,7 @@ class client:
         endpoint = f"{endpoint}/{parameter}/"
         #endpoint = f"{endpoint}/{data.get("id")}/"
         try:
-            response = self.session.patch(self.base_url+endpoint,data=data, auth=self.auth)
+            response = self.session.patch(self.base_url+endpoint,data=data,headers=self.headers)
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
