@@ -8,31 +8,30 @@ import useDebounce from "@/hooks/use_debounce";
 
 
 function LogListView() {
-    const [games, setGames] = useState([]);
+    const [logs, setLogs] = useState([]);
     const [searchtxt, setsearchtxt] = useState([]);
 
     const debounce = useDebounce(searchtxt, 300)
     const { id } = useParams();
     useEffect(() => {
-        getGames();
+        getLogs();
     }, [debounce]); // this list is called dependency array
 
-    const getGames = () => {
+    const getLogs = () => {
         api
-            .get(`/api/games?event=${id}`)
+            .get(`/api/logs?game=${id}`)
             .then((res) => res.data)
             .then((data) => {
-                setGames(data);
-                console.log("Game List", data);
+                setLogs(data);
+                console.log("Log List", data);
             })
             .catch((err) => alert(err));
     };
 
-
     
     return (
         <div className="projects-section">
-            <h2>List of Games for Event {id}</h2>
+            <h2>List of Logs for Game {id}</h2>
             <div className="projects-section-line">
                 <div className="search-wrapper">
                     <input className="search-input" type="text" placeholder="Search" />
@@ -44,9 +43,9 @@ function LogListView() {
                 </div>
             </div>
             <div className="project-boxes jsGridView">
-                {games.map((game) => (
-                    <Link to={`/games/${game.id}`} className="project-box-wrapper" key={game.id}>
-                        <Event event={game} key={game.name}></Event>
+                {logs.map((log) => (
+                    <Link to={`/images/${log.id}`} className="project-box-wrapper" key={log.id}>
+                        <Event event={log} key={log.name}></Event>
                     </Link>
                 ))}
             </div>
