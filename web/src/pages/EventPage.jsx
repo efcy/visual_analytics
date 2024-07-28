@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import "../styles/new.css"
+//import "@/styles/new.css"
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
 
-import Header from "../components/Header"
-import Sidebar from "../components/Sidebar"
+import Header from "../components/custom/Header"
+import Sidebar from "../components/custom/Sidebar"
 
 
 function EventPage() {
