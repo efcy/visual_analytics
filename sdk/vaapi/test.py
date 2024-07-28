@@ -2,9 +2,10 @@ from vaapi import client
 import logging
 from requests.auth import HTTPBasicAuth
 baseurl = "http://127.0.0.1:8000/api/"
-key = "WVerj5dm.Pvu8w2lzkyC2w2FqiIvepajEkSccAefP"
+key = "your-key-here"
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#set to DEBUG to see urllib3 debug mesasges
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 #example objects
 event = {"name":"Mexico"}
