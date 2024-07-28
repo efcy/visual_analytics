@@ -46,9 +46,24 @@ class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
 
+    def get_queryset(self):
+        game_id = self.request.query_params.get("game")
+        if game_id is not None:
+            return models.Log.objects.filter(game=game_id)
+        else:
+            return models.Log.objects.all()
+
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
+
+    def get_queryset(self):
+        log_id = self.request.query_params.get("log")
+        print("log_id", log_id)
+        if log_id is not None:
+            return models.Image.objects.filter(log=log_id)
+        else:
+            return models.Image.objects.all()
 
 class CameraMatrixViewSet(viewsets.ModelViewSet):
     queryset = models.CameraMatrix.objects.all()
