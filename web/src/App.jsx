@@ -1,15 +1,14 @@
-import react from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Login from "./pages/Login"
-import EventListView from "./components/custom/EventListView"
-import GameListView from "./components/custom/GameListView"
-import Register from "./pages/Register"
-import EventPage from "./pages/EventPage"
-import NotFound from "./pages/NotFound"
-import Dashboard from "./pages/Settings"
-import ProtectedRoute from "./components/custom/ProtectedRoute"
-import SingleImageViewer from "./components/custom/SingleImageViewer"
-import CanvasImageViewer from "./components/custom/CanvasImageViewer"
+import Login from "./pages/Login.jsx"
+import EventListView from "./components/custom/EventListView.jsx"
+import GameListView from "./components/custom/GameListView.jsx"
+import Register from "./pages/Register.jsx"
+import EventPage from "./pages/EventPage.jsx"
+import NotFound from "./pages/NotFound.jsx"
+import Dashboard from "./pages/Settings.jsx"
+import ProtectedRoute from "./components/custom/ProtectedRoute.jsx"
+//import SingleImageViewer from "./components/custom/SingleImageViewer"
+import CanvasImageViewer from "./components/custom/CanvasImageViewer.jsx"
 
 function Logout() {
   localStorage.clear()

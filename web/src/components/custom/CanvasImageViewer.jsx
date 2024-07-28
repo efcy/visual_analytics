@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const CanvasImageViewer = ({ imageUrls }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
