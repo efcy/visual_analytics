@@ -3,6 +3,7 @@ asgiref
 django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
+djangorestframework-api-key==3.*
 PyJWT
 pytz
 sqlparse

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "api",  # I see other using api.apps.ApiConfig here
     "rest_framework",
+    'rest_framework_api_key',
     "corsheaders",
     'drf_spectacular',
     #'django.contrib.gis',
