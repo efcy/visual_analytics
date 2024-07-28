@@ -10,12 +10,11 @@ class client:
     def get(self,endpoint,parameter):
         endpoint = f"{endpoint}/{parameter}" if parameter is not None else f"{endpoint}/" 
         try:
-            logging.debug(self.base_url+endpoint)
             response =self.session.get(self.base_url+endpoint,headers=self.headers)
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
-            logging.debug(f"Error making Request:\n{e}")
+            logging.error(f"Error making Request:\n{e}")
             return
         
     def post(self,endpoint:str,data:dict):
@@ -24,7 +23,7 @@ class client:
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
-            logging.debug(f"Error making Request:\n{e}")
+            logging.error(f"Error making Request:\n{e}")
             return
         
     def patch(self,endpoint:str,data:dict,parameter=None):
@@ -36,7 +35,7 @@ class client:
             response.raise_for_status()  
             return response.json()
         except requests.exceptions.RequestException as e:
-            logging.debug(f"Error making Request:\n{e}")
+            logging.error(f"Error making Request:\n{e}")
             return
     #event 
     def get_event(self,id=None): 
