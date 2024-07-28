@@ -24,18 +24,18 @@ spec:
         env:
         - name: USE_POSTGRES
           value: "true"
-        - name: POSTGRES_DB
+        - name: VAT_POSTGRES_DB
           value: "vat"
-        - name: POSTGRES_USER
+        - name: VAT_POSTGRES_USER
           value: "naoth"
-        - name: POSTGRES_PASS
+        - name: VAT_POSTGRES_PASS
           valueFrom:
             secretKeyRef:
               name: postgres-secret
               key: "password"
-        - name: POSTGRES_HOST
+        - name: VAT_POSTGRES_HOST
           value: "postgres-postgresql.postgres.svc.cluster.local"
-        - name: POSTGRES_PORT
+        - name: VAT_POSTGRES_PORT
           value: "5432"
       containers:
       - name: backend
