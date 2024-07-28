@@ -1,9 +1,15 @@
 from django.db import models
+#from django.contrib.gis.db import models as geo_models
+from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
+    time = DateTimeRangeField(blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    # location = geo_models.PointField() # TODO figure out how to use this with our postgres and with testing 
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         # TODO is this function just for the admin panel?
@@ -38,8 +44,8 @@ class Image(models.Model):
     log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
-    frame_number = models.IntegerField()
-    image_url = models.CharField(max_length=200)
+    frame_number = models.IntegerField(blank=True, null=True)
+    image_url = models.CharField(max_length=200, blank=True, null=True)
 
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
