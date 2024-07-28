@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Login from "./pages/Login.jsx"
 import EventListView from "./components/custom/EventListView.jsx"
 import GameListView from "./components/custom/GameListView.jsx"
+import LogListView from "./components/custom/LogListView.jsx"
 import Register from "./pages/Register.jsx"
 import EventPage from "./pages/EventPage.jsx"
 import NotFound from "./pages/NotFound.jsx"
@@ -21,10 +22,7 @@ function RegisterAndLogout() {
 }
 
 function App() {
-  const yourArrayOfImageUrls = [
-    "https://logs.naoth.de/2024-04-17_GO24/2024-04-18_13-50-00_Berlin%20United_vs_Hulks_half2/extracted/1_15_Nao0006_240418-1243/log_top/0000001.png",
-    "https://logs.naoth.de/2024-04-17_GO24/2024-04-18_13-50-00_Berlin%20United_vs_Hulks_half2/extracted/1_15_Nao0006_240418-1243/log_top/0021136.png"
-  ];
+  
   //<Route exact path="/" element={<Navigate to="/events" replace />}/>
   return (
     <BrowserRouter>
@@ -35,13 +33,14 @@ function App() {
           <Route index element={<EventListView />} />
           <Route path="/" element={<EventListView />} />
           <Route path="/events/:id" element={<GameListView />} />
+          <Route path="/games/:id" element={<LogListView />} />
           <Route path="/settings" element={<Dashboard/>} />
+          <Route path="/images/:id" element={<CanvasImageViewer/>} />
         </Route>
         
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
-        <Route path="/test" element={<CanvasImageViewer imageUrls={yourArrayOfImageUrls}/>} />
         <Route path="*" element={<NotFound />}></Route>
         
       </Routes>

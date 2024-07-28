@@ -1,20 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-const CanvasImageViewer = ({ imageUrls }) => {
+const CanvasImageViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [loadedImages, setLoadedImages] = useState({});
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const imageUrls = [
+    "https://logs.naoth.de/2024-04-17_GO24/2024-04-18_13-50-00_Berlin%20United_vs_Hulks_half2/extracted/1_15_Nao0006_240418-1243/log_top/0000001.png",
+    "https://logs.naoth.de/2024-04-17_GO24/2024-04-18_13-50-00_Berlin%20United_vs_Hulks_half2/extracted/1_15_Nao0006_240418-1243/log_top/0021136.png"
+  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
     canvas.width = 800;
     canvas.height = 600;
-    
-    const context = canvas.getContext('2d');
-    context.lineCap = 'round';
-    context.strokeStyle = 'red';
+
+    const context = canvas.getContext("2d");
+    context.lineCap = "round";
+    context.strokeStyle = "red";
     context.lineWidth = 2;
     contextRef.current = context;
 
@@ -34,7 +38,7 @@ const CanvasImageViewer = ({ imageUrls }) => {
     if (!loadedImages[url]) {
       const img = new Image();
       img.src = url;
-      img.onload = () => setLoadedImages(prev => ({ ...prev, [url]: img }));
+      img.onload = () => setLoadedImages((prev) => ({ ...prev, [url]: img }));
     }
   };
 
@@ -44,7 +48,7 @@ const CanvasImageViewer = ({ imageUrls }) => {
     } else {
       const img = new Image();
       img.onload = () => {
-        setLoadedImages(prev => ({ ...prev, [url]: img }));
+        setLoadedImages((prev) => ({ ...prev, [url]: img }));
         drawImageOnCanvas(img);
       };
       img.src = url;
@@ -53,14 +57,17 @@ const CanvasImageViewer = ({ imageUrls }) => {
 
   const drawImageOnCanvas = (img) => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     // Calculate aspect ratio to fit image within canvas
-    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-    const x = (canvas.width / 2) - (img.width / 2) * scale;
-    const y = (canvas.height / 2) - (img.height / 2) * scale;
-    
+    const scale = Math.min(
+      canvas.width / img.width,
+      canvas.height / img.height
+    );
+    const x = canvas.width / 2 - (img.width / 2) * scale;
+    const y = canvas.height / 2 - (img.height / 2) * scale;
+
     ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
   };
 
@@ -84,42 +91,69 @@ const CanvasImageViewer = ({ imageUrls }) => {
   };
 
   const goToPrevious = () => {
-    setCurrentIndex(prev => (prev > 0 ? prev - 1 : prev));
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
   const goToNext = () => {
-    setCurrentIndex(prev => (prev < imageUrls.length - 1 ? prev + 1 : prev));
+    setCurrentIndex((prev) => (prev < imageUrls.length - 1 ? prev + 1 : prev));
   };
 
   const buttonStyle = {
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    margin: '0 10px'
+    padding: "10px 20px",
+    fontSize: "16px",
+    cursor: "pointer",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    margin: "0 10px",
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
-      <canvas
-        ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        style={{ border: '1px solid #ddd', marginBottom: '20px' }}
-      />
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-        <button onClick={goToPrevious} disabled={currentIndex === 0} style={buttonStyle}>
-          Previous
-        </button>
-        <span>{currentIndex + 1} / {imageUrls.length}</span>
-        <button onClick={goToNext} disabled={currentIndex === imageUrls.length - 1} style={buttonStyle}>
-          Next
-        </button>
+    <div className="projects-section">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          maxWidth: "800px",
+          margin: "0 auto",
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={stopDrawing}
+          onMouseLeave={stopDrawing}
+          style={{ border: "1px solid #ddd", marginBottom: "20px" }}
+        />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onClick={goToPrevious}
+            disabled={currentIndex === 0}
+            style={buttonStyle}
+          >
+            Previous
+          </button>
+          <span>
+            {currentIndex + 1} / {imageUrls.length}
+          </span>
+          <button
+            onClick={goToNext}
+            disabled={currentIndex === imageUrls.length - 1}
+            style={buttonStyle}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
