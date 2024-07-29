@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { useParams, Link } from 'react-router-dom';
 
-import Event from "./Event"
+import Event from "./EventCard"
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
 

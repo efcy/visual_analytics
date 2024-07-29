@@ -3,7 +3,9 @@ import "@/styles/new.css"
 import "@/styles/event.css"
 import event_image from '@/assets/robocup.jpeg';
 
-function Event({ event }) {
+// TODO this should be a shadcn ui card component
+
+function EventCard({ event }) {
     return (
             <div className="project-box">
                 <img src={event_image} alt='' />
@@ -50,4 +52,4 @@ function Event({ event }) {
     );
 }
 
-export default Event
+export default EventCard
