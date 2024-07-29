@@ -45,7 +45,7 @@ function LogListView() {
             <div className="project-boxes jsGridView">
                 {logs.map((log) => (
                     <Link to={`/images/${log.id}`} className="project-box-wrapper" key={log.id}>
-                        <LogCard event={log} key={log.name}></LogCard>
+                        <LogCard log={log} key={log.name}></LogCard>
                     </Link>
                 ))}
             </div>
