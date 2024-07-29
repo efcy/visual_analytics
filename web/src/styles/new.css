@@ -366,7 +366,7 @@ button, a {
 
   display: grid;
   grid-gap: var(--gap);
-  grid-template-columns: repeat(auto-fit, minmax(var(--min), 1fr));
+  grid-template-columns: repeat(auto-fit, var(--min));
 }
 
 
