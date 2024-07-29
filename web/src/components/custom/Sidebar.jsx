@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { GearIcon } from "@radix-ui/react-icons"
+// icon list: https://www.radix-ui.com/icons
+import { GearIcon, ExitIcon } from "@radix-ui/react-icons"
+
 
 function Sidebar() {
   return (
@@ -22,6 +24,11 @@ function Sidebar() {
       <Button variant="ghost" size="icon" asChild>
         <Link to="/settings">
           <GearIcon className="h-4 w-4" />
+        </Link>
+      </Button>
+      <Button variant="ghost" size="icon" asChild>
+        <Link to="/logout">
+          <ExitIcon className="h-4 w-4" />
         </Link>
       </Button>
     </div>
