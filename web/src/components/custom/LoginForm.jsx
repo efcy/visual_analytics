@@ -1,21 +1,18 @@
 import { useState } from "react";
 import api from "@/api";
-import "@/styles/form.css"
+import "@/styles/login.css"
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants";
 
-import LoadingIndicator from "./LoadingIndicator";
 
-function Form({ route, method }) {
+function LoginForm({ route, method }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const name = method === "login" ? "Login" : "Register";
 
     const handleSubmit = async (e) => {
-        setLoading(true);
         e.preventDefault();
 
         try {
@@ -30,7 +27,6 @@ function Form({ route, method }) {
         } catch (error) {
             alert(error)
         } finally {
-            setLoading(false)
         }
     };
 
@@ -51,7 +47,7 @@ function Form({ route, method }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
-            {loading && <LoadingIndicator />}
+            
             <button className="form-button" type="submit">
                 {name}
             </button>
@@ -59,4 +55,4 @@ function Form({ route, method }) {
     );
 }
 
-export default Form
+export default LoginForm

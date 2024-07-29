@@ -1,8 +1,8 @@
-import Form from "../components/custom/Form";
+import LoginForm from "../components/custom/LoginForm";
 import "@/styles/login.css"
 import logo from "../assets/logo.svg";
 
-function Login() {
+function LoginPage() {
   return (
     <div className="container-fluid">
       <div className="left-container">
@@ -12,10 +12,10 @@ function Login() {
         </div>
       </div>
       <div className="right-container">
-        <Form route="/api/token/" method="login" />
+        <LoginForm route="/api/token/" method="login" />
       </div>
     </div>
   );
 }
 
-export default Login;
+export default LoginPage;

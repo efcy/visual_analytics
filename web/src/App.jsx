@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Login from "./pages/Login.jsx"
+import LoginPage from "./pages/LoginPage.jsx"
 import EventListView from "./components/custom/EventListView.jsx"
 import GameListView from "./components/custom/GameListView.jsx"
 import LogListView from "./components/custom/LogListView.jsx"
@@ -38,7 +38,7 @@ function App() {
           <Route path="/images/:id" element={<CanvasImageViewer/>} />
         </Route>
         
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />}></Route>
