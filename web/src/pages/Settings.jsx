@@ -20,7 +20,7 @@ function Dashboard() {
           <h1 className="text-3xl font-semibold">Settings</h1>
         </div>
         <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[400px_1fr]">
-        <Card x-chunk="dashboard-04-chunk-2">
+        <Card>
               <CardHeader>
                 <CardTitle>Account info</CardTitle>
                 <CardDescription></CardDescription>
@@ -45,7 +45,7 @@ function Dashboard() {
                 <Button>Save</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="dashboard-04-chunk-2">
+            <Card>
               <CardHeader>
                 <CardTitle>Access Token</CardTitle>
                 <CardDescription>
