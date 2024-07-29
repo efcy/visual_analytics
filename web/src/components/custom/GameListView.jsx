@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { useParams, Link } from 'react-router-dom';
 
-import Event from "./EventCard"
+import GameCard from "./GameCard"
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
 
@@ -46,7 +46,7 @@ function LogListView() {
             <div className="project-boxes jsGridView">
                 {games.map((game) => (
                     <Link to={`/games/${game.id}`} className="project-box-wrapper" key={game.id}>
-                        <Event event={game} key={game.name}></Event>
+                        <GameCard event={game} key={game.name}></GameCard>
                     </Link>
                 ))}
             </div>

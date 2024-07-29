@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
 
-import Event from "./EventCard"
+import EventCard from "./EventCard"
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
 
@@ -44,7 +44,7 @@ function EventListView() {
 
                 {events.map((event) => (
                     <Link to={`/events/${event.id}`} className="project-box-wrapper" key={event.name}>
-                        <Event event={event} ></Event>
+                        <EventCard event={event} ></EventCard>
                     </Link>
                 ))}
             </div>
