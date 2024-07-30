@@ -1,11 +1,13 @@
-from vaapi import client
+from client import client
 import logging
-from requests.auth import HTTPBasicAuth
-baseurl = "http://127.0.0.1:8000/api/"
-key = "your-key-here"
 
-#set to DEBUG to see urllib3 debug mesasges
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+baseurl = "http://127.0.0.1:8000/api/"
+#key can be created on admin site
+key = "Ajfnatkg.pDyZAUl0eMS5zIym8amPpy4X7yRKJlXX"
+
+
+#set to DEBUG to see more detailed logging messages
+logging.basicConfig(level=logging.ERROR)
 
 #example objects
 event = {"name":"Mexico"}
@@ -23,8 +25,14 @@ Image = {"log":2,"type":"JPEG"}
 ImageAnnotation = {"image":1,"type":"boundingbox"}
 
 if __name__ == "__main__":
-    test = client(baseurl,key)
-    print(test.get_event())
+    #using the health checkpoint without authentication
+    test = client(baseurl,"wrong-key")
+    print(test.check_connection())
+    #everything else only works while authenticated
+    test1 = client(baseurl,key)
+    #lists only events with name test
+    print(test1.list_events({"name":"test"}))
+    print(test1.add_event(event))
 
     #print(test.get_log())
     #test.add_camera_matrix(CameraMatrix)
