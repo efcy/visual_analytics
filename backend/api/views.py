@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics,viewsets
 from . import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.pagination import LimitOffsetPagination
 from . import models
 
 class CreateUserView(generics.CreateAPIView):
@@ -53,10 +54,15 @@ class LogViewSet(viewsets.ModelViewSet):
         else:
             return models.Log.objects.all()
 
+class ImagePagination(LimitOffsetPagination):
+    default_limit = 1
+    template = None
+
+
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
-
+    pagination_class = ImagePagination
     def get_queryset(self):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
