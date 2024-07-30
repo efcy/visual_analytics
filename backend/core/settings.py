@@ -38,6 +38,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     'rest_framework_api_key',
     "corsheaders",
     'drf_spectacular',
+    'rest_framework.authtoken',
     #'django.contrib.gis',
 ]
 
@@ -153,3 +155,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com']
+
+
+SPECTACULAR_SETTINGS = {
+    'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
+}
