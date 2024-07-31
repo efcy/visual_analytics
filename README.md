@@ -38,6 +38,21 @@ export VAT_POSTGRES_HOST=localhost
 export VAT_POSTGRES_PORT=5432
 ```
 
+### Django Setup
+
+create local user in django
+
+```bash
+python manage.py createsuperuser
+```
+
+log in to admin page on http://localhost:8000/admin/
+
+Click 'add' next to 'API Keys' 
+
+The API Key is shown only once. Make sure you copy it immediately.
+
+
 
 
 ## SDK
