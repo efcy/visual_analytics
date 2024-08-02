@@ -32,8 +32,12 @@ class client:
         try:
             url = f"{self.url}{endpoint}/"
             response = self.session.request(method, url, headers=self.headers, *args, **kwargs)
-            response.raise_for_status()  
-            return response.json()
+            response.raise_for_status()
+            #delete requests don't json responses this is a quick hack to avoid errors
+            if method == "DELETE":
+                return response
+            else:  
+                return response.json()
         except requests.exceptions.RequestException as e:
             logging.error(f"Error while making {method} request to {url}\n"
                         f"Headers: {self.headers}\n"
@@ -515,3 +519,15 @@ class client:
         """
         return self.make_request("DELETE", f"frametime/{id}", params=query_params)
         
+    def delete_all_frametimes(self,query_params=None):
+        """
+        Delete an image annotation.
+
+        Args:
+            id (int): The ID of the image annotation to delete.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response confirming the deletion.
+        """
+        return self.make_request("DELETE", f"frametime/all", params=query_params)
