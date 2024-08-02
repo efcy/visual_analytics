@@ -7,7 +7,8 @@ from drf_spectacular.views import SpectacularSwaggerView,SpectacularAPIView
 urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/',SpectacularSwaggerView.as_view(url_name='schema'),name='swagger-ui'),
-    path('health/',views.health_check,name="health_check")
+    path('health/',views.health_check,name="health_check"),
+    path('api/frametime/all/', views.FrameTimeViewSet.as_view({'delete': 'destroy'}))
 ]
 
 router = routers.DefaultRouter()
