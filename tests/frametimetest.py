@@ -1,4 +1,6 @@
-# this works after running pip install vaapi inside the sdk folder
+#pip uninstall vaapi
+#cd sdk
+#python3 setup.py install
 from vaapi import client
 import logging,random
 
