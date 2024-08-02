@@ -448,3 +448,70 @@ class client:
         """
         return self.make_request("DELETE", f"imageannotation/{id}", params=query_params)
         
+    #frametime
+
+    def list_frametimes(self, query_params=None):
+        """
+        List all image annotations.
+
+        Args:
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response containing the list of image annotations.
+        """
+        return self.make_request("GET", "frametime", params=query_params)
+
+    def get_frametime(self, id, query_params=None):
+        """
+        Get a specific image annotation.
+
+        Args:
+            id (int): The ID of the image annotation.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response containing the image annotation details.
+        """
+        return self.make_request("GET", f"frametime/{id}", params=query_params)
+
+    def add_frametime(self, annotation: dict, query_params=None):
+        """
+        Add a new image annotation.
+
+        Args:
+            annotation (dict): The image annotation data to be added.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response containing the added image annotation details.
+        """
+        return self.make_request("POST", "frametime", json=annotation, params=query_params)
+
+    def change_frametime(self, id, annotation: dict, query_params=None):
+        """
+        Update an existing image annotation.
+
+        Args:
+            id (int): The ID of the image annotation to update.
+            annotation (dict): The updated image annotation data.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response containing the updated image annotation details.
+        """
+        return self.make_request("PATCH", f"frametime/{id}", json=annotation, params=query_params)
+
+    def delete_frametime(self, id, query_params=None):
+        """
+        Delete an image annotation.
+
+        Args:
+            id (int): The ID of the image annotation to delete.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response confirming the deletion.
+        """
+        return self.make_request("DELETE", f"frametime/{id}", params=query_params)
+        
