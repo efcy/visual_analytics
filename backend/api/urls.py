@@ -17,6 +17,6 @@ router.register('logs',views.LogViewSet)
 router.register('image',views.ImageViewSet)
 router.register('imageannotation',views.ImageAnnotationViewSet)
 router.register('camera_matrix',views.CameraMatrixViewSet)
-
+router.register("frametime",views.FrameTimeViewSet)
 
 urlpatterns += router.urls
