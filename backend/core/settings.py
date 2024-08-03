@@ -67,6 +67,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework.authtoken',
     #'django.contrib.gis',
+    'accounts',
+    'user_profile',
 ]
 
 MIDDLEWARE = [
