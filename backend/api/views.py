@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework import generics,viewsets
 from . import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -55,20 +56,25 @@ class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [HasAPIKey | IsAuthenticated]
     queryset = models.Event.objects.all()
 
-    def get_queryset(self):
-        """
-        this is for the event search bar, maybe I can do this better/faster and with less database querying
-        However this should never be that slow since we wont have that many events anyway
-        """
-        qs = models.Event.objects.all()
-        name = self.request.query_params.get("name")
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
         id = self.request.query_params.get("id")
+        name = self.request.query_params.get("name")
 
-        if name is not None:
-            qs = qs.filter(name__icontains=name)
         if id is not None:
-            qs = qs.filter(id=id).first()
-        return qs
+            # If id is provided, return a single object
+            event = get_object_or_404(queryset, id=id)
+            serializer = self.get_serializer(event)
+            return Response(serializer.data)
+        elif name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        
+        # For other cases, proceed with normal list behavior
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        return models.Event.objects.all()
 
 
 class GameViewSet(viewsets.ModelViewSet):
