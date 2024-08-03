@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import api from "@/api";
+import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 
 const CanvasImageViewer = () => {
@@ -45,8 +45,8 @@ const CanvasImageViewer = () => {
   }, [currentIndex, images]);
 
   const getImages = () => {
-    api
-        .get(`/api/image?log=${id}`)
+    axios
+        .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}`)
         .then((res) => res.data)
         .then((data) => {
           setImages(data);

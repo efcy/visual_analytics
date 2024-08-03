@@ -1,8 +1,10 @@
-import LoginForm from "../components/custom/LoginForm";
+import LoginForm from "../components/custom/LoginForm2";
 import "@/styles/login.css"
 import logo from "../assets/logo.svg";
 
-function LoginPage() {
+
+const LoginPage = ({ login, isAuthenticated }) => {
+  // old: <LoginForm route="/api/token/" method="login" />
   return (
     <div className="container-fluid">
       <div className="left-container">
@@ -12,10 +14,12 @@ function LoginPage() {
         </div>
       </div>
       <div className="right-container">
-        <LoginForm route="/api/token/" method="login" />
+        <LoginForm />
       </div>
     </div>
   );
 }
+
+
 
 export default LoginPage;

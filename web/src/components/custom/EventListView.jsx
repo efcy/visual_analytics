@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
-
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import EventCard from "./EventCard"
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
@@ -17,8 +18,9 @@ function EventListView() {
     }, [debounce]); // this list is called dependency array
 
     const getEvents = () => {
-        api
-            .get(`/api/events?name=${searchtxt}`)
+
+        axios
+            .get(`${import.meta.env.VITE_API_URL}/api/events?name=${searchtxt}`)
             .then((res) => res.data)
             .then((data) => {
                 setEvents(data);

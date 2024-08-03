@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { useParams, Link } from 'react-router-dom';
-
+import axios from 'axios';
 import GameCard from "./GameCard"
-import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
 
 
@@ -18,8 +17,9 @@ function LogListView() {
     }, [debounce]); // this list is called dependency array
 
     const getGames = () => {
-        api
-            .get(`/api/games?event=${id}`)
+        //TODO enforce csrf in the backend and then add cockies here
+        axios
+            .get(`${import.meta.env.VITE_API_URL}/api/games?event=${id}`)
             .then((res) => res.data)
             .then((data) => {
                 setGames(data);

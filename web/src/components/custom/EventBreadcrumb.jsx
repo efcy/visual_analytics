@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -20,7 +22,15 @@ const useEventData = (id) => {
       const fetchEventData = async () => {
         setIsLoading(true);
         try {
-          const response = await api.get(`api/events`, { params: { id } });
+            const config = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken')
+                },
+                params: { id }
+            };
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`, config);
           setEventName(response.data.name);
           setError(null);
           console.log(response) 
