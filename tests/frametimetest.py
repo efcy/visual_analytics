@@ -6,7 +6,7 @@ import logging,random
 
 baseurl = "http://127.0.0.1:8000/api/"
 #key can be created on admin site
-key = "5DGQstAj.cPhVWdemQdXWcxf9uUso9PUwYLvMGiDw"
+api_token = "514cf2e88eab425cfdfce652994d30a1a0c3b1ad"
 
 
 #set to DEBUG to see more detailed logging messages
@@ -28,7 +28,8 @@ def add_new_frames(client : client,count):
     client.add_frametime(frametime_list)
 
 if __name__ == "__main__":
-    test1 = client(baseurl,key)
+    test1 = client(baseurl,api_token)
+
     delete_all_frames(test1)
     add_new_frames(test1,2000)
     print(test1.list_frametimes())    

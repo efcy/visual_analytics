@@ -36,8 +36,8 @@ ALLOWED_HOSTS = ["*"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -61,10 +61,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "api",  # I see other using api.apps.ApiConfig here
     "rest_framework",
-    'rest_framework_api_key',
     "corsheaders",
     'drf_spectacular',
+    'rest_framework.authtoken',
     #'django.contrib.gis',
+    'accounts',
+    'user_profile',
 ]
 
 MIDDLEWARE = [
@@ -150,6 +152,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+# https://github.com/adamchainz/django-cors-headers
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWS_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com']
+CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'http://localhost:8000', 'http://localhost:5173']
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CORS_ALLOWED_ORIGINS = ['https://api.berlin-united.com', 'http://localhost:5173', 'http://localhost:8000']
+CORS_ALLOW_CREDENTIALS = True
+SPECTACULAR_SETTINGS = {
+    'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
+}

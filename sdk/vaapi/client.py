@@ -3,11 +3,11 @@ import requests,logging
 class client:
     def __init__(self,
                  url:str,
-                 api_key:str
+                 api_token:str
                  ):
         self.url = url
         
-        self.headers = {"Authorization": f"Api-Key {api_key}",
+        self.headers = {"Authorization": f"Token  {api_token}",
                         "Connection": "keep-alive" ,
                         "Content-Type": "application/json"}
 #

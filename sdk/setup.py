@@ -21,7 +21,7 @@ setup(name='vaapi',
       zip_safe=False,
       setup_requires=['wheel'],
       install_requires=[
-          'protobuf==3.20.3', 'numpy'
+          'protobuf==3.20.3', 'numpy', 'requests'
       ],
       python_requires='>=3.6.9',
       )

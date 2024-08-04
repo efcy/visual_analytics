@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics,viewsets
 from . import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_api_key.permissions import HasAPIKey
 from . import models
 
 from django.http import JsonResponse
@@ -18,7 +17,7 @@ def health_check(request):
 
 class FrameTimeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.FrameTimeSerializer
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.FrameTime.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -53,7 +52,7 @@ class CreateUserView(generics.CreateAPIView):
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -80,7 +79,7 @@ class EventViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     """this approach to get games related to events is not really good 
         see serializers.py for an better example"""    
     def get_queryset(self):
@@ -91,7 +90,7 @@ class GameViewSet(viewsets.ModelViewSet):
             return models.Game.objects.all()
         
 class LogViewSet(viewsets.ModelViewSet):
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
 
@@ -103,7 +102,7 @@ class LogViewSet(viewsets.ModelViewSet):
             return models.Log.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
 
@@ -116,11 +115,11 @@ class ImageViewSet(viewsets.ModelViewSet):
             return models.Image.objects.all()
 
 class CameraMatrixViewSet(viewsets.ModelViewSet):
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.CameraMatrix.objects.all()
     serializer_class = serializers.CameraMatrixSerializer
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
-    permission_classes = [HasAPIKey | IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.ImageAnnotation.objects.all()
     serializer_class = serializers.ImageAnnotationSerializer
