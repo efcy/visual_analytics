@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ["*"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -62,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "api",  # I see other using api.apps.ApiConfig here
     "rest_framework",
-    'rest_framework_api_key',
     "corsheaders",
     'drf_spectacular',
     'rest_framework.authtoken',
