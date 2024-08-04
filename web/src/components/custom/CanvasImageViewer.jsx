@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 //import Timeline from './Timeline';
 import FrameTimeline from './FrameTimeline';
+import MultiRowRangeSlider from './MultiRowRangeSlider';
 function generateFrameData(baseFrameNumber = 12000, framesCount = 100, intervalSeconds = 5) {
   const frames = [];
   const intervalMs = intervalSeconds * 1000;
@@ -343,7 +344,7 @@ const CanvasImageViewer = () => {
       </div>
       <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Timeline Example</h1>
-      <FrameTimeline frames={frames} width={600} />
+      <MultiRowRangeSlider />
     </div>
     </div>
   );

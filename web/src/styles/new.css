@@ -33,6 +33,9 @@
   --search-area-bg: #fff;
   --star: #1ff1c2e;
   --message-btn: #fff;
+  --color-rose-bar: #ffcccb;
+  --color-rose-bar-indicator1: #ff69b4;
+  --handle-color: #333;
 }
 
 .dark:root {
@@ -54,6 +57,60 @@
   --more-list-bg-hover: rgba(195, 207, 244, 0.1);
   --more-list-shadow: rgba(195, 207, 244, 0.1);
   --message-btn: rgba(195, 207, 244, 0.1);
+}
+
+.dummy_video_track {
+  background-color: #6EA7D3;
+  border-radius: 8px;
+  padding-bottom: 5vh;
+  height: calc(100% - 10vh);
+  width: 50%;
+  /* margin-left: 10vw; */
+  cursor: pointer;
+}
+
+.multi-row-range-slider {
+  width: 1200px;
+  overflow-x: scroll;
+}
+
+.range-slider-container {
+  height: 100px;
+  position: relative;
+  margin-bottom: 20px;
+  
+}
+
+.custom-range {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.range-handle {
+  width: 2px;
+  height: 100%;
+  background-color: #333;
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+}
+
+.rs-value {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Arial, sans-serif;
+}
+
+.draggable-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-image: repeating-linear-gradient(90deg, 
+    var(--color-rose-bar) 0px 50px, 
+    var(--color-rose-bar-indicator1) 50px 51px);
 }
 
 html, body {
