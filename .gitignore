@@ -1,6 +1,7 @@
 # ignore python stuff
 __pycache__/
 backend/venv/
+venv/
 
 # django
 *.sqlite3

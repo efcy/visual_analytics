@@ -38,6 +38,9 @@ export VAT_POSTGRES_HOST=localhost
 export VAT_POSTGRES_PORT=5432
 ```
 
+### install sdk locally
+python -m pip install -e sdk
+
 ### Django Setup
 
 create local user in django
