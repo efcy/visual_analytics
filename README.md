@@ -2,61 +2,6 @@
 The goal of of this tool is to make it possible to quickly view, annotate and analyze all of our RoboCup data. This tool is inspired by V7Labs Darwin Tool but we will also add a lot of other features to it as well.
 Access to the V7 tool for inspiration can be given on request.
 
-## Dev Setup
-Install postgres in your ubuntu or ubuntu wsl machine:
-```bash
-sudo apt install postgresql postgresql-contrib
-```
-Change this line in `/etc/postgresql/16/main/pg_hba.conf`
-```txt
-local   all             all                                     peer
-```
-to
-```txt
-local   all             all                                     md5
-```
-
-log into postgres and setup a new user with sufficient permissions
-```bash
-sudo -u postgres psql
-
-CREATE DATABASE vat_test;
-CREATE USER testuser WITH PASSWORD 'password';
-
-# set permissions
-GRANT ALL ON DATABASE vat_test TO testuser;
-GRANT ALL PRIVILEGES ON DATABASE vat_test TO testuser;
-ALTER DATABASE vat_test OWNER TO testuser;
-GRANT ALL ON SCHEMA PUBLIC TO testuser;
-```
-You can use different names for the database, user and password. But you have to export them as environment variables in your .bashrc. For example like this
-```bash
-export VAT_POSTGRES_DB=vat_test
-export VAT_POSTGRES_USER=testuser
-export VAT_POSTGRES_PASS=password
-export VAT_POSTGRES_HOST=localhost
-export VAT_POSTGRES_PORT=5432
-```
-
-### install sdk locally
-python -m pip install -e sdk
-
-### Django Setup
-
-create local user in django
-
-```bash
-python manage.py createsuperuser
-```
-
-log in to admin page on http://localhost:8000/admin/
-
-Click 'add' next to 'API Keys' 
-
-The API Key is shown only once. Make sure you copy it immediately.
-
-
-
 
 ## SDK
 Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
