@@ -1,6 +1,33 @@
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+//import Timeline from './Timeline';
+import FrameTimeline from './FrameTimeline';
+function generateFrameData(baseFrameNumber = 12000, framesCount = 100, intervalSeconds = 5) {
+  const frames = [];
+  const intervalMs = intervalSeconds * 1000;
+
+  for (let i = 0; i < framesCount; i++) {
+    const frameNumber = baseFrameNumber + i;
+    const time = i * intervalMs;
+    let data = `Frame ${i + 1}`;
+
+    // Check for minute marks
+    const minutes = Math.floor(time / 60000);
+    if (time % 60000 === 0 && minutes > 0) {
+      data = `${minutes} minute mark`;
+    }
+
+    frames.push({
+      index: i,
+      framenumber: frameNumber,
+      time: time,
+      data: data
+    });
+  }
+
+  return frames;
+}
 
 const CanvasImageViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -255,6 +282,8 @@ const CanvasImageViewer = () => {
     setBoundingBoxes([]);
   };
 
+  const frames = generateFrameData();
+
   const buttonStyle = {
     padding: "10px 20px",
     fontSize: "16px",
@@ -312,6 +341,10 @@ const CanvasImageViewer = () => {
           </button>
         </div>
       </div>
+      <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Timeline Example</h1>
+      <FrameTimeline frames={frames} width={600} />
+    </div>
     </div>
   );
 };
