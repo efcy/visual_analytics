@@ -531,3 +531,17 @@ class client:
             dict: The JSON response confirming the deletion.
         """
         return self.make_request("DELETE", f"frametime/all", params=query_params)
+    
+
+    def add_sensorlog_data(self, data: dict, query_params=None):
+        """
+        Add a new sensorlogs.
+
+        Args:
+            sensorlogs (dict): The sensorlogs data to be added.
+            query_params (dict, optional): Additional query parameters.
+
+        Returns:
+            dict: The JSON response containing the added sensorlogs details.
+        """
+        return self.make_request("POST", "sensorlogs", json=data, params=query_params)

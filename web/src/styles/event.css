@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.stage {
+    background-color:#187adc;
+}
+
 .project-box-wrapper{
     text-decoration: none;
     width: 300px;

@@ -8,7 +8,6 @@ import EventPage from "./pages/EventPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
-//import SingleImageViewer from "./components/custom/SingleImageViewer"
 import CanvasImageViewer from "./components/custom/CanvasImageViewer.jsx";
 
 import { Provider } from "react-redux";

@@ -1,34 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-//import Timeline from './Timeline';
-import FrameTimeline from './FrameTimeline';
 import MultiRowRangeSlider from './MultiRowRangeSlider';
-function generateFrameData(baseFrameNumber = 12000, framesCount = 100, intervalSeconds = 5) {
-  const frames = [];
-  const intervalMs = intervalSeconds * 1000;
-
-  for (let i = 0; i < framesCount; i++) {
-    const frameNumber = baseFrameNumber + i;
-    const time = i * intervalMs;
-    let data = `Frame ${i + 1}`;
-
-    // Check for minute marks
-    const minutes = Math.floor(time / 60000);
-    if (time % 60000 === 0 && minutes > 0) {
-      data = `${minutes} minute mark`;
-    }
-
-    frames.push({
-      index: i,
-      framenumber: frameNumber,
-      time: time,
-      data: data
-    });
-  }
-
-  return frames;
-}
+import { useSelector, useDispatch } from "react-redux"
 
 const CanvasImageViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,6 +18,7 @@ const CanvasImageViewer = () => {
   const { id } = useParams();
   const startPositionRef = useRef({ x: 0, y: 0 });
   const currentImageRef = useRef(null);
+  const store_idx = useSelector((state) => state.canvasReducer.index);
 
   useEffect(() => {
     getImages();
@@ -60,17 +35,17 @@ const CanvasImageViewer = () => {
     context.lineWidth = 2;
     contextRef.current = context;
 
-    loadImage(images[currentIndex]);
-  }, [currentIndex, images]);
+    loadImage(images[store_idx]);
+  }, [store_idx, images]);
 
   useEffect(() => {
     // Preload current image and next few images
     for (let i = 0; i < 5; i++) {
-      if (images[currentIndex + i]) {
-        preloadImage(images[currentIndex + i]);
+      if (images[store_idx + i]) {
+        preloadImage(images[store_idx + i]);
       }
     }
-  }, [currentIndex, images]);
+  }, [store_idx, images]);
 
   const getImages = () => {
     axios
@@ -283,7 +258,12 @@ const CanvasImageViewer = () => {
     setBoundingBoxes([]);
   };
 
-  const frames = generateFrameData();
+  const goToIdx = ( idx ) => {
+    setCurrentIndex((prev) => (idx < images.length - 1 ? idx : prev));
+    setBoundingBoxes([]);
+  };
+
+  //const frames = generateFrameData();
 
   const buttonStyle = {
     padding: "10px 20px",
@@ -343,7 +323,7 @@ const CanvasImageViewer = () => {
         </div>
       </div>
       <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Timeline Example</h1>
+      <h1 className="text-2xl font-bold mb-4">Timeline Example {store_idx}</h1>
       <MultiRowRangeSlider />
     </div>
     </div>
