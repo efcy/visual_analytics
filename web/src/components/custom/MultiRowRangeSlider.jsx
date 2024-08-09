@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
+import { useSelector, useDispatch } from "react-redux"
+import { set } from "@/reducers/canvasSlice"
 
 const MultiRowRangeSlider = () => {
   const [sliderValue, setSliderValue] = useState(0);
@@ -12,6 +14,9 @@ const MultiRowRangeSlider = () => {
   const [containerWidth, setContainerWidth] = useState(0);
   const [gradientStyle, setGradientStyle] = useState({});
   const containerRef = useRef(null);
+
+  const store_idx = useSelector((state) => state.canvasReducer.index);
+  const dispatch = useDispatch();
 
   const maxValue = 22000;
   const totalBars = 22000;
@@ -93,7 +98,9 @@ const MultiRowRangeSlider = () => {
   };
 
   const getHandlePosition = () => {
+    
     const barIndex = Math.round((sliderValue / maxValue) * (totalBars - 1));
+    dispatch(set(barIndex))
     console.log("position:", barIndex * stepSize + stepSize / 2, barIndex);
     return barIndex * stepSize + stepSize / 2;
   };
@@ -141,6 +148,12 @@ const MultiRowRangeSlider = () => {
   };
 
   return (
+    <>
+    <p>
+      {store_idx}
+
+    </p>
+    
     <div
       className="multi-row-range-slider"
       ref={containerRef}
@@ -190,6 +203,7 @@ const MultiRowRangeSlider = () => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 

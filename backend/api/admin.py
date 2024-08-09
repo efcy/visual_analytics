@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Game, Log, Image, FrameTime
+from .models import Event, Game, Log, Image, FrameTime, SensorLog
 
 # Register your models here.
 
@@ -9,3 +9,4 @@ admin.site.register(Game)
 admin.site.register(Log)
 admin.site.register(Image)
 admin.site.register(FrameTime)
+admin.site.register(SensorLog)

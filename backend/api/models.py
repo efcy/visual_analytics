@@ -29,6 +29,14 @@ class Log(models.Model):
     head_serial = models.CharField(max_length=20, blank=True, null=True)  # TODO is this really the head serial???
     representations = models.JSONField(blank=True, null=True)
 
+
+class SensorLog(models.Model):
+    #log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='sensorlogs')
+    sensor_frame_number = models.IntegerField(blank=True, null=True)
+    sensor_frame_time = models.IntegerField(blank=True, null=True)
+    representation_name = models.CharField(max_length=40, blank=True, null=True)
+    representation_data = models.JSONField(blank=True, null=True)
+
 class CameraMatrix(models.Model):
     log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='camera_matrix')
     frame_number = models.IntegerField()
