@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: logs-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: log-filesystem 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: log-filesystem 

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-filesystem 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-filesystem
+  template:
+    metadata:
+      labels:
+        app: log-filesystem
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+        - name: replmount
+          mountPath: /mnt/repl         
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      - name: replmount
+        hostPath:
+          path: /mnt/repl # path to a folder on the actual node

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: log-filesystem
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: log-filesystem
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "logs.berlin-united.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: logs-svc
+                port:
+                  number: 80
+  tls:
+  - hosts:
+    - "logs.berlin-united.com"
+    secretName: tls-cert-logs

@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fileserver
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:efcy/visual_analytics.git'
+    path: deployment/fileserver
+    targetRevision: HEAD
+    helm:
+      releaseName: fileserver
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fileserver
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
