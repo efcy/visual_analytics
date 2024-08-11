@@ -22,6 +22,12 @@ function GameCard({ game }) {
         </CardHeader>
         <CardContent>
           <CardTitle>{game ? game.team1 : ""} vs {game ? game.team2 : ""}</CardTitle>
+          <p>
+            Half: {game ? game.half : ""}
+          </p>
+          <p>
+            Time: {game ? game.start_time : ""}
+          </p>
         </CardContent>
         <CardFooter className="px-6">
           <Progress value={33} />

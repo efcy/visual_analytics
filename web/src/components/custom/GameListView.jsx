@@ -32,7 +32,6 @@ function LogListView() {
     
     return (
         <div className="projects-section">
-            <h2>List of Games for Event {id}</h2>
             <div className="projects-section-line">
                 <div className="search-wrapper">
                     <input className="search-input" type="text" placeholder="Search" />
