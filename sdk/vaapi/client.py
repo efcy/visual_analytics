@@ -93,6 +93,12 @@ class client:
         Returns:
             dict: The JSON response containing the added event details.
         """
+        # FIXME improve this code
+        existing_events = self.list_events()
+        for e in existing_events:
+            if e["name"] == event["name"]:
+                print("WARNING: name already exists")
+                return e
         return self.make_request("POST", "events", json=event, params=query_params)
 
     def change_event(self, id, event: dict, query_params=None):
@@ -159,6 +165,14 @@ class client:
         Returns:
             dict: The JSON response containing the added game details.
         """
+        existing_games = self.list_games({"event":games["event"]})
+        for g in existing_games:
+            if g["event"] == games["event"] and \
+               g["start_time"] == games["start_time"] and \
+               g["half"] == games["half"]:
+                print("WARNING: game already exists")
+                return g
+
         return self.make_request("POST", "games", json=games, params=query_params)
 
     def change_games(self, id, games: dict, query_params=None):

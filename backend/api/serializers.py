@@ -50,8 +50,6 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class GameSerializer(serializers.ModelSerializer):
-    #event = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    event = EventSerializer()
     class Meta:
         model = models.Game
         fields = '__all__'

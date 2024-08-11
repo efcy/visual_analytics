@@ -5,21 +5,34 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     time = DateTimeRangeField(blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     # location = geo_models.PointField() # TODO figure out how to use this with our postgres and with testing 
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        # TODO is this function just for the admin panel?
         return self.name
 
 class Game(models.Model):
-    event = models.ForeignKey(Event,on_delete=models.CASCADE,related_name='games')
+    event = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='games')
     #related names attribute is to get all objects related to a 'parent' object. for example Event.games.all() returns all games for a specified event
-    team1 = models.CharField(max_length=100)
-    team2 = models.CharField(max_length=100)
+    team1 = models.CharField(max_length=100,blank=True, null=True)
+    team2 = models.CharField(max_length=100,blank=True, null=True)
+    half = models.CharField(max_length=100,blank=True, null=True)
+    is_testgame = models.BooleanField(blank=True, null=True)
+    head_ref = models.CharField(max_length=100, blank=True, null=True)
+    assistent_ref = models.CharField(max_length=100, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    field = models.CharField(max_length=100, blank=True, null=True)
+    start_time = models.DateTimeField(blank=True, null=True)
+    # score
+
+    class Meta:
+        unique_together = ('event', 'start_time', 'half')
+
+    def __str__(self):
+        return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
 class Log(models.Model):
     # TODO check this foreignkey thing: the related_name stuff looks wrong
