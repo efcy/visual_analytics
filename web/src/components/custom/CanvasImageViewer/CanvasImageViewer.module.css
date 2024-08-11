@@ -1,0 +1,24 @@
+.mainView {
+  flex: 2;
+  background-color: var(--projects-section);
+  border-top-left-radius: 32px;
+  padding: 32px 0 0 0;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dataView {
+  display: grid;
+  grid-template-columns: 70% 10% 20%;
+}
+
+.dataView canvas {
+   border: 3px solid #000;
+   margin-bottom: 20px;
+}
+
+.representationSelector{
+  max-width: 300px;
+}
