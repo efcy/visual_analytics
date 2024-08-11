@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+
 from django.shortcuts import get_object_or_404
 from rest_framework import generics,viewsets
 from . import serializers
@@ -11,6 +11,9 @@ from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 @require_GET
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
