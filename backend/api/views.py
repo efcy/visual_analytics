@@ -129,10 +129,11 @@ class RobotDataViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
+        print("game id: ", game_id)
         if game_id is not None:
-            return models.Log.objects.filter(game=game_id)
+            return models.RobotData.objects.filter(game=game_id)
         else:
-            return models.Log.objects.all()
+            return models.RobotData.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

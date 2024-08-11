@@ -24,7 +24,7 @@ function LogCard({ log }) {
           <CardTitle>
           Player number: {log ? log.player_number : ""}
           <br/>
-          Robot number: {log ? log.robot_number : ""}
+          Head number: {log ? log.head_number : ""}
           </CardTitle>
         </CardContent>
         <CardFooter className="px-6">

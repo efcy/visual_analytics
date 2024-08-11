@@ -37,11 +37,20 @@ class Game(models.Model):
 class RobotData(models.Model):
     # TODO check this foreignkey thing: the related_name stuff looks wrong
     game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
+    robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
-    robot_number = models.IntegerField(blank=True, null=True)
-    head_serial = models.CharField(max_length=20, blank=True, null=True)  # TODO is this really the head serial???
+    head_number = models.IntegerField(blank=True, null=True)
+    body_serial = models.CharField(max_length=20, blank=True, null=True)
+    head_serial = models.CharField(max_length=20, blank=True, null=True)
     representations = models.JSONField(blank=True, null=True)
+    sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
+    log_path = models.CharField(max_length=200, blank=True, null=True)
 
+    class Meta:
+        unique_together = ('game', 'player_number', 'head_number')
+
+    def __str__(self):
+        return f"{self.player_number} - {self.head_number}"
 
 class SensorLog(models.Model):
     #log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='sensorlogs')
