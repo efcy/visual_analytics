@@ -53,7 +53,7 @@ class RobotData(models.Model):
         return f"{self.player_number} - {self.head_number}"
 
 class SensorLog(models.Model):
-    #log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='sensorlogs')
+    robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='sensorlogs')
     sensor_frame_number = models.IntegerField(blank=True, null=True)
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)

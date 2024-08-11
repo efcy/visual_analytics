@@ -21,7 +21,7 @@ class FrameTimeSerializer(serializers.ModelSerializer):
 class SensorLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SensorLog
-        fields = ['sensor_frame_number']
+        fields = '__all__'
 
 
 class ImageAnnotationSerializer(serializers.ModelSerializer):

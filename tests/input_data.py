@@ -50,7 +50,6 @@ if __name__ == "__main__":
   root_path = "/mnt/q/logs"
   my_client = client(baseurl,api_token)
   
-
   all_events = [f for f in Path(root_path).iterdir() if f.is_dir()]
   for event in sorted(all_events, reverse=True):
       if event.name in event_list:
@@ -88,6 +87,7 @@ if __name__ == "__main__":
                     # Load the content of the file into a Python dictionary
                     data = json.load(file)
 
+                # FIXME should probably also remove the log folder /mnt/q/logs/
                 sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix("/mnt/q/")
                 log_path = str(Path(logfolder) / "combined.log").removeprefix("/mnt/q/")
                 response = my_client.add_robot_data({

@@ -58,13 +58,17 @@ class SensorLogViewSet(viewsets.ModelViewSet):
     #overloading the create function to allow lists and single objects as input
     def create(self, request, *args, **kwargs):
         data = request.data
-        print(data)
+        print("request.data:", data)
         if isinstance(data, list):
             serializer = self.get_serializer(data=data, many=True)
         else:
             serializer = self.get_serializer(data=data)
+        print("serializer created")
         
-        serializer.is_valid(raise_exception=True)
+
+        serializer.is_valid(raise_exception=False)
+        print(serializer.errors)
+        print("serializer.is_valid")
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         print(serializer.data)
