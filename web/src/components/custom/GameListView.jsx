@@ -4,12 +4,13 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import GameCard from "./GameCard"
 import useDebounce from "@/hooks/use_debounce";
-
+import { useDispatch } from "react-redux";
+import { set_game, reset_game } from "@/reducers/breadcrumbSlice";
 
 function LogListView() {
     const [games, setGames] = useState([]);
     const [searchtxt, setsearchtxt] = useState([]);
-
+    const dispatch = useDispatch();
     const debounce = useDebounce(searchtxt, 300)
     const { id } = useParams();
     useEffect(() => {
@@ -26,9 +27,13 @@ function LogListView() {
                 console.log("Game List", data);
             })
             .catch((err) => alert(err));
+        dispatch(reset_game());
     };
 
-
+    const set_current_game = (game) =>{
+        var game_str =`${game.team1} vs ${game.team2} - ${game.half}`;
+        dispatch(set_game(game_str));
+    }
     
     return (
         <div className="projects-section">
@@ -44,7 +49,7 @@ function LogListView() {
             </div>
             <div className="project-boxes jsGridView">
                 {games.map((game) => (
-                    <Link to={`/games/${game.id}`} className="project-box-wrapper" key={game.id}>
+                    <Link to={`/games/${game.id}`} className="project-box-wrapper" key={game.id} onClick={() => set_current_game(game)}>
                         <GameCard game={game} key={game.name}></GameCard>
                     </Link>
                 ))}

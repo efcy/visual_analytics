@@ -11,7 +11,8 @@ import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
 import CanvasImageViewer from "./components/custom/CanvasImageViewer/CanvasImageViewer.jsx";
 
 import { Provider } from "react-redux";
-import store from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./store";
 
 //Hack
 import axios from "axios";
@@ -31,23 +32,25 @@ function App() {
   //<Route exact path="/" element={<Navigate to="/events" replace />}/>
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<EventPage />}>
-            <Route index element={<EventListView />} />
-            <Route path="/" element={<EventListView />} />
-            <Route path="/events/:id" element={<GameListView />} />
-            <Route path="/games/:id" element={<LogListView />} />
-            <Route path="/settings" element={<Dashboard />} />
-            <Route path="/images/:id" element={<CanvasImageViewer />} />
-          </Route>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<EventPage />}>
+              <Route index element={<EventListView />} />
+              <Route path="/" element={<EventListView />} />
+              <Route path="/events/:id" element={<GameListView />} />
+              <Route path="/games/:id" element={<LogListView />} />
+              <Route path="/settings" element={<Dashboard />} />
+              <Route path="/images/:id" element={<CanvasImageViewer />} />
+            </Route>
 
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/register" element={<RegisterAndLogout />} />
-          <Route path="*" element={<NotFound />}></Route>
-        </Routes>
-      </BrowserRouter>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/register" element={<RegisterAndLogout />} />
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   );
 }

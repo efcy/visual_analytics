@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
-import { Routes, Route, Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import EventCard from "./EventCard"
-import api from "@/api";
+import { useDispatch } from "react-redux";
+import { set_event, reset_event, reset_game } from "@/reducers/breadcrumbSlice";
 import useDebounce from "@/hooks/use_debounce";
 
 function EventListView() {
@@ -12,13 +12,13 @@ function EventListView() {
     const [searchtxt, setsearchtxt] = useState([]);
 
     const debounce = useDebounce(searchtxt, 300)
+    const dispatch = useDispatch();
 
     useEffect(() => {
         getEvents();
     }, [debounce]); // this list is called dependency array
 
     const getEvents = () => {
-
         axios
             .get(`${import.meta.env.VITE_API_URL}/api/events?name=${searchtxt}`)
             .then((res) => res.data)
@@ -27,7 +27,13 @@ function EventListView() {
                 console.log("Event List: ", data);
             })
             .catch((err) => alert(err));
+        dispatch(reset_event());
+        dispatch(reset_game());
     };
+
+    const set_current_event = (name) =>{
+        dispatch(set_event(name));
+    }
 
     return (
         <div className="projects-section">
@@ -45,7 +51,7 @@ function EventListView() {
 
 
                 {events.map((event) => (
-                    <Link to={`/events/${event.id}`} className="project-box-wrapper" key={event.name}>
+                    <Link to={`/events/${event.id}`} className="project-box-wrapper" key={event.name} onClick={() => set_current_event(event.name)}>
                         <EventCard event={event} ></EventCard>
                     </Link>
                 ))}
