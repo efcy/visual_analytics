@@ -39,9 +39,9 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = '__all__'
 
-class LogSerializer(serializers.ModelSerializer):
+class RobotDataSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Log
+        model = models.RobotData
         fields = '__all__'
 
 class EventSerializer(serializers.ModelSerializer):

@@ -203,7 +203,7 @@ class client:
         return self.make_request("DELETE", f"games/{id}", params=query_params)
 
     # Logs
-    def list_logs(self, query_params=None):
+    def list_robot_data(self, query_params=None):
         """
         List all logs.
 
@@ -213,9 +213,9 @@ class client:
         Returns:
             dict: The JSON response containing the list of logs.
         """
-        return self.make_request("GET", "logs", params=query_params)
+        return self.make_request("GET", "robotdata", params=query_params)
 
-    def get_log(self, id, query_params=None):
+    def get_robot_data(self, id, query_params=None):
         """
         Get a specific log.
 
@@ -226,9 +226,9 @@ class client:
         Returns:
             dict: The JSON response containing the log details.
         """
-        return self.make_request("GET", f"logs/{id}", params=query_params)
+        return self.make_request("GET", f"robotdata/{id}", params=query_params)
 
-    def add_log(self, log: dict, query_params=None):
+    def add_robot_data(self, log: dict, query_params=None):
         """
         Add a new log.
 
@@ -239,9 +239,9 @@ class client:
         Returns:
             dict: The JSON response containing the added log details.
         """
-        return self.make_request("POST", "logs", json=log, params=query_params)
+        return self.make_request("POST", "robotdata", json=log, params=query_params)
 
-    def change_log(self, id, log: dict, query_params=None):
+    def change_robot_data(self, id, log: dict, query_params=None):
         """
         Update an existing log.
 
@@ -253,9 +253,9 @@ class client:
         Returns:
             dict: The JSON response containing the updated log details.
         """
-        return self.make_request("PATCH", f"logs/{id}", json=log, params=query_params)
+        return self.make_request("PATCH", f"robotdata/{id}", json=log, params=query_params)
 
-    def delete_log(self, id, query_params=None):
+    def delete_robot_data(self, id, query_params=None):
         """
         Delete a log.
 
@@ -266,7 +266,7 @@ class client:
         Returns:
             dict: The JSON response confirming the deletion.
         """
-        return self.make_request("DELETE", f"logs/{id}", params=query_params)
+        return self.make_request("DELETE", f"robotdata/{id}", params=query_params)
 
     # CameraMatrix
     def list_camera_matrices(self, query_params=None):

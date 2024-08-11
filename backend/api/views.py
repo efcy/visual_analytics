@@ -122,10 +122,10 @@ class GameViewSet(viewsets.ModelViewSet):
         else:
             return models.Game.objects.all()
         
-class LogViewSet(viewsets.ModelViewSet):
+class RobotDataViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.Log.objects.all()
-    serializer_class = serializers.LogSerializer
+    queryset = models.RobotData.objects.all()
+    serializer_class = serializers.RobotDataSerializer
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
