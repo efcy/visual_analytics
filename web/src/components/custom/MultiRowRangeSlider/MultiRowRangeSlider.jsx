@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
-import { useSelector, useDispatch } from "react-redux"
-import { set } from "@/reducers/canvasSlice"
+import { useSelector, useDispatch } from "react-redux";
+import { set } from "@/reducers/canvasSlice";
+import classes from './MultiRowRangeSlider.module.css'
+
 
 const MultiRowRangeSlider = () => {
   const [sliderValue, setSliderValue] = useState(0);
@@ -27,8 +29,8 @@ const MultiRowRangeSlider = () => {
       backgroundImage: `repeating-linear-gradient(90deg, 
         var(--color-rose-bar) 0px ${stepSize - 1}px, 
         var(--color-rose-bar-indicator1) ${stepSize - 1}px ${stepSize}px)`,
-      width: '100%',
-      height: '100px'
+      width: "100%",
+      height: "100px",
     };
     setGradientStyle(newStyle);
   }, [stepSize]);
@@ -55,7 +57,7 @@ const MultiRowRangeSlider = () => {
       const delta_y = Math.sign(e.deltaY);
       const delta_x = Math.sign(e.deltaX);
 
-      setStepSize(prevSize => {
+      setStepSize((prevSize) => {
         const newSize = Math.max(minStepSize, Math.min(51, prevSize - delta_y));
         return newSize;
       });
@@ -65,17 +67,16 @@ const MultiRowRangeSlider = () => {
       const scrollWidth = container.scrollWidth;
       const newPos = Math.max(0, Math.min(scrollWidth, currPos + delta_x * 18));
       container.scrollLeft = newPos;
-
     };
-    
+
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('wheel', handleScroll, { passive: false });
+      container.addEventListener("wheel", handleScroll, { passive: false });
     }
-  
+
     return () => {
       if (container) {
-        container.removeEventListener('wheel', handleScroll);
+        container.removeEventListener("wheel", handleScroll);
       }
     };
   }, [stepSize]);
@@ -98,9 +99,8 @@ const MultiRowRangeSlider = () => {
   };
 
   const getHandlePosition = () => {
-    
     const barIndex = Math.round((sliderValue / maxValue) * (totalBars - 1));
-    dispatch(set(barIndex))
+    dispatch(set(barIndex));
     console.log("position:", barIndex * stepSize + stepSize / 2, barIndex);
     return barIndex * stepSize + stepSize / 2;
   };
@@ -146,63 +146,62 @@ const MultiRowRangeSlider = () => {
       )
     );
   };
+  //FIXME make buttons work for previous and next, also make keyboard shortcuts work
 
   return (
     <>
-    <p>
-      {store_idx}
+      <button disabled={store_idx === 0}>Previous</button>
+      <button>Next</button>
+      <p>{store_idx}</p>
 
-    </p>
-    
-    <div
-      className="multi-row-range-slider"
-      ref={containerRef}
-    >
-      {rows.map((row) => (
-        <div
-          key={row.id}
-          className="range-slider-container"
-          style={{ width: `${stepSize * totalBars}px` }}
-        >
-          {row.type === "slider" ? (
-            <div
-              className="custom-range"
-              style={gradientStyle}
-              onClick={handleSliderClick}
-            >
-              <Draggable
-                axis="x"
-                bounds="parent"
-                grid={[stepSize, 0]}
-                onDrag={handleSliderDrag}
-                position={{ x: getHandlePosition(), y: 0 }}
+      <div className={classes.multi_row_range_slider} ref={containerRef}>
+        {rows.map((row) => (
+          <div
+            key={row.id}
+            className={classes.range_slider_container}
+            style={{ width: `${stepSize * totalBars}px` }}
+          >
+            {row.type === "slider" ? (
+              <div
+                className={classes.customRange}
+                style={gradientStyle}
+                onClick={handleSliderClick}
               >
-                <div className="range-handle">
-                  <span className="rs-value">{sliderValue}</span>
-                </div>
-              </Draggable>
-            </div>
-          ) : (
-            <div className="draggable-container">
-              {row.items.map((item) => (
                 <Draggable
-                  key={item.id}
                   axis="x"
                   bounds="parent"
                   grid={[stepSize, 0]}
-                  position={{ x: item.position, y: 0 }}
-                  onDrag={(e, data) => handleItemDrag(row.id, item.id, e, data)}
+                  onDrag={handleSliderDrag}
+                  position={{ x: getHandlePosition(), y: 0 }}
                 >
-                  <div className="dummy_video_track">
-                    Draggable Item {item.id}
+                  <div className={classes.rangeHandle}>
+                    <span className={classes.rsValue}>{sliderValue}</span>
                   </div>
                 </Draggable>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
+              </div>
+            ) : (
+              <div className={classes.draggableContainer}>
+                {row.items.map((item) => (
+                  <Draggable
+                    key={item.id}
+                    axis="x"
+                    bounds="parent"
+                    grid={[stepSize, 0]}
+                    position={{ x: item.position, y: 0 }}
+                    onDrag={(e, data) =>
+                      handleItemDrag(row.id, item.id, e, data)
+                    }
+                  >
+                    <div className={classes.dummy_video_track}>
+                      Draggable Item {item.id}
+                    </div>
+                  </Draggable>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </>
   );
 };

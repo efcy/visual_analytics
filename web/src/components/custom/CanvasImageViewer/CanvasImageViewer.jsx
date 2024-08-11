@@ -1,8 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import MultiRowRangeSlider from './MultiRowRangeSlider';
-import { useSelector, useDispatch } from "react-redux"
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
+import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import classes from './CanvasImageViewer.module.css'
 
 const CanvasImageViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,31 +56,32 @@ const CanvasImageViewer = () => {
 
   const getImages = () => {
     axios
-        .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}`)
-        .then((res) => res.data)
-        .then((data) => {
-          setImages(data);
-            console.log("Image List", data);
-        })
-        .catch((err) => alert(err));
-};
+      .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}`)
+      .then((res) => res.data)
+      .then((data) => {
+        setImages(data);
+        console.log("Image List", data);
+      })
+      .catch((err) => alert(err));
+  };
 
   const preloadImage = (image_db_obj) => {
-    if (!image_db_obj){
+    if (!image_db_obj) {
       return;
     }
     if (!loadedImages[image_db_obj.image_url]) {
       const img = new Image();
       img.src = image_db_obj.image_url;
-      img.onload = () => setLoadedImages((prev) => ({ ...prev, [image_db_obj.image_url]: img }));
+      img.onload = () =>
+        setLoadedImages((prev) => ({ ...prev, [image_db_obj.image_url]: img }));
     }
   };
 
   const loadImage = (image_db_obj) => {
-    if (!image_db_obj){
+    if (!image_db_obj) {
       return;
     }
-    console.log(image_db_obj.image_url)
+    console.log(image_db_obj.image_url);
     //const url = image_db_obj.image_url
     if (loadedImages[image_db_obj.image_url]) {
       drawImageOnCanvas(loadedImages[image_db_obj.image_url]);
@@ -108,7 +116,7 @@ const CanvasImageViewer = () => {
   };
 
   const redrawBoundingBoxes = () => {
-    boundingBoxes.forEach(box => {
+    boundingBoxes.forEach((box) => {
       drawBoundingBox(box.startX, box.startY, box.endX, box.endY, true);
     });
   };
@@ -123,7 +131,10 @@ const CanvasImageViewer = () => {
       if (corner) {
         setResizingCorner(corner);
       } else {
-        startPositionRef.current = { x: offsetX - clickedBox.startX, y: offsetY - clickedBox.startY };
+        startPositionRef.current = {
+          x: offsetX - clickedBox.startX,
+          y: offsetY - clickedBox.startY,
+        };
       }
     } else {
       startPositionRef.current = { x: offsetX, y: offsetY };
@@ -134,7 +145,12 @@ const CanvasImageViewer = () => {
   const draw = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
     if (isDrawing) {
-      drawBoundingBox(startPositionRef.current.x, startPositionRef.current.y, offsetX, offsetY);
+      drawBoundingBox(
+        startPositionRef.current.x,
+        startPositionRef.current.y,
+        offsetX,
+        offsetY
+      );
     } else if (selectedBox) {
       if (resizingCorner) {
         resizeBox(selectedBox, resizingCorner, offsetX, offsetY);
@@ -147,12 +163,15 @@ const CanvasImageViewer = () => {
   const stopDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
     if (isDrawing) {
-      setBoundingBoxes(prev => [...prev, {
-        startX: startPositionRef.current.x,
-        startY: startPositionRef.current.y,
-        endX: offsetX,
-        endY: offsetY
-      }]);
+      setBoundingBoxes((prev) => [
+        ...prev,
+        {
+          startX: startPositionRef.current.x,
+          startY: startPositionRef.current.y,
+          endX: offsetX,
+          endY: offsetY,
+        },
+      ]);
       setIsDrawing(false);
     } else if (selectedBox) {
       updateBoxPosition(selectedBox, offsetX, offsetY);
@@ -169,7 +188,7 @@ const CanvasImageViewer = () => {
       ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
       redrawBoundingBoxes();
     }
-    
+
     ctx.beginPath();
     ctx.rect(startX, startY, endX - startX, endY - startY);
     ctx.stroke();
@@ -177,26 +196,28 @@ const CanvasImageViewer = () => {
 
   const getClickedBox = (x, y) => {
     const clickMargin = 5; // Pixels of leeway for clicking near the border
-    return boundingBoxes.find(box => {
+    return boundingBoxes.find((box) => {
       const minX = Math.min(box.startX, box.endX) - clickMargin;
       const maxX = Math.max(box.startX, box.endX) + clickMargin;
       const minY = Math.min(box.startY, box.endY) - clickMargin;
       const maxY = Math.max(box.startY, box.endY) + clickMargin;
-      
+
       return x >= minX && x <= maxX && y >= minY && y <= maxY;
     });
   };
 
   const getClickedCorner = (box, x, y) => {
     const corners = [
-      { x: box.startX, y: box.startY, name: 'topLeft' },
-      { x: box.endX, y: box.startY, name: 'topRight' },
-      { x: box.startX, y: box.endY, name: 'bottomLeft' },
-      { x: box.endX, y: box.endY, name: 'bottomRight' }
+      { x: box.startX, y: box.startY, name: "topLeft" },
+      { x: box.endX, y: box.startY, name: "topRight" },
+      { x: box.startX, y: box.endY, name: "bottomLeft" },
+      { x: box.endX, y: box.endY, name: "bottomRight" },
     ];
     const cornerSize = 10;
-    return corners.find(corner => 
-      Math.abs(x - corner.x) < cornerSize && Math.abs(y - corner.y) < cornerSize
+    return corners.find(
+      (corner) =>
+        Math.abs(x - corner.x) < cornerSize &&
+        Math.abs(y - corner.y) < cornerSize
     )?.name;
   };
 
@@ -212,19 +233,19 @@ const CanvasImageViewer = () => {
 
   const resizeBox = (box, corner, x, y) => {
     switch (corner) {
-      case 'topLeft':
+      case "topLeft":
         box.startX = x;
         box.startY = y;
         break;
-      case 'topRight':
+      case "topRight":
         box.endX = x;
         box.startY = y;
         break;
-      case 'bottomLeft':
+      case "bottomLeft":
         box.startX = x;
         box.endY = y;
         break;
-      case 'bottomRight':
+      case "bottomRight":
         box.endX = x;
         box.endY = y;
         break;
@@ -233,7 +254,7 @@ const CanvasImageViewer = () => {
   };
 
   const updateBoxPosition = (box, x, y) => {
-    const index = boundingBoxes.findIndex(b => b === box);
+    const index = boundingBoxes.findIndex((b) => b === box);
     if (index !== -1) {
       const updatedBoxes = [...boundingBoxes];
       updatedBoxes[index] = box;
@@ -248,84 +269,42 @@ const CanvasImageViewer = () => {
     ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     redrawBoundingBoxes();
   };
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
-    setBoundingBoxes([]);
-  };
 
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : prev));
-    setBoundingBoxes([]);
-  };
-
-  const goToIdx = ( idx ) => {
-    setCurrentIndex((prev) => (idx < images.length - 1 ? idx : prev));
-    setBoundingBoxes([]);
-  };
-
-  //const frames = generateFrameData();
-
-  const buttonStyle = {
-    padding: "10px 20px",
-    fontSize: "16px",
-    cursor: "pointer",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    margin: "0 10px",
-  };
 
   return (
-    <div className="projects-section">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: "800px",
-          margin: "0 auto",
-        }}
-      >
+    <div className={classes.mainView}>
+      <div className={classes.dataView}>
         <canvas
+          className={classes.imageCanvas}
           ref={canvasRef}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
           onMouseLeave={stopDrawing}
-          style={{ border: "1px solid #ddd", marginBottom: "20px" }}
         />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <button
-            onClick={goToPrevious}
-            disabled={currentIndex === 0}
-            style={buttonStyle}
-          >
-            Previous
-          </button>
-          <span>
-            {currentIndex + 1} / {images.length}
-          </span>
-          <button
-            onClick={goToNext}
-            disabled={currentIndex === images.length - 1}
-            style={buttonStyle}
-          >
-            Next
-          </button>
+        <div className="representationSelector">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+        <div>
+          <code>
+            asdhoashdohiaosdijoaijsdasosuhdpuasiogdlbaiwhep 
+          </code>
         </div>
       </div>
+
       <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Timeline Example {store_idx}</h1>
-      <MultiRowRangeSlider />
-    </div>
+        <h1 className="text-2xl font-bold mb-4">
+          Timeline Example {store_idx}
+        </h1>
+        <MultiRowRangeSlider />
+      </div>
     </div>
   );
 };
