@@ -3,29 +3,24 @@
 # Check if $1 is provided
 if [ -z "$1" ]; then
   echo "Error: No mode specified."
-  echo "Usage: $0 {del|renew|create}"
+  echo "Usage: $0 {renew|create}"
   exit 1
 fi
 
-cd /tmp
+
 # Set the mode based on $1
 mode=$1
 
-if [ "$mode" == "del" ]; then
+if [ "$mode" == "renew" ]; then
+
+    cd ../backend
+
+    find . -path "*/migrations/*.py" ! -name "__init__.py" -delete
+
+    cd /tmp
+
   # Execute the drop database command
     sudo -u postgres psql -c "DROP DATABASE IF EXISTS vat_test";
-
-    # Check if the command was successful
-    if [ $? -eq 0 ]; then
-        echo "Database vat_test deleted successfully."
-        exit 0
-    else
-        echo "Failed to delete database vat_test."
-        exit 1
-    fi
-
-elif [ "$mode" == "renew" ]; then
-      # create db and user
 
     sudo -u postgres psql -c "CREATE DATABASE vat_test;"
     #fails if user is already created
@@ -46,7 +41,7 @@ elif [ "$mode" == "renew" ]; then
 
 elif [ "$mode" == "create" ]; then
           # create db and user
-
+    cd /tmp
     sudo -u postgres psql -c "CREATE DATABASE vat_test;"
     #fails if user is already created
     sudo -u postgres psql -c "CREATE USER testuser WITH PASSWORD 'password';"
@@ -67,7 +62,7 @@ elif [ "$mode" == "create" ]; then
 
 else
   echo "Error: Invalid mode specified."
-  echo "Usage: $0 {del|renew|create}"
+  echo "Usage: $0 {renew|create}"
   exit 1
 fi
 
