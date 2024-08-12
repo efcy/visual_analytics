@@ -13,7 +13,9 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
+    #user app uses accounts path so frontend still works
     path('accounts/', include('user.urls')),
+    #frontend things where profile was used have to use accounts/ now
     #path('profile/', include('user_profile.urls')),
     path("api/", include("api.urls")),
 ]
