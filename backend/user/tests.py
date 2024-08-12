@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from .models import organization
-
+#not working
 User = get_user_model()
 
 class AuthViewsTestCase(TestCase):
