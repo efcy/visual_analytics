@@ -275,72 +275,6 @@ class client:
         """
         return self.make_request("DELETE", f"robotdata/{id}", params=query_params)
 
-    # CameraMatrix
-    def list_camera_matrices(self, query_params=None):
-        """
-        List all camera matrices.
-
-        Args:
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the list of camera matrices.
-        """
-        return self.make_request("GET", "camera_matrix", params=query_params)
-
-    def get_camera_matrix(self, id, query_params=None):
-        """
-        Get a specific camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the camera matrix details.
-        """
-        return self.make_request("GET", f"camera_matrix/{id}", params=query_params)
-
-    def add_camera_matrix(self, camera_matrix: dict, query_params=None):
-        """
-        Add a new camera matrix.
-
-        Args:
-            camera_matrix (dict): The camera matrix data to be added.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the added camera matrix details.
-        """
-        return self.make_request("POST", "camera_matrix", json=camera_matrix, params=query_params)
-
-    def change_camera_matrix(self, id, camera_matrix: dict, query_params=None):
-        """
-        Update an existing camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix to update.
-            camera_matrix (dict): The updated camera matrix data.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the updated camera matrix details.
-        """
-        return self.make_request("PATCH", f"camera_matrix/{id}", json=camera_matrix, params=query_params)
-
-    def delete_camera_matrix(self, id, query_params=None):
-        """
-        Delete a camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix to delete.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response confirming the deletion.
-        """
-        return self.make_request("DELETE", f"camera_matrix/{id}", params=query_params)
-
     # Image
     def list_images(self, query_params=None):
         """
@@ -378,6 +312,14 @@ class client:
         Returns:
             dict: The JSON response containing the added image details.
         """
+        existing_data = self.list_images({"log":image["log"]})
+        for data in existing_data:
+            if data["log"] == image["log"] and \
+               data["camera"] == image["camera"] and \
+               data["type"] == image["type"] and \
+               data["frame_number"] == int(image["frame_number"]) :
+                #print("WARNING: image already exists")
+                return data
         return self.make_request("POST", "image", json=image, params=query_params)
 
     def change_image(self, id, image: dict, query_params=None):

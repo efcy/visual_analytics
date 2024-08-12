@@ -58,10 +58,6 @@ class SensorLog(models.Model):
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-class CameraMatrix(models.Model):
-    log = models.ForeignKey(RobotData,on_delete=models.CASCADE,related_name='camera_matrix')
-    frame_number = models.IntegerField()
     
 class Image(models.Model):
     class Camera(models.TextChoices):
@@ -76,6 +72,9 @@ class Image(models.Model):
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     frame_number = models.IntegerField(blank=True, null=True)
     image_url = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('log', 'camera', 'type', 'frame_number')
 
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')

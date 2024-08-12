@@ -133,7 +133,6 @@ class RobotDataViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
-        print("game id: ", game_id)
         if game_id is not None:
             return models.RobotData.objects.filter(game=game_id)
         else:
@@ -151,11 +150,6 @@ class ImageViewSet(viewsets.ModelViewSet):
             return models.Image.objects.filter(log=log_id)
         else:
             return models.Image.objects.all()
-
-class CameraMatrixViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = models.CameraMatrix.objects.all()
-    serializer_class = serializers.CameraMatrixSerializer
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

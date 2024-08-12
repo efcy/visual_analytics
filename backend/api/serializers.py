@@ -29,11 +29,6 @@ class ImageAnnotationSerializer(serializers.ModelSerializer):
         model = models.ImageAnnotation
         fields = '__all__'
 
-class CameraMatrixSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.CameraMatrix
-        fields = '__all__'
-
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
