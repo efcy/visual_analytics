@@ -28,7 +28,7 @@ ALTER DATABASE vat_test OWNER TO testuser;
 GRANT ALL ON SCHEMA PUBLIC TO testuser;
 ```
 
-you can also use the dbutils.sh in /tests to create the test database with the default values stated below.
+you can also use the dbutils.sh in /utils to create the test database with the default values stated below.
 
 ```bash
 ./dbutils.sh create
