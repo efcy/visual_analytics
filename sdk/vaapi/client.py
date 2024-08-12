@@ -97,7 +97,7 @@ class client:
         existing_events = self.list_events()
         for e in existing_events:
             if e["name"] == event["name"]:
-                print("WARNING: name already exists")
+                #print("WARNING: name already exists")
                 return e
         return self.make_request("POST", "events", json=event, params=query_params)
 
@@ -170,7 +170,7 @@ class client:
             if g["event"] == games["event"] and \
                g["start_time"] == games["start_time"] and \
                g["half"] == games["half"]:
-                print("WARNING: game already exists")
+                #print("WARNING: game already exists")
                 return g
 
         return self.make_request("POST", "games", json=games, params=query_params)
@@ -203,7 +203,7 @@ class client:
         return self.make_request("DELETE", f"games/{id}", params=query_params)
 
     # Logs
-    def list_logs(self, query_params=None):
+    def list_robot_data(self, query_params=None):
         """
         List all logs.
 
@@ -213,9 +213,9 @@ class client:
         Returns:
             dict: The JSON response containing the list of logs.
         """
-        return self.make_request("GET", "logs", params=query_params)
+        return self.make_request("GET", "robotdata", params=query_params)
 
-    def get_log(self, id, query_params=None):
+    def get_robot_data(self, id, query_params=None):
         """
         Get a specific log.
 
@@ -226,9 +226,9 @@ class client:
         Returns:
             dict: The JSON response containing the log details.
         """
-        return self.make_request("GET", f"logs/{id}", params=query_params)
+        return self.make_request("GET", f"robotdata/{id}", params=query_params)
 
-    def add_log(self, log: dict, query_params=None):
+    def add_robot_data(self, log: dict, query_params=None):
         """
         Add a new log.
 
@@ -239,9 +239,16 @@ class client:
         Returns:
             dict: The JSON response containing the added log details.
         """
-        return self.make_request("POST", "logs", json=log, params=query_params)
+        existing_data = self.list_robot_data({"game":log["game"]})
+        for data in existing_data:
+            if data["game"] == log["game"] and \
+               data["player_number"] == int(log["player_number"]) and \
+               data["head_number"] == int(log["head_number"]):
+                #print("WARNING: robot_data already exists")
+                return data
+        return self.make_request("POST", "robotdata", json=log, params=query_params)
 
-    def change_log(self, id, log: dict, query_params=None):
+    def change_robot_data(self, id, log: dict, query_params=None):
         """
         Update an existing log.
 
@@ -253,9 +260,9 @@ class client:
         Returns:
             dict: The JSON response containing the updated log details.
         """
-        return self.make_request("PATCH", f"logs/{id}", json=log, params=query_params)
+        return self.make_request("PATCH", f"robotdata/{id}", json=log, params=query_params)
 
-    def delete_log(self, id, query_params=None):
+    def delete_robot_data(self, id, query_params=None):
         """
         Delete a log.
 
@@ -266,73 +273,7 @@ class client:
         Returns:
             dict: The JSON response confirming the deletion.
         """
-        return self.make_request("DELETE", f"logs/{id}", params=query_params)
-
-    # CameraMatrix
-    def list_camera_matrices(self, query_params=None):
-        """
-        List all camera matrices.
-
-        Args:
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the list of camera matrices.
-        """
-        return self.make_request("GET", "camera_matrix", params=query_params)
-
-    def get_camera_matrix(self, id, query_params=None):
-        """
-        Get a specific camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the camera matrix details.
-        """
-        return self.make_request("GET", f"camera_matrix/{id}", params=query_params)
-
-    def add_camera_matrix(self, camera_matrix: dict, query_params=None):
-        """
-        Add a new camera matrix.
-
-        Args:
-            camera_matrix (dict): The camera matrix data to be added.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the added camera matrix details.
-        """
-        return self.make_request("POST", "camera_matrix", json=camera_matrix, params=query_params)
-
-    def change_camera_matrix(self, id, camera_matrix: dict, query_params=None):
-        """
-        Update an existing camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix to update.
-            camera_matrix (dict): The updated camera matrix data.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response containing the updated camera matrix details.
-        """
-        return self.make_request("PATCH", f"camera_matrix/{id}", json=camera_matrix, params=query_params)
-
-    def delete_camera_matrix(self, id, query_params=None):
-        """
-        Delete a camera matrix.
-
-        Args:
-            id (int): The ID of the camera matrix to delete.
-            query_params (dict, optional): Additional query parameters.
-
-        Returns:
-            dict: The JSON response confirming the deletion.
-        """
-        return self.make_request("DELETE", f"camera_matrix/{id}", params=query_params)
+        return self.make_request("DELETE", f"robotdata/{id}", params=query_params)
 
     # Image
     def list_images(self, query_params=None):
@@ -371,6 +312,14 @@ class client:
         Returns:
             dict: The JSON response containing the added image details.
         """
+        existing_data = self.list_images({"log":image["log"]})
+        for data in existing_data:
+            if data["log"] == image["log"] and \
+               data["camera"] == image["camera"] and \
+               data["type"] == image["type"] and \
+               data["frame_number"] == int(image["frame_number"]) :
+                #print("WARNING: image already exists")
+                return data
         return self.make_request("POST", "image", json=image, params=query_params)
 
     def change_image(self, id, image: dict, query_params=None):

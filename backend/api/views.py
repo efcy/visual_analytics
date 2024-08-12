@@ -58,13 +58,17 @@ class SensorLogViewSet(viewsets.ModelViewSet):
     #overloading the create function to allow lists and single objects as input
     def create(self, request, *args, **kwargs):
         data = request.data
-        print(data)
+        print("request.data:", data)
         if isinstance(data, list):
             serializer = self.get_serializer(data=data, many=True)
         else:
             serializer = self.get_serializer(data=data)
+        print("serializer created")
         
-        serializer.is_valid(raise_exception=True)
+
+        serializer.is_valid(raise_exception=False)
+        print(serializer.errors)
+        print("serializer.is_valid")
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         print(serializer.data)
@@ -122,17 +126,17 @@ class GameViewSet(viewsets.ModelViewSet):
         else:
             return models.Game.objects.all()
         
-class LogViewSet(viewsets.ModelViewSet):
+class RobotDataViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.Log.objects.all()
-    serializer_class = serializers.LogSerializer
+    queryset = models.RobotData.objects.all()
+    serializer_class = serializers.RobotDataSerializer
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
         if game_id is not None:
-            return models.Log.objects.filter(game=game_id)
+            return models.RobotData.objects.filter(game=game_id)
         else:
-            return models.Log.objects.all()
+            return models.RobotData.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -146,11 +150,6 @@ class ImageViewSet(viewsets.ModelViewSet):
             return models.Image.objects.filter(log=log_id)
         else:
             return models.Image.objects.all()
-
-class CameraMatrixViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = models.CameraMatrix.objects.all()
-    serializer_class = serializers.CameraMatrixSerializer
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
