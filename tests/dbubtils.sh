@@ -15,7 +15,7 @@ if [ "$mode" == "renew" ]; then
 
     cd ../backend
 
-    find . -path "*/migrations/*.py" ! -name "__init__.py" -delete
+    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -path "./venv/*" -delete
 
     cd /tmp
 
