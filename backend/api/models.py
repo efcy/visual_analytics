@@ -34,25 +34,30 @@ class Game(models.Model):
     def __str__(self):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
-class Log(models.Model):
+class RobotData(models.Model):
     # TODO check this foreignkey thing: the related_name stuff looks wrong
-    game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='logs')
+    game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
+    robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
-    robot_number = models.IntegerField(blank=True, null=True)
-    head_serial = models.CharField(max_length=20, blank=True, null=True)  # TODO is this really the head serial???
+    head_number = models.IntegerField(blank=True, null=True)
+    body_serial = models.CharField(max_length=20, blank=True, null=True)
+    head_serial = models.CharField(max_length=20, blank=True, null=True)
     representations = models.JSONField(blank=True, null=True)
+    sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
+    log_path = models.CharField(max_length=200, blank=True, null=True)
 
+    class Meta:
+        unique_together = ('game', 'player_number', 'head_number')
+
+    def __str__(self):
+        return f"{self.player_number} - {self.head_number}"
 
 class SensorLog(models.Model):
-    #log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='sensorlogs')
+    robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='sensorlogs')
     sensor_frame_number = models.IntegerField(blank=True, null=True)
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-class CameraMatrix(models.Model):
-    log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='camera_matrix')
-    frame_number = models.IntegerField()
     
 class Image(models.Model):
     class Camera(models.TextChoices):
@@ -62,11 +67,14 @@ class Image(models.Model):
         raw = "RAW", _("raw")
         jpeg = "JPEG", _("jpeg")
     # FIXME playernumber, robotnumber and serial must be part of the foreign key, we can change robots midgame when one robot breaks
-    log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
+    log = models.ForeignKey(RobotData,on_delete=models.CASCADE,related_name='images')
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     frame_number = models.IntegerField(blank=True, null=True)
     image_url = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('log', 'camera', 'type', 'frame_number')
 
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
