@@ -147,9 +147,11 @@ class ImageViewSet(viewsets.ModelViewSet):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
         if log_id is not None:
-            return models.Image.objects.filter(log=log_id)
+            queryset = models.Image.objects.filter(log=log_id)
         else:
-            return models.Image.objects.all()
+            queryset = models.Image.objects.all()
+
+        return queryset.order_by('frame_number')
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

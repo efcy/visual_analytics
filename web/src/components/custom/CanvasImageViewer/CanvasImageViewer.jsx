@@ -69,11 +69,12 @@ const CanvasImageViewer = () => {
     if (!image_db_obj) {
       return;
     }
-    if (!loadedImages[image_db_obj.image_url]) {
+    const new_url = 'https://logs.berlin-united.com/' + image_db_obj.image_url
+    if (!loadedImages[new_url]) {
       const img = new Image();
-      img.src = image_db_obj.image_url;
-      img.onload = () =>
-        setLoadedImages((prev) => ({ ...prev, [image_db_obj.image_url]: img }));
+      img.src = new_url;
+      img.onload = () =>  
+        setLoadedImages((prev) => ({ ...prev, [new_url]: img }));
     }
   };
 
@@ -81,17 +82,18 @@ const CanvasImageViewer = () => {
     if (!image_db_obj) {
       return;
     }
-    console.log(image_db_obj.image_url);
+    const new_url = 'https://logs.berlin-united.com/' + image_db_obj.image_url
+    console.log(new_url);
     //const url = image_db_obj.image_url
-    if (loadedImages[image_db_obj.image_url]) {
-      drawImageOnCanvas(loadedImages[image_db_obj.image_url]);
+    if (loadedImages[new_url]) {
+      drawImageOnCanvas(loadedImages[new_url]);
     } else {
       const img = new Image();
       img.onload = () => {
-        setLoadedImages((prev) => ({ ...prev, [image_db_obj.image_url]: img }));
+        setLoadedImages((prev) => ({ ...prev, [new_url]: img }));
         drawImageOnCanvas(img);
       };
-      img.src = image_db_obj.image_url;
+      img.src = new_url;
     }
   };
 
