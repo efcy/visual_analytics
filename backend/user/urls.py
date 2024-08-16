@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.authtoken import views
 from .views import *
 
 urlpatterns = [
@@ -10,4 +11,5 @@ urlpatterns = [
     path('csrf_cookie', GetCSRFToken.as_view(), name='csrf_cookie'),
     path('user', GetUserProfileView.as_view(), name='user_profile'),
     path('update', UpdateUserProfileView.as_view(), name='update_profile'),
+    path('api-token-auth/', views.obtain_auth_token)
 ]

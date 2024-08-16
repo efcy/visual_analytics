@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
-
+from rest_framework.authtoken.models import Token
 
 class Organization(models.Model):
     name = models.CharField(max_length=100)
@@ -11,12 +11,17 @@ class Organization(models.Model):
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('The Email field must be set')
+        #
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        t = Token.objects.create(user=user)
+        print(t)
+        a = t.generate_key()
+        t.delete()
+        t = Token.objects.create(user=user)
+        print(t)
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
@@ -31,6 +36,8 @@ class CustomUserManager(BaseUserManager):
         # Add any additional fields or modifications here
         admin_organization, created = Organization.objects.get_or_create(name='admin')
         extra_fields['organization'] = admin_organization
+
+
 
         return self.create_user(username, email, password, **extra_fields)
 
