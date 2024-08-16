@@ -5,7 +5,7 @@ import { set } from "@/reducers/canvasSlice";
 import classes from './MultiRowRangeSlider.module.css'
 
 
-const MultiRowRangeSlider = () => {
+const MultiRowRangeSlider = ( {length} ) => {
   const [sliderValue, setSliderValue] = useState(0);
   const [stepSize, setStepSize] = useState(51);
   const [rows, setRows] = useState([
@@ -20,8 +20,8 @@ const MultiRowRangeSlider = () => {
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const dispatch = useDispatch();
 
-  const maxValue = 22000;
-  const totalBars = 22000;
+  const maxValue = length;
+  const totalBars = length;
   const minStepSize = 23; // Width of each bar including the indicator
 
   const updateGradientStyle = useCallback(() => {
