@@ -9,6 +9,9 @@ from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.db.models import Q
+
 User = get_user_model()
 
 @require_GET
@@ -113,6 +116,10 @@ class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
 
+    def list(self, request, *args, **kwargs):
+        # Keep the original list behavior
+        return super().list(request, *args, **kwargs)
+
     def get_queryset(self):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
@@ -122,6 +129,57 @@ class ImageViewSet(viewsets.ModelViewSet):
             queryset = models.Image.objects.all()
 
         return queryset.order_by('frame_number')
+    
+    def create(self, request, *args, **kwargs):
+        data = request.data  # This should be a list of dictionaries
+        print(data)
+        if not isinstance(data, list):
+            return Response({"error": "Data must be a list"}, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            # Fetch all relevant RobotData instances
+            log_ids = set(item['log'] for item in data)
+            robot_data_dict = {rd.id: rd for rd in models.RobotData.objects.filter(id__in=log_ids)}
+
+            # Get existing objects
+            existing_combinations = set(
+                models.Image.objects.filter(
+                    Q(log__in=log_ids) &
+                    Q(camera__in=[item['camera'] for item in data]) &
+                    Q(type__in=[item['type'] for item in data]) &
+                    Q(frame_number__in=[item['frame_number'] for item in data])
+                ).values_list('log', 'camera', 'type', 'frame_number')
+            )
+
+
+            # Prepare new objects, excluding existing combinations
+            new_objs = []
+            for item in data:
+                log_instance = robot_data_dict.get(item['log'])
+                if log_instance and (item['log'], item['camera'], item['type'], item['frame_number']) not in existing_combinations:
+                    new_item = item.copy()
+                    # Replace the log ID with the actual RobotData instance
+                    new_item['log'] = log_instance
+                    # Create a new Image instance with all provided fields
+                    new_obj = models.Image(**new_item)
+                    new_objs.append(new_obj)
+
+            # Bulk create new objects, ignoring conflicts
+            models.Image.objects.bulk_create(new_objs, ignore_conflicts=True)
+
+            # Fetch all objects (both existing and newly created)
+            all_objs = models.Image.objects.filter(
+                Q(log__in=[item['log'] for item in data]) &
+                Q(camera__in=[item['camera'] for item in data]) &
+                Q(type__in=[item['type'] for item in data]) &
+                Q(frame_number__in=[item['frame_number'] for item in data])
+            )
+
+            # Serialize the results
+            serializer = self.serializer_class(all_objs, many=True)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

@@ -312,14 +312,6 @@ class client:
         Returns:
             dict: The JSON response containing the added image details.
         """
-        existing_data = self.list_images({"log":image["log"]})
-        for data in existing_data:
-            if data["log"] == image["log"] and \
-               data["camera"] == image["camera"] and \
-               data["type"] == image["type"] and \
-               data["frame_number"] == int(image["frame_number"]) :
-                #print("WARNING: image already exists")
-                return data
         return self.make_request("POST", "image", json=image, params=query_params)
 
     def change_image(self, id, image: dict, query_params=None):
