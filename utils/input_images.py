@@ -9,6 +9,28 @@ baseurl = "http://127.0.0.1:8000/api/"
 #key can be created on admin site
 api_token = os.environ.get("VAT_API_TOKEN")
 
+def handle_insertion(individual_extracted_folder):
+    if not Path(individual_extracted_folder).is_dir():
+        return
+    image_files = [f for f in os.listdir(individual_extracted_folder) if f.lower().endswith("png")]
+    image_ar = []
+    print(f"inserting bottom data for {game_folder} - {robot_foldername}")
+    for idx, file in tqdm(enumerate(image_files)):
+        framenumber = int(Path(file).stem)
+        url_path = str(file).removeprefix(log_root_path).strip("/")
+
+        image_ar.append({
+            "log": robot_data_id,
+            "camera": "BOTTOM",
+            "type": "RAW",
+            "frame_number": framenumber,
+            "image_url": url_path,
+        })
+        if idx % 100 and idx > 0:
+            response = my_client.add_image(image_ar)
+            image_ar.clear()
+
+
 if __name__ == "__main__":
     # FIXME use environment variables for this
     log_root_path = os.environ.get("VAT_LOG_ROOT")
@@ -25,38 +47,11 @@ if __name__ == "__main__":
         # TODO figure out if raw or jpeg dynamically here
         bottom_path = extracted_path / "log_bottom"
         top_path = extracted_path / "log_top"
+        bottom_path_jpg = extracted_path / "log_bottom_jpg"
+        top_path_jpg = extracted_path / "log_top_jpg"
 
-        bottom_files = Path(bottom_path).glob("*")
-        bottom_ar = []
-        print(f"inserting bottom data for {game_folder} - {robot_foldername}")
-        for idx, file in tqdm(enumerate(bottom_files)):
-            framenumber = int(file.stem)
-            url_path = str(file).removeprefix(log_root_path).strip("/")
-
-            bottom_ar.append({
-                "log": robot_data_id,
-                "camera": "BOTTOM",
-                "type": "RAW",
-                "frame_number": framenumber,
-                "image_url": url_path,
-            })
-            if idx % 50 and idx > 0:
-                response = my_client.add_image(bottom_ar)
-                bottom_ar.clear()
-
-        top_files = Path(top_path).glob("*")
-        top_ar = []
-        print(f"inserting top data for {game_folder} - {robot_foldername}")
-        for idx, file in tqdm(enumerate(top_ar)):
-            framenumber = int(file.stem)
-            url_path = str(file).removeprefix(log_root_path).strip("/")
-            top_ar.append({
-                "log": robot_data_id,
-                "camera": "TOP",
-                "type": "RAW",
-                "frame_number": framenumber,
-                "image_url": url_path,
-            })
-            if idx % 50 and idx > 0:
-                response = my_client.add_image(top_ar)
-                top_ar.clear()
+        handle_insertion(bottom_path)
+        handle_insertion(top_path)
+        handle_insertion(bottom_path_jpg)
+        handle_insertion(top_path_jpg)
+ 
