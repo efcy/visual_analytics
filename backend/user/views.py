@@ -3,10 +3,13 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from django.contrib import auth
 from rest_framework.response import Response
-from user_profile.models import UserProfile
-#from .serializers import UserSerializer
+from user.models import vat_user,organization
+from .serializers import UserSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
@@ -23,17 +26,22 @@ class CheckAuthenticatedView(APIView):
         except:
             return Response({ 'error': 'Something went wrong when checking authentication status' })
 
+User = get_user_model()
 
 @method_decorator(csrf_protect, name='dispatch')
 class SignupView(APIView):
     permission_classes = (permissions.AllowAny, )
-
     def post(self, request, format=None):
         data = self.request.data
-
         username = data['username']
         password = data['password']
-        re_password  = data['re_password']
+        re_password = data['re_password']
+        
+        # New fields
+        name = data.get('name', '')
+        first_name = data.get('first_name', '')
+        email = data.get('email', '')
+        organization_name = data.get('organization', '')
 
         try:
             if password == re_password:
@@ -43,19 +51,25 @@ class SignupView(APIView):
                     if len(password) < 6:
                         return Response({ 'error': 'Password must be at least 6 characters' })
                     else:
-                        user = User.objects.create_user(username=username, password=password)
-
-                        user = User.objects.get(id=user.id)
-
-                        user_profile = UserProfile.objects.create(user=user, first_name='', last_name='', phone='', city='')
-
+                        # Create or get the organization
+                        orga, _ = organization.objects.get_or_create(name=organization_name)
+                        
+                        # Create the user with new fields
+                        user = User.objects.create_user(
+                            username=username, 
+                            password=password,
+                            name=name,
+                            first_name=first_name,
+                            email=email,
+                            orga=orga
+                        )
                         return Response({ 'success': 'User created successfully' })
             else:
                 return Response({ 'error': 'Passwords do not match' })
         except Exception as e:
-                print(e)
-                return Response({ 'error': 'Something went wrong when registering account' })
-
+            print(e)
+            return Response({ 'error': 'Something went wrong when registering account' })
+        
 @method_decorator(csrf_protect, name='dispatch')
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -104,3 +118,38 @@ class DeleteAccountView(APIView):
             return Response({ 'success': 'User deleted successfully' })
         except:
             return Response({ 'error': 'Something went wrong when trying to delete user' })
+        
+class GetUserProfileView(APIView):
+    def get(self, request, format=None):
+        try:
+            user = self.request.user
+            username = user.username
+
+            user_profile = User.objects.get(user=user)
+            user_profile = UserSerializer(user_profile)
+
+            return Response({ 'profile': user_profile.data, 'username': str(username) })
+        except Exception as e:
+            print(e)
+            return Response({ 'error': 'Something went wrong when retrieving profile' })
+
+class UpdateUserProfileView(APIView):
+    def put(self, request, format=None):
+        try:
+            user = self.request.user
+            username = user.username
+
+            data = self.request.data
+            first_name = data['first_name']
+            last_name = data['last_name']
+            phone = data['phone']
+            city = data['city']
+
+            User.objects.filter(user=user).update(first_name=first_name, last_name=last_name, phone=phone, city=city)
+
+            user_profile = User.objects.get(user=user)
+            user_profile = UserSerializer(user_profile)
+
+            return Response({ 'profile': user_profile.data, 'username': str(username) })
+        except:
+            return Response({ 'error': 'Something went wrong when updating profile' })

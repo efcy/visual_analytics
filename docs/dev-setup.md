@@ -27,6 +27,13 @@ GRANT ALL PRIVILEGES ON DATABASE vat_test TO testuser;
 ALTER DATABASE vat_test OWNER TO testuser;
 GRANT ALL ON SCHEMA PUBLIC TO testuser;
 ```
+
+you can also use the dbutils.sh in /utils to create the test database with the default values stated below.
+
+```bash
+./dbutils.sh create
+```
+
 You can use different names for the database, user and password. But you have to export them as environment variables in your .bashrc. For example like this
 ```bash
 export VAT_POSTGRES_DB=vat_test
