@@ -15,21 +15,22 @@ if [ "$mode" == "renew" ]; then
 
     cd ../backend
 
-    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -path "./venv/*" -delete
-
-    cd /tmp
+    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -delete
 
   # Execute the drop database command
-    sudo -u postgres psql -c "DROP DATABASE IF EXISTS vat_test";
+    sudo -u postgres psql -c "DROP DATABASE IF EXISTS $VAT_POSTGRES_DB";
 
-    sudo -u postgres psql -c "CREATE DATABASE vat_test;"
-    #fails if user is already created
+    sudo -u postgres psql -c "CREATE DATABASE $VAT_POSTGRES_DB;"
+
+    sudo -u postgres psql -c "DROP OWNED BY $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c "DROP USER IF EXISTS $VAT_POSTGRES_USER"
+    sudo -u postgres psql -c "CREATE USER $VAT_POSTGRES_USER WITH PASSWORD '${VAT_POSTGRES_PASS}'"
 
     # set permissions
-    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO testuser;"
-    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO testuser;"
-    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO testuser;"
-    sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO testuser;"
+    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
 
 
     # Check if the command was successful
@@ -42,14 +43,14 @@ if [ "$mode" == "renew" ]; then
 elif [ "$mode" == "create" ]; then
           # create db and user
     cd /tmp
-    sudo -u postgres psql -c "CREATE DATABASE vat_test;"
+    sudo -u postgres psql -c "CREATE DATABASE $VAT_POSTGRES_DB;"
     #fails if user is already created
-    sudo -u postgres psql -c "CREATE USER testuser WITH PASSWORD 'password';"
+    sudo -u postgres psql -c "CREATE USER $VAT_POSTGRES_USER WITH PASSWORD '${VAT_POSTGRES_PASS}';"
     # set permissions
-    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO testuser;"
-    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO testuser;"
-    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO testuser;"
-    sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO testuser;"
+    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
 
 
     # Check if the command was successful

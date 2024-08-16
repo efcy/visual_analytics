@@ -1,7 +1,6 @@
-import LoginForm from "../components/custom/LoginForm2";
+import LoginForm from "../components/custom/LoginForm";
 import "@/styles/login.css"
 import logo from "../assets/logo.svg";
-
 
 const LoginPage = ({ login, isAuthenticated }) => {
   // old: <LoginForm route="/api/token/" method="login" />
@@ -19,7 +18,5 @@ const LoginPage = ({ login, isAuthenticated }) => {
     </div>
   );
 }
-
-
 
 export default LoginPage;
