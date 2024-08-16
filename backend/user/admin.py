@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import vat_user, organization
+from .models import VATUser, Organization
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
@@ -13,5 +13,5 @@ class CustomUserAdmin(UserAdmin):
     # Optionally, display organization in the list view
     list_display = UserAdmin.list_display + ('organization',)
 
-admin.site.register(vat_user, CustomUserAdmin)
-admin.site.register(organization)
+admin.site.register(VATUser, CustomUserAdmin)
+admin.site.register(Organization)

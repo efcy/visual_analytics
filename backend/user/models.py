@@ -1,14 +1,13 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
-
 from django.contrib.auth.models import BaseUserManager
 
 
-
-class organization(models.Model):
+class Organization(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -30,24 +29,20 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         # Add any additional fields or modifications here
-        admin_organization, created = organization.objects.get_or_create(name='admin')
+        admin_organization, created = Organization.objects.get_or_create(name='admin')
         extra_fields['organization'] = admin_organization
 
         return self.create_user(email, password, **extra_fields)
 
 
-
-
-
-class vat_user(AbstractUser):
+class VATUser(AbstractUser):
     name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     token = models.CharField(max_length=100)
-    organization = models.ForeignKey(organization,on_delete=models.SET_NULL,related_name='organizations',blank=True,null=True)
+    organization = models.ForeignKey(Organization,on_delete=models.SET_NULL,related_name='organizations',blank=True,null=True)
     
     objects = CustomUserManager()
 
     def __str__(self):
         return self.first_name
-

@@ -163,4 +163,4 @@ CORS_ALLOW_CREDENTIALS = True
 SPECTACULAR_SETTINGS = {
     'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
 }
-AUTH_USER_MODEL = 'user.vat_user' 
+AUTH_USER_MODEL = 'user.VATUser' 

@@ -79,9 +79,3 @@ class Image(models.Model):
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
     type  = models.CharField(max_length=100)
-
-
-class FrameTime(models.Model):
-    """dummy model to test timeline"""
-    frame_number = models.IntegerField(blank=True, null=True)
-    frame_time   = models.IntegerField(blank=True,null=True)

@@ -3,13 +3,11 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from django.contrib import auth
 from rest_framework.response import Response
-from user.models import vat_user,organization
-from .serializers import UserSerializer
+from user.models import VATUser,Organization
+from .serializers import VATUserSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
@@ -26,7 +24,7 @@ class CheckAuthenticatedView(APIView):
         except:
             return Response({ 'error': 'Something went wrong when checking authentication status' })
 
-User = get_user_model()
+
 
 @method_decorator(csrf_protect, name='dispatch')
 class SignupView(APIView):
@@ -45,17 +43,17 @@ class SignupView(APIView):
 
         try:
             if password == re_password:
-                if User.objects.filter(username=username).exists():
+                if VATUser.objects.filter(username=username).exists():
                     return Response({ 'error': 'Username already exists' })
                 else:
                     if len(password) < 6:
                         return Response({ 'error': 'Password must be at least 6 characters' })
                     else:
                         # Create or get the organization
-                        orga, _ = organization.objects.get_or_create(name=organization_name)
+                        orga, _ = Organization.objects.get_or_create(name=organization_name)
                         
                         # Create the user with new fields
-                        user = User.objects.create_user(
+                        user = VATUser.objects.create_user(
                             username=username, 
                             password=password,
                             name=name,
@@ -125,8 +123,8 @@ class GetUserProfileView(APIView):
             user = self.request.user
             username = user.username
 
-            user_profile = User.objects.get(user=user)
-            user_profile = UserSerializer(user_profile)
+            user_profile = VATUser.objects.get(user=user)
+            user_profile = VATUserSerializer(user_profile)
 
             return Response({ 'profile': user_profile.data, 'username': str(username) })
         except Exception as e:
@@ -147,8 +145,8 @@ class UpdateUserProfileView(APIView):
 
             User.objects.filter(user=user).update(first_name=first_name, last_name=last_name, phone=phone, city=city)
 
-            user_profile = User.objects.get(user=user)
-            user_profile = UserSerializer(user_profile)
+            user_profile = VATUser.objects.get(user=user)
+            user_profile = VATUserSerializer(user_profile)
 
             return Response({ 'profile': user_profile.data, 'username': str(username) })
         except:

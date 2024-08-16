@@ -13,11 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-class FrameTimeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FrameTime
-        fields = '__all__'
-
 class SensorLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SensorLog

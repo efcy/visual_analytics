@@ -4,13 +4,10 @@ from rest_framework import generics,viewsets
 from . import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from . import models
-
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import action
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -18,35 +15,6 @@ User = get_user_model()
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
-class FrameTimeViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.FrameTimeSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = models.FrameTime.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        # Keep the original list behavior
-        return super().list(request, *args, **kwargs)
-
-    #overloading the create function to allow lists and single objects as input
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        if isinstance(data, list):
-            serializer = self.get_serializer(data=data, many=True)
-        else:
-            serializer = self.get_serializer(data=data)
-        
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    def destroy(self, request, *args, **kwargs):
-        # Override destroy method to handle both single and bulk delete
-        if kwargs.get('pk') == 'all':
-            deleted_count, _ = self.get_queryset().delete()
-            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
-        return super().destroy(request, *args, **kwargs)
 
 class SensorLogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SensorLogSerializer

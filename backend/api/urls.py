@@ -8,7 +8,6 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/',SpectacularSwaggerView.as_view(url_name='schema'),name='swagger-ui'),
     path('health/',views.health_check,name="health_check"),
-    path('api/frametime/all/', views.FrameTimeViewSet.as_view({'delete': 'destroy'}))
 ]
 
 router = routers.DefaultRouter()
@@ -17,7 +16,6 @@ router.register('games', views.GameViewSet)
 router.register('robotdata',views.RobotDataViewSet)
 router.register('image',views.ImageViewSet)
 router.register('imageannotation',views.ImageAnnotationViewSet)
-router.register("frametime",views.FrameTimeViewSet)
 router.register("sensorlogs",views.SensorLogViewSet)
 
 urlpatterns += router.urls

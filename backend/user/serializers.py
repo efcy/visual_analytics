@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import vat_user
+from .models import VATUser
 
-class UserSerializer(serializers.ModelSerializer):
+class VATUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = vat_user
+        model = VATUser
         fields = '__all__'
