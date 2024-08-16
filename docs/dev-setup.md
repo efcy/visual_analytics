@@ -50,9 +50,7 @@ Create local user for you django
 python manage.py createsuperuser
 ```
 
-
-
-## Setup Node
+## Setup Node.js
 We currently use node.js 18.
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
@@ -71,4 +69,13 @@ In the repo folder install the sdk with
 ```bash
 python -m pip install -e sdk
 ```
-then log in to django admin page on http://localhost:8000/admin/ and create or get the API Token for use with the sdk.
+then log in to django admin page on http://localhost:8000/admin/ and get the API Token for use with the sdk. If you plan to use the predefined functions for inserting data you need to expose the API Key as an environment variable:
+```bash
+export VAT_API_TOKEN=<your api token>
+```
+
+## Add Data
+Make sure you have the log folder mounted via sshfs. 
+```bash
+export VAT_LOG_ROOT=<path to folder containing all the events>
+```
