@@ -4,12 +4,13 @@
 from pathlib import Path
 from vaapi import client
 import json
-import logging,random
+import os
+import logging
 from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 baseurl = "http://127.0.0.1:8000/api/"
 #key can be created on admin site
-api_token = "514cf2e88eab425cfdfce652994d30a1a0c3b1ad"
+api_token = os.environ.get("VAT_API_TOKEN")
 event_list = ["2024-07-15_RC24"]
 
 
@@ -47,17 +48,16 @@ def get_robot_version(head_number):
         return "unknown"
 
 if __name__ == "__main__":
-  root_path = "/mnt/q/logs"
+  log_root_path = os.environ.get("VAT_LOG_ROOT")
   my_client = client(baseurl,api_token)
   
-  all_events = [f for f in Path(root_path).iterdir() if f.is_dir()]
+  all_events = [f for f in Path(log_root_path).iterdir() if f.is_dir()]
   for event in sorted(all_events, reverse=True):
       if event.name in event_list:
         response = my_client.add_event({
           "name": event.name,
         })  
         event_id = response["id"]
-        print(event_id)
         
         for game in [f for f in event.iterdir() if f.is_dir()]:
             if str(game.name) == "Experiments":
@@ -88,8 +88,8 @@ if __name__ == "__main__":
                     data = json.load(file)
 
                 # FIXME should probably also remove the log folder /mnt/q/logs/
-                sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix("/mnt/q/")
-                log_path = str(Path(logfolder) / "combined.log").removeprefix("/mnt/q/")
+                sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
+                log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
                 response = my_client.add_robot_data({
                     "game": game_id,
                     "robot_version": version,
