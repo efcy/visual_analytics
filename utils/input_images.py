@@ -115,4 +115,3 @@ if __name__ == "__main__":
         handle_insertion(top_path, data, camera="TOP", type="RAW")
         handle_insertion(bottom_path_jpg, data, camera="BOTTOM", type="JPEG")
         handle_insertion(top_path_jpg, data, camera="TOP", type="JPEG")
-        break
