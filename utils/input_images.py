@@ -34,24 +34,26 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     if check_insertion(robot_data_id, camera, type):
         return
 
-    image_ar = [None] * 100
+    
 
     for batch in path_generator(individual_extracted_folder):
+        image_ar = [None] * len(batch)
         for idx, file in enumerate(batch):
 
             framenumber = int(Path(file).stem)
             url_path = str(file).removeprefix(log_root_path).strip("/")
             
-            image_ar[idx % 100] = {
+            image_ar[idx] = {
                 "log": robot_data_id,
                 "camera": camera,
                 "type": type,
                 "frame_number": framenumber,
                 "image_url": url_path,
             }
-            if idx % 100 == 99 and idx > 0:
-                response = my_client.add_image(image_ar)
-                sleep(0.5)
+
+        response = my_client.add_image(image_ar)
+
+        sleep(0.5)
     sleep(5)
 
 def check_insertion(robot_data_id, camera, type):
@@ -62,25 +64,25 @@ def check_insertion(robot_data_id, camera, type):
         "type": type,
     }
     response = my_client.image_count(params)
-    target_count = response["count"]
+    db_count = int(response["count"])
     
 
     response2 = my_client.get_robot_data(robot_data_id)
     if camera == "BOTTOM" and type == "RAW":
-        db_count = response2["num_bottom"]
+        target_count = int(response2["num_bottom"])
     elif camera == "TOP" and type == "RAW":
-        db_count = response2["num_top"]
+        target_count = int(response2["num_top"])
     elif camera == "BOTTOM" and type == "JPEG":
-        db_count = response2["num_jpg_bottom"]
+        target_count = int(response2["num_jpg_bottom"])
     elif camera == "TOP" and type == "JPEG":
-        db_count = response2["num_jpg_top"]
+        target_count = int(response2["num_jpg_top"])
     else:
         ValueError()
+
     if target_count == db_count:
         print("\tskipping insertion")
         return True
 
-    print(target_count, db_count)
     return False
 
 
@@ -113,3 +115,4 @@ if __name__ == "__main__":
         handle_insertion(top_path, data, camera="TOP", type="RAW")
         handle_insertion(bottom_path_jpg, data, camera="BOTTOM", type="JPEG")
         handle_insertion(top_path_jpg, data, camera="TOP", type="JPEG")
+        break
