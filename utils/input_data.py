@@ -5,6 +5,7 @@ from pathlib import Path
 from vaapi import client
 import json
 import os
+import time
 import logging
 from linetimer import CodeTimer
 import subprocess
@@ -71,10 +72,10 @@ def calculate_images(log_path, robot_data_id):
         response = my_client.change_robot_data(robot_data_id,log={
             "num_jpg_bottom": int(num_jpg_bottom),
             "num_jpg_top": int(num_jpg_top),
-            "num_bottom": int(num_jpg_top),
+            "num_bottom": int(num_bottom),
             "num_top": int(num_top),
         })
-
+    time.sleep(5)
 
 if __name__ == "__main__":
   log_root_path = os.environ.get("VAT_LOG_ROOT")
