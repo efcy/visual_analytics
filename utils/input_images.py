@@ -26,14 +26,13 @@ def path_generator(directory: str, batch_size: int = 100) -> Generator[List[str]
     if batch:
         yield batch
 
-def handle_insertion(individual_extracted_folder, data):
-    # TODO check first if we need to insert
-    # time ls -f my_dir | wc -l
-    # have a function that gives me num images in database
+def handle_insertion(individual_extracted_folder, data, camera, type):
 
     print(individual_extracted_folder)
     if not Path(individual_extracted_folder).is_dir():
         return
+    check_insertion()
+
     image_ar = [None] * 100
 
     for batch in path_generator(individual_extracted_folder):
@@ -44,8 +43,8 @@ def handle_insertion(individual_extracted_folder, data):
             
             image_ar[idx % 100] = {
                 "log": robot_data_id,
-                "camera": "BOTTOM",
-                "type": "RAW",
+                "camera": camera,
+                "type": type,
                 "frame_number": framenumber,
                 "image_url": url_path,
             }
@@ -54,6 +53,15 @@ def handle_insertion(individual_extracted_folder, data):
                 sleep(0.5)
     sleep(5)
 
+def check_insertion():
+    # TODO get the number of images in db via api => write an endpoint for this
+    params = {
+        "log": 1,
+        "camera": "TOP",
+        "type": "RAW"
+    }
+    my_client.image_count(params)
+    pass
 
 if __name__ == "__main__":
     print(os.getpid())
@@ -80,7 +88,7 @@ if __name__ == "__main__":
         bottom_path_jpg = extracted_path / "log_bottom_jpg"
         top_path_jpg = extracted_path / "log_top_jpg"
 
-        handle_insertion(bottom_path, data)
-        handle_insertion(top_path, data)
-        handle_insertion(bottom_path_jpg, data)
-        handle_insertion(top_path_jpg, data)
+        handle_insertion(bottom_path, data, camera="BOTTOM", type="RAW")
+        handle_insertion(top_path, data, camera="TOP", type="RAW")
+        handle_insertion(bottom_path_jpg, data, camera="BOTTOM", type="RAW")
+        handle_insertion(top_path_jpg, data, camera="TOP", type="RAW")

@@ -2,6 +2,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics,viewsets
 from . import serializers
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from . import models
 from django.http import JsonResponse
@@ -179,6 +180,24 @@ class ImageViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(all_objs, many=True)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ImageCountView(APIView):
+    def get(self, request):
+        # Get filter parameters from query string
+        log_id = request.query_params.get('log')
+        camera = request.query_params.get('camera')
+        image_type = request.query_params.get('type')
+
+        # Start with all images
+        queryset = models.Image.objects.all()
+
+        # Apply filters if provided
+        queryset = queryset.filter(log_id=log_id, camera=camera, type=image_type)
+
+        # Get the count
+        count = queryset.count()
+
+        return Response({'count': count}, status=status.HTTP_200_OK)
 
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
