@@ -342,7 +342,7 @@ class client:
         return self.make_request("DELETE", f"image/{id}", params=query_params)
 
     def image_count(self, params):
-        return self.make_request("POST", "/api/image-count/", params=params)
+        return self.make_request("GET", "api/image-count", params=params)
     
 
     # Image Annotation

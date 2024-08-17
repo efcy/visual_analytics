@@ -31,7 +31,8 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     print(individual_extracted_folder)
     if not Path(individual_extracted_folder).is_dir():
         return
-    check_insertion()
+    if check_insertion(robot_data_id, camera, type):
+        return
 
     image_ar = [None] * 100
 
@@ -53,15 +54,35 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
                 sleep(0.5)
     sleep(5)
 
-def check_insertion():
+def check_insertion(robot_data_id, camera, type):
     # TODO get the number of images in db via api => write an endpoint for this
     params = {
-        "log": 1,
-        "camera": "TOP",
-        "type": "RAW"
+        "log": robot_data_id,
+        "camera": camera,
+        "type": type,
     }
-    my_client.image_count(params)
-    pass
+    response = my_client.image_count(params)
+    target_count = response["count"]
+    
+
+    response2 = my_client.get_robot_data(robot_data_id)
+    if camera == "BOTTOM" and type == "RAW":
+        db_count = response2["num_bottom"]
+    elif camera == "TOP" and type == "RAW":
+        db_count = response2["num_top"]
+    elif camera == "BOTTOM" and type == "JPEG":
+        db_count = response2["num_jpg_bottom"]
+    elif camera == "TOP" and type == "JPEG":
+        db_count = response2["num_jpg_top"]
+    else:
+        ValueError()
+    if target_count == db_count:
+        print("\tskipping insertion")
+        return True
+
+    print(target_count, db_count)
+    return False
+
 
 if __name__ == "__main__":
     print(os.getpid())
@@ -90,5 +111,5 @@ if __name__ == "__main__":
 
         handle_insertion(bottom_path, data, camera="BOTTOM", type="RAW")
         handle_insertion(top_path, data, camera="TOP", type="RAW")
-        handle_insertion(bottom_path_jpg, data, camera="BOTTOM", type="RAW")
-        handle_insertion(top_path_jpg, data, camera="TOP", type="RAW")
+        handle_insertion(bottom_path_jpg, data, camera="BOTTOM", type="JPEG")
+        handle_insertion(top_path_jpg, data, camera="TOP", type="JPEG")
