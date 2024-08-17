@@ -35,7 +35,6 @@ class Game(models.Model):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
 class RobotData(models.Model):
-    # TODO check this foreignkey thing: the related_name stuff looks wrong
     game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
@@ -45,6 +44,11 @@ class RobotData(models.Model):
     representations = models.JSONField(blank=True, null=True)
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     log_path = models.CharField(max_length=200, blank=True, null=True)
+
+    num_jpg_bottom = models.IntegerField(blank=True, null=True)
+    num_jpg_top = models.IntegerField(blank=True, null=True)
+    num_bottom = models.IntegerField(blank=True, null=True)
+    num_top = models.IntegerField(blank=True, null=True)
 
     class Meta:
         unique_together = ('game', 'player_number', 'head_number')
