@@ -132,7 +132,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         data = request.data  # This should be a list of dictionaries
-        print(data)
+        #print(data)
         if not isinstance(data, list):
             return Response({"error": "Data must be a list"}, status=status.HTTP_400_BAD_REQUEST)
 
