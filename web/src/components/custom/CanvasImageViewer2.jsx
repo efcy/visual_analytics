@@ -39,13 +39,13 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const stageRef = useRef(null);
 
-  const [selectedId, selectShape] = React.useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
-    const clickedOnEmpty = e.target === e.target.getStage();
+    const clickedOnEmpty = e.target === e.target.getStage() || e.target.attrs.name === undefined;
     if (clickedOnEmpty) {
-      selectShape(null);
+      setSelectedId(null);
     }
   };
 
@@ -96,6 +96,7 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
   };
 
   const handleMouseDown = (e) => {
+    checkDeselect(e);
     const stage = e.target.getStage();
     if (e.evt.button === 1) { // Middle mouse button
       e.evt.preventDefault(); // Prevent default middle-click behavior
@@ -109,6 +110,11 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
         y: pos.y,
         width: 0,
         height: 0,
+        fill: 'rgba(0, 255, 0, 0.5)',
+        stroke: 'rgba(0, 255, 0, 1)',
+        strokeWidth: 2,
+        opacity: 0.5,
+        id: uuid4(),
       };
       setBoundingBoxes([...boundingBoxes, newBox]);
     }
@@ -150,6 +156,28 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Delete' && selectedId) {
+        deleteSelectedRect();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedId]); // Re-run effect if selectedId changes
+
+  const deleteSelectedRect = () => {
+    setBoundingBoxes((prevBoxes) => 
+      prevBoxes.filter((box) => box.id !== selectedId)
+    );
+    setSelectedId(null);
+  };
+
   return (
     <Stage
       width={canvasWidth}
@@ -159,8 +187,9 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
       scaleY={scale}
       x={position.x}
       y={position.y}
-      onMouseDown={checkDeselect}
-      onTouchStart={checkDeselect}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
       ref={stageRef}
     >
       <Layer>
@@ -173,7 +202,7 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
             shapeProps={box}
               isSelected={box.id === selectedId}
               onSelect={() => {
-                selectShape(box.id);
+                setSelectedId(box.id);
               }}
               onChange={(newAttrs) => {
                 const rects = boundingBoxes.slice();
