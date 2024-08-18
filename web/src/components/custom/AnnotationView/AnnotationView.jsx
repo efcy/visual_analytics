@@ -14,6 +14,7 @@ import classes from './AnnotationView.module.css'
 
 const AnnotationView = () => {
   const [images, setImages] = useState([]);
+  const [camera, setCamera] = useState("BOTTOM");
   const [loadedImages, setLoadedImages] = useState({});
   const [url, setUrl] = useState("");
   const { id } = useParams();
@@ -44,7 +45,7 @@ const AnnotationView = () => {
 
   const getImages = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`)
       .then((res) => res.data)
       .then((data) => {
         setImages(data);

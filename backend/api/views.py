@@ -123,9 +123,10 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         log_id = self.request.query_params.get("log")
+        camera = self.request.query_params.get('camera')
         print("log_id", log_id)
-        if log_id is not None:
-            queryset = models.Image.objects.filter(log=log_id)
+        if log_id is not None and camera is not None:
+            queryset = models.Image.objects.filter(log=log_id, camera=camera)
         else:
             queryset = models.Image.objects.all()
 
