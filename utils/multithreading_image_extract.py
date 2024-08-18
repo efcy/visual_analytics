@@ -11,8 +11,34 @@ import io
 from PIL import PngImagePlugin
 from PIL import Image as PIL_Image
 
-logpath = "testlog/combined.log"
+import cProfile
+import pstats
+import io
 
+def profile(fnc):
+    def inner(*args, **kwargs):
+        pr = cProfile.Profile()
+        pr.enable()
+        retval = fnc(*args, **kwargs)
+        pr.disable()
+        s = io.StringIO()
+        sortby = 'cumulative'
+        
+        # Get the current file's path
+        current_file = os.path.abspath(__file__)
+        
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        
+        # Filter stats to only include functions from the current file
+        ps.print_stats(lambda func: func[0] == current_file)
+        
+        print(s.getvalue())
+        return retval
+    return inner
+
+
+
+logpath = "testlog/combined.log"
 
 def export_images(logfile, img, output_folder_top, output_folder_bottom, out_top_jpg, out_bottom_jpg):
     """
@@ -52,7 +78,7 @@ def export_images(logfile, img, output_folder_top, output_folder_bottom, out_top
                 frame_number, img_t_jpg, cm_t, out_top_jpg, cam_id=0, name=logfile
             )
 
-        print("\tsaving images from frame ", i, end="\r", flush=True)
+        #print("\tsaving images from frame ", i, end="\r", flush=True)
 
 
 def get_images(frame):
@@ -90,28 +116,29 @@ def get_images(frame):
 
 
 def image_from_proto(message):
-    # read each channel of yuv422 separately
-    yuv422 = np.frombuffer(message.data, dtype=np.uint8)
-    y = yuv422[0::2]
-    u = yuv422[1::4]
-    v = yuv422[3::4]
+    with CodeTimer("File I/O"):
+        # read each channel of yuv422 separately
+        yuv422 = np.frombuffer(message.data, dtype=np.uint8)
+        y = yuv422[0::2]
+        u = yuv422[1::4]
+        v = yuv422[3::4]
 
-    # convert from yuv422 to yuv888
-    yuv888 = np.zeros(message.height * message.width * 3, dtype=np.uint8)
+        # convert from yuv422 to yuv888
+        yuv888 = np.zeros(message.height * message.width * 3, dtype=np.uint8)
 
-    yuv888[0::3] = y
-    yuv888[1::6] = u
-    yuv888[2::6] = v
-    yuv888[4::6] = u
-    yuv888[5::6] = v
+        yuv888[0::3] = y
+        yuv888[1::6] = u
+        yuv888[2::6] = v
+        yuv888[4::6] = u
+        yuv888[5::6] = v
 
-    yuv888 = yuv888.reshape((message.height, message.width, 3))
+        yuv888 = yuv888.reshape((message.height, message.width, 3))
 
-    # convert the image to rgb and save it
-    img = PIL_Image.frombytes(
-        "YCbCr", (message.width, message.height), yuv888.tobytes()
-    )
-    return img
+        # convert the image to rgb and save it
+        img = PIL_Image.frombytes(
+            "YCbCr", (message.width, message.height), yuv888.tobytes()
+        )
+        return img
 
 
 def image_from_proto_jpeg(message):
@@ -191,6 +218,9 @@ def worker(data_queue, output_paths):
         except queue.Empty:
             continue
 
+
+
+@profile
 def main():
     data_queue = queue.Queue()
 
