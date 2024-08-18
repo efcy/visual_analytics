@@ -8,8 +8,8 @@ import EventPage from "./pages/EventPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
-import CanvasImageViewer from "./components/custom/CanvasImageViewer/CanvasImageViewer.jsx";
-import CanvasImageViewer2 from "./components/custom/CanvasImageViewer2.jsx";
+import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
+import CanvasView from "./components/custom/CanvasView.jsx";
 
 
 import { Provider } from "react-redux";
@@ -43,7 +43,7 @@ function App() {
               <Route path="/events/:id" element={<GameListView />} />
               <Route path="/games/:id" element={<LogListView />} />
               <Route path="/settings" element={<Dashboard />} />
-              <Route path="/images/:id" element={<CanvasImageViewer2 imageUrl="https://logs.berlin-united.com/2024-07-15_RC24/2024-07-20_11-15-00_BerlinUnited_vs_HTWK_half2/extracted/1_23_Nao0010_240720-1207/log_bottom_jpg/0043322.png" />} />
+              <Route path="/images/:id" element={<AnnotationView />} />
             </Route>
 
             <Route path="/login" element={<LoginPage />} />

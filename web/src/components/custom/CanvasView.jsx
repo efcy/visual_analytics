@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Stage, Layer, Image, Rect, Transformer } from 'react-konva';
+import { Stage, Layer, Image } from 'react-konva';
 import useImage from 'use-image';
 import uuid4 from "uuid4";
 import Rectangle from "./Rectangle/Rectangle";
 
 
-const CanvasImageViewer2 = ({ imageUrl }) => {
+const CanvasView = ({ imageUrl }) => {
   const [image] = useImage(imageUrl);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -13,9 +13,10 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
   const [lastMousePosition, setLastMousePosition] = useState(null);
   const [boundingBoxes, setBoundingBoxes] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const stageRef = useRef(null);
 
-  const [selectedId, setSelectedId] = useState(null);
+  
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
@@ -193,4 +194,4 @@ const CanvasImageViewer2 = ({ imageUrl }) => {
   );
 };
 
-export default CanvasImageViewer2;
+export default CanvasView;
