@@ -3,12 +3,12 @@ name: build frontend container
 on:
   push:
     branches: ['main']
-    paths: ['web/**']
+    paths: ['web/**', '.github/**']
     
 # This creates an environment variable called `IMAGE_NAME ` with the value `ghtoken_product_demo`.
 env:
   IMAGE_NAME: vite_frontend
-  VITE_API_URL: "https://api.berlin-united.com/"
+  VITE_API_URL: "https://api.berlin-united.com"
 #
 jobs:
   # This pushes the image to GitHub Packages.
