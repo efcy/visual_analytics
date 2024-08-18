@@ -3,22 +3,20 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
 import { useSelector, useDispatch } from "react-redux";
+import CanvasView from "../CanvasView.jsx";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import classes from './CanvasImageViewer.module.css'
+import classes from './AnnotationView.module.css'
 
-const CanvasImageViewer = () => {
+const AnnotationView = () => {
   const [images, setImages] = useState([]);
   const [loadedImages, setLoadedImages] = useState({});
-
-  const canvasRef = useRef(null);
-  const contextRef = useRef(null);
+  const [url, setUrl] = useState("");
   const { id } = useParams();
-  const currentImageRef = useRef(null);
   const store_idx = useSelector((state) => state.canvasReducer.index);
 
   useEffect(() => {
@@ -26,17 +24,13 @@ const CanvasImageViewer = () => {
   }, []); // this list is called dependency array
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    canvas.width = 800;
-    canvas.height = 600;
-
-    const context = canvas.getContext("2d");
-    context.lineCap = "round";
-    context.strokeStyle = "red";
-    context.lineWidth = 2;
-    contextRef.current = context;
-
-    loadImage(images[store_idx]);
+    //loadImage(images[store_idx]);
+    if (!images[store_idx]) {
+      return;
+    }
+    const new_url = 'https://logs.berlin-united.com/' + images[store_idx].image_url
+    console.log("url: ", new_url)
+    setUrl(new_url)
   }, [store_idx, images]);
 
   useEffect(() => {
@@ -80,41 +74,22 @@ const CanvasImageViewer = () => {
     console.log(new_url);
     //const url = image_db_obj.image_url
     if (loadedImages[new_url]) {
-      drawImageOnCanvas(loadedImages[new_url]);
+      //drawImageOnCanvas(loadedImages[new_url]);
     } else {
       const img = new Image();
       img.onload = () => {
         setLoadedImages((prev) => ({ ...prev, [new_url]: img }));
-        drawImageOnCanvas(img);
+        //drawImageOnCanvas(img);
       };
       img.src = new_url;
     }
   };
 
-  const drawImageOnCanvas = (img) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Calculate aspect ratio to fit image within canvas
-    const scale = Math.min(
-      canvas.width / img.width,
-      canvas.height / img.height
-    );
-    const x = canvas.width / 2 - (img.width / 2) * scale;
-    const y = canvas.height / 2 - (img.height / 2) * scale;
-
-    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-    currentImageRef.current = { img, x, y, scale };
-  };
 
   return (
     <div className={classes.mainView}>
       <div className={classes.dataView}>
-        <canvas
-          className={classes.imageCanvas}
-          ref={canvasRef}
-        />
+        <CanvasView imageUrl={url} />
         <div className="representationSelector">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -139,4 +114,4 @@ const CanvasImageViewer = () => {
   );
 };
 
-export default CanvasImageViewer;
+export default AnnotationView;

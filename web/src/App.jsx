@@ -8,7 +8,9 @@ import EventPage from "./pages/EventPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
-import CanvasImageViewer from "./components/custom/CanvasImageViewer/CanvasImageViewer.jsx";
+import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
+import CanvasView from "./components/custom/CanvasView.jsx";
+
 
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -41,7 +43,7 @@ function App() {
               <Route path="/events/:id" element={<GameListView />} />
               <Route path="/games/:id" element={<LogListView />} />
               <Route path="/settings" element={<Dashboard />} />
-              <Route path="/images/:id" element={<CanvasImageViewer />} />
+              <Route path="/images/:id" element={<AnnotationView />} />
             </Route>
 
             <Route path="/login" element={<LoginPage />} />

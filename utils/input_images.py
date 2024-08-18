@@ -16,7 +16,7 @@ def scandir_yield_files(directory):
             if entry.is_file():
                 yield entry.path
 
-def path_generator(directory: str, batch_size: int = 100) -> Generator[List[str], None, None]:
+def path_generator(directory: str, batch_size: int = 200) -> Generator[List[str], None, None]:
     batch = []
     for path in scandir_yield_files(directory):
         batch.append(path)
@@ -54,7 +54,7 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
         response = my_client.add_image(image_ar)
 
         sleep(0.5)
-    sleep(5)
+    #sleep(5)
 
 def check_insertion(robot_data_id, camera, type):
     # TODO get the number of images in db via api => write an endpoint for this
