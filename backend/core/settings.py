@@ -134,6 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://github.com/adamchainz/django-cors-headers
 CORS_ALLOW_ALL_ORIGINS = True
+CSRF_COOKIE_DOMAIN = ".berlin-united.com"
 CORS_ALLOWS_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'https://vat.berlin-united.com', 'http://localhost:8000', 'http://localhost:5173']
 
