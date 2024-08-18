@@ -5,37 +5,13 @@ import uuid4 from "uuid4";
 import Rectangle from "./Rectangle/Rectangle";
 
 
-const initialRectangles = [
-  {
-    x: 10,
-    y: 10,
-    width: 100,
-    height: 100,
-    fill: 'rgba(255, 0, 0, 0.5)',
-    stroke: 'rgba(255, 0, 0, 1)',
-    strokeWidth: 2,
-    id: uuid4(),
-  },
-  {
-    x: 150,
-    y: 150,
-    width: 100,
-    height: 100,
-    fill: 'rgba(0, 255, 0, 0.5)',
-    stroke: 'rgba(0, 255, 0, 1)',
-    strokeWidth: 2,
-    opacity: 0.5,
-    id: uuid4(),
-  },
-];
-
 const CanvasImageViewer2 = ({ imageUrl }) => {
   const [image] = useImage(imageUrl);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const [lastMousePosition, setLastMousePosition] = useState(null);
-  const [boundingBoxes, setBoundingBoxes] = useState(initialRectangles);
+  const [boundingBoxes, setBoundingBoxes] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const stageRef = useRef(null);
 
