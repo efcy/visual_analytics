@@ -215,14 +215,17 @@ def main():
 
             with CodeTimer("Reading and processing logs"):
                 with LogReader(logpath, my_parser) as reader:
-                    batch = []
+                    batch = [None] * batch_size
+                    index = 0
                     for image in map(get_images, reader.read()):
-                        batch.append((image, output_paths["top"], output_paths["bottom"]))
-                        if len(batch) >= batch_size:
+                        batch[index] = (image, output_paths["top"], output_paths["bottom"])
+                        index += 1
+                        if index == batch_size:
                             data_queue.put(batch)
-                            batch = []
-                    if batch:  # Put any remaining items
-                        data_queue.put(batch)
+                            batch = [None] * batch_size
+                            index = 0
+                    if index > 0:  # Put any remaining items
+                        data_queue.put(batch[:index])
 
             with CodeTimer("Writing images"):
                 # Wait for all tasks to be completed
