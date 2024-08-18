@@ -1,17 +1,11 @@
 from django.contrib import admin
 from django.urls import include, path
 from api.views import CreateUserView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework.schemas import get_schema_view
-from django.views.generic import TemplateView
-
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
-    path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     #user app uses accounts path so frontend still works
     path('accounts/', include('user.urls')),
@@ -19,4 +13,3 @@ urlpatterns = [
     #path('profile/', include('user_profile.urls')),
     path("api/", include("api.urls")),
 ]
-
