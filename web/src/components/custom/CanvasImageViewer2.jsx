@@ -11,7 +11,9 @@ const initialRectangles = [
     y: 10,
     width: 100,
     height: 100,
-    fill: 'red',
+    fill: 'rgba(255, 0, 0, 0.5)',
+    stroke: 'rgba(255, 0, 0, 1)',
+    strokeWidth: 2,
     id: uuid4(),
   },
   {
@@ -19,7 +21,10 @@ const initialRectangles = [
     y: 150,
     width: 100,
     height: 100,
-    fill: 'green',
+    fill: 'rgba(0, 255, 0, 0.5)',
+    stroke: 'rgba(0, 255, 0, 1)',
+    strokeWidth: 2,
+    opacity: 0.5,
     id: uuid4(),
   },
 ];

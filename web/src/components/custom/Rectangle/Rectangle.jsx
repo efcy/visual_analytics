@@ -54,12 +54,22 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
           <Transformer
             ref={trRef}
             flipEnabled={false}
+            anchorStroke='green'
+            anchorFill='white'
+            borderStrokeWidth={0}
+            rotateEnabled={false}
+            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
             boundBoxFunc={(oldBox, newBox) => {
               // limit resize
               if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
                 return oldBox;
               }
               return newBox;
+            }}
+            anchorStyleFunc = {(anchor) => {
+              // anchor is Konva.Rect instance
+              // you manually change its styling
+              anchor.cornerRadius(10);
             }}
           />
         )}
