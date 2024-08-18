@@ -16,7 +16,10 @@ const CanvasView = ({ imageUrl }) => {
   const [selectedId, setSelectedId] = useState(null);
   const stageRef = useRef(null);
 
-  
+  useEffect(() => {
+    //TODO eventually load the existing annotations here
+    setBoundingBoxes([]);
+  }, [imageUrl]); // this list is called dependency array
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
