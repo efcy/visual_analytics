@@ -21,8 +21,6 @@ const LoginForm = ({ login, isAuthenticated }) => {
         console.log(username)
         login(username, password);
     };
-    //const [username, setUsername] = useState("");
-    //const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +28,6 @@ const LoginForm = ({ login, isAuthenticated }) => {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
-    //const name = method === "login" ? "Login" : "Register";
 
     return (
         <form onSubmit={e => onSubmit(e)} className="form-container">

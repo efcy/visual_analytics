@@ -52,6 +52,8 @@ export const checkAuthenticated = () => async dispatch => {
 };
 
 export const login = (username, password) => async dispatch => {
+    const a = Cookies.get('csrftoken');
+    console.log("cookie in login function: ", a)
     const config = {
         headers: {
             'Accept': 'application/json',
@@ -61,7 +63,7 @@ export const login = (username, password) => async dispatch => {
     };
 
     const body = JSON.stringify({ username, password });
-
+    console.log("login:", config)
     try {
         const res = await axios.post(`${import.meta.env.VITE_API_URL}/accounts/login`, body, config);
 
@@ -70,7 +72,7 @@ export const login = (username, password) => async dispatch => {
                 type: LOGIN_SUCCESS
             });
 
-            dispatch(load_user());
+            //dispatch(load_user());
         } else {
             dispatch({
                 type: LOGIN_FAIL
