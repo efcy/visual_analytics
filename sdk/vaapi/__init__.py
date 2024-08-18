@@ -2,4 +2,4 @@
 you can perform with the API of the visual analytics tool by Berlin United for the Robocup SPL"""
 from .client import client
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
