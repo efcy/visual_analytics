@@ -21,6 +21,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
           ref={shapeRef}
           {...shapeProps}
           draggable
+          strokeScaleEnabled={false}
           onDragEnd={(e) => {
             onChange({
               ...shapeProps,
@@ -56,6 +57,8 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
             flipEnabled={false}
             anchorStroke='green'
             anchorFill='white'
+            keepRatio={false}
+            ignoreStroke={true}
             borderStrokeWidth={0}
             rotateEnabled={false}
             enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
