@@ -146,3 +146,5 @@ SPECTACULAR_SETTINGS = {
     'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
 }
 AUTH_USER_MODEL = 'user.VATUser' 
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
