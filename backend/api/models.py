@@ -50,12 +50,6 @@ class RobotData(models.Model):
     num_bottom = models.IntegerField(blank=True, null=True)
     num_top = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        # in some cases we have multiple logs of the same robot for one half 
-        # => when a robot breaks and we do pickup with log collection for example
-        # => solution use the folder name as unique key as well
-        unique_together = ('game', 'player_number', 'head_number', 'log_path')
-
     def __str__(self):
         return f"{self.log_path}"
 

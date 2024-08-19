@@ -135,5 +135,4 @@ if __name__ == "__main__":
                     "log_path": log_path,
                 })
                 print("response", response)
-                quit()
                 calculate_images(logfolder, response["id"])

@@ -35,28 +35,19 @@ class RobotDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RobotData
         fields = '__all__'
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        print("RobotDataSerializer initialized")
 
-    def to_internal_value(self, data):
-        print(f"to_internal_value called with data: {data}")
-        return super().to_internal_value(data)
-    
-    def is_valid(self, raise_exception=False):
-        valid = super().is_valid(raise_exception=False)
-        if not valid:
-            print(f"Serializer errors: {self.errors}")
-        return True
 
-    def validate(self, attrs):
-        print("run validate")
-        # Check if an object with these unique fields already exists
-        
 
     def create(self, validated_data):
-        # If we get here, we know the object doesn't exist, so we can create it
-        return super().create(validated_data)
+        # Since the validation ensures no duplicates, we can safely create a new instance
+        instance, created = models.RobotData.objects.get_or_create(
+            game=validated_data.get('game'),
+            player_number=validated_data.get('player_number'),
+            head_number=validated_data.get('head_number'),
+            log_path=validated_data.get('log_path'),
+            defaults=validated_data
+        )
+        return instance
 
 
 
