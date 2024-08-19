@@ -37,8 +37,7 @@ def profile(fnc):
     return inner
 
 
-
-logpath = "testlog/combined.log"
+logpath = "/mnt/smb_share/naoth/logs/2024-07-15_RC24/2024-07-20_11-15-00_BerlinUnited_vs_HTWK_Einlauftest/game_logs/1_23_Nao0010_240720-1102/combined.log"
 
 def export_images(logfile, img, output_folder_top, output_folder_bottom, out_top_jpg, out_bottom_jpg):
     """
@@ -245,17 +244,14 @@ def main():
 
             with CodeTimer("Reading and processing logs"):
                 with LogReader(logpath, my_parser) as reader:
-                    batch = [None] * batch_size
-                    index = 0
-                    for image in map(get_images, reader.read()):
-                        batch[index] = (image, output_paths["top"], output_paths["bottom"])
-                        index += 1
-                        if index == batch_size:
-                            data_queue.put(batch)
-                            batch = [None] * batch_size
-                            index = 0
-                    if index > 0:  # Put any remaining items
-                        data_queue.put(batch[:index])
+                    
+                    # FIXME
+                    images = map(get_images, reader.read())
+                    for idx, image in enumerate(images.take(50)):
+                        batch = [None] * batch_size
+                        batch[idx] = (image, output_paths["top"], output_paths["bottom"])
+
+                    data_queue.put(batch)
 
             with CodeTimer("Writing images"):
                 # Wait for all tasks to be completed
