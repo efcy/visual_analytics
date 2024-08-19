@@ -37,9 +37,8 @@ class RobotDataSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
     def create(self, validated_data):
-        # Since the validation ensures no duplicates, we can safely create a new instance
+        # TODO figure out why this works
         instance, created = models.RobotData.objects.get_or_create(
             game=validated_data.get('game'),
             player_number=validated_data.get('player_number'),
