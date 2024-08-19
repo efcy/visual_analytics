@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from . import models
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,6 +35,30 @@ class RobotDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RobotData
         fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("RobotDataSerializer initialized")
+
+    def to_internal_value(self, data):
+        print(f"to_internal_value called with data: {data}")
+        return super().to_internal_value(data)
+    
+    def is_valid(self, raise_exception=False):
+        valid = super().is_valid(raise_exception=False)
+        if not valid:
+            print(f"Serializer errors: {self.errors}")
+        return True
+
+    def validate(self, attrs):
+        print("run validate")
+        # Check if an object with these unique fields already exists
+        
+
+    def create(self, validated_data):
+        # If we get here, we know the object doesn't exist, so we can create it
+        return super().create(validated_data)
+
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

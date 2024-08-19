@@ -12,6 +12,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
+from django.db import IntegrityError
 
 User = get_user_model()
 
@@ -111,7 +112,24 @@ class RobotDataViewSet(viewsets.ModelViewSet):
             return models.RobotData.objects.filter(game=game_id)
         else:
             return models.RobotData.objects.all()
-
+    """
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        instance = serializer.save()
+        
+        # Check if this is a new instance or an existing one
+        if instance.pk is None:
+            # This means a new instance was created
+            status_code = status.HTTP_201_CREATED
+        else:
+            # This means an existing instance was returned
+            status_code = status.HTTP_200_OK
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status_code, headers=headers)
+    """
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.Image.objects.all()

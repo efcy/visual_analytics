@@ -239,13 +239,6 @@ class client:
         Returns:
             dict: The JSON response containing the added log details.
         """
-        existing_data = self.list_robot_data({"game":log["game"]})
-        for data in existing_data:
-            if data["game"] == log["game"] and \
-               data["player_number"] == int(log["player_number"]) and \
-               data["head_number"] == int(log["head_number"]):
-                #print("WARNING: robot_data already exists")
-                return data
         return self.make_request("POST", "robotdata", json=log, params=query_params)
 
     def change_robot_data(self, id, log: dict, query_params=None):
