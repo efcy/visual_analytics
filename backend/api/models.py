@@ -57,7 +57,7 @@ class RobotData(models.Model):
         unique_together = ('game', 'player_number', 'head_number', 'log_path')
 
     def __str__(self):
-        return f"{self.player_number} - {self.head_number}"
+        return f"{self.log_path}"
 
 class SensorLog(models.Model):
     robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='sensorlogs')
