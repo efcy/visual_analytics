@@ -13,14 +13,14 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 baseurl = "http://127.0.0.1:8000/api/"
 #key can be created on admin site
-api_token = "84c6f4b516cc9d292f1b0eba26ea88e99812fbb9" #os.environ.get("VAT_API_TOKEN")
+api_token = os.environ.get("VAT_API_TOKEN") #"ab43645dd5bc6583cf8b2b9ec4b761728843901c" #
 event_list = ["2024-07-15_RC24"]
 
 
 def handle_games(game):
     # for now we allow only on folder called Experiments to also exist inside the Event folder -> TODO have discussion about additional folders
     
-    print(f"\t{game}")
+    #print(f"\t{game}")
     # parse additional information from game folder
     game_parsed = str(game.name).split("_")
     timestamp = game_parsed[0] + "_" + game_parsed[1]
@@ -98,7 +98,7 @@ if __name__ == "__main__":
  
             gamelog_path = Path(game) / "game_logs"
             for logfolder in [f for f in gamelog_path.iterdir() if f.is_dir()]:
-                print(f"\t\t{logfolder}")
+                #print(f"\t\t{logfolder}")
                 logfolder_parsed = str(logfolder.name).split("_")
                 playernumber = logfolder_parsed[0]
                 head_number = logfolder_parsed[1]
@@ -120,16 +120,19 @@ if __name__ == "__main__":
                 # FIXME should probably also remove the log folder /mnt/q/logs/
                 sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
                 log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
+                if not logfolder.parent.parent.name == "2024-07-20_14-15-00_BerlinUnited_vs_Runswift_half1":
+                    continue
+                print("aaaaaaaaaaaaaaa", log_path)
                 response = my_client.add_robot_data({
                     "game": game_id,
                     "robot_version": version,
-                    "player_number": playernumber,
-                    "head_number": head_number,
+                    "player_number": int(playernumber),
+                    "head_number": int(head_number),
                     "body_serial": body_serial,
                     "head_serial": head_serial,
                     "representations": data,
                     "sensor_log_path": sensor_log_path,
                     "log_path": log_path,
                 })
-                
+                print("response", response)
                 calculate_images(logfolder, response["id"])

@@ -5,9 +5,9 @@ from time import sleep
 from tqdm import tqdm
 
 from vaapi import client
-baseurl = "http://127.0.0.1:8000/api/"
+baseurl = "https://api.berlin-united.com/api/" #"http://127.0.0.1:8000/api/"
 #key can be created on admin site
-api_token = os.environ.get("VAT_API_TOKEN")
+api_token = "ab43645dd5bc6583cf8b2b9ec4b761728843901c" #os.environ.get("VAT_API_TOKEN")
 
 def scandir_yield_files(directory):
     """Generator that yields file paths in a directory."""

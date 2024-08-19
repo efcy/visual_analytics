@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from . import models
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,6 +35,21 @@ class RobotDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RobotData
         fields = '__all__'
+
+
+
+    def create(self, validated_data):
+        # Since the validation ensures no duplicates, we can safely create a new instance
+        instance, created = models.RobotData.objects.get_or_create(
+            game=validated_data.get('game'),
+            player_number=validated_data.get('player_number'),
+            head_number=validated_data.get('head_number'),
+            log_path=validated_data.get('log_path'),
+            defaults=validated_data
+        )
+        return instance
+
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

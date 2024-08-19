@@ -12,6 +12,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
+from django.db import IntegrityError
 
 User = get_user_model()
 
