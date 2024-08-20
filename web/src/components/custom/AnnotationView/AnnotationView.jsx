@@ -22,7 +22,7 @@ const AnnotationView = () => {
 
   useEffect(() => {
     getImages();
-  }, []); // this list is called dependency array
+  }, [camera]); // this list is called dependency array
 
   useEffect(() => {
     //loadImage(images[store_idx]);
@@ -109,6 +109,8 @@ const AnnotationView = () => {
       </div>
 
       <div className="p-4">
+        <button onClick={() =>  setCamera("TOP")}>TOP</button>
+        <button onClick={() =>  setCamera("BOTTOM")}>BOTTOM</button>
         <MultiRowRangeSlider length={images.length}/>
       </div>
     </div>
