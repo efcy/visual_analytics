@@ -218,6 +218,16 @@ def worker(data_queue, output_paths):
             continue
 
 
+def my_generator(images, batch_size: int = 50):
+    batch = []
+    for image in images:
+        batch.append(image)
+        if len(batch) == batch_size:
+            yield batch
+            batch = []
+    # for the last items
+    if batch:
+        yield batch
 
 @profile
 def main():
@@ -244,14 +254,13 @@ def main():
 
             with CodeTimer("Reading and processing logs"):
                 with LogReader(logpath, my_parser) as reader:
-                    
-                    # FIXME
                     images = map(get_images, reader.read())
-                    for idx, image in enumerate(images.take(50)):
-                        batch = [None] * batch_size
-                        batch[idx] = (image, output_paths["top"], output_paths["bottom"])
+                    for batch in my_generator(images, batch_size):
+                        my_array = [None] * len(batch)
+                        for idx, image in enumerate(batch):
+                            my_array[idx] = (image, output_paths["top"], output_paths["bottom"])
 
-                    data_queue.put(batch)
+                        data_queue.put(my_array)
 
             with CodeTimer("Writing images"):
                 # Wait for all tasks to be completed
