@@ -567,3 +567,19 @@ button, a {
   background-color: #d55959;
   
 }
+
+
+.tabs-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 400px;
+}
+
+.tabs-list {
+  margin-right: 2rem;
+}
+
+.tabs-content {
+  flex-grow: 1;
+}
