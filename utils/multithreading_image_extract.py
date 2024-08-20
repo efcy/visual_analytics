@@ -218,10 +218,10 @@ def worker(data_queue, output_paths):
             continue
 
 
-def my_generator(images, batch_size: int = 50):
+def my_generator(images, batch_size, top_output_path, bottom_output_path):
     batch = []
     for image in images:
-        batch.append(image)
+        batch.append((image, top_output_path, bottom_output_path))
         if len(batch) == batch_size:
             yield batch
             batch = []
@@ -255,12 +255,13 @@ def main():
             with CodeTimer("Reading and processing logs"):
                 with LogReader(logpath, my_parser) as reader:
                     images = map(get_images, reader.read())
-                    for batch in my_generator(images, batch_size):
-                        my_array = [None] * len(batch)
-                        for idx, image in enumerate(batch):
-                            my_array[idx] = (image, output_paths["top"], output_paths["bottom"])
+                    print(type(images))
+                    for batch in my_generator(images, batch_size, output_paths["top"], output_paths["bottom"]):
+                        #my_array = [None] * len(batch)
+                        #for idx, image in enumerate(batch):
+                        #    my_array[idx] = (image, )
 
-                        data_queue.put(my_array)
+                        data_queue.put(batch)
 
             with CodeTimer("Writing images"):
                 # Wait for all tasks to be completed
