@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "@/reducers/canvasSlice";
 import classes from './MultiRowRangeSlider.module.css'
-
+import { Button } from "@/components/ui/button"
 
 const MultiRowRangeSlider = ( {length} ) => {
   const [sliderValue, setSliderValue] = useState(0);
@@ -51,6 +51,20 @@ const MultiRowRangeSlider = ( {length} ) => {
     updateGradientStyle();
   }, [stepSize, updateGradientStyle]);
 
+  const handleKeyPress = useCallback((event) => {
+    switch(event.key) {
+      // FIXME make step configurable
+      case 'ArrowRight':
+        next_frame(1);
+        break;
+      case 'ArrowLeft':
+        previous_frame(1);
+        break;
+      default:
+        console.log(`Key pressed: ${event.key}`);
+    }
+  }, []);
+
   useEffect(() => {
     const handleScroll = (e) => {
       e.preventDefault();
@@ -80,6 +94,15 @@ const MultiRowRangeSlider = ( {length} ) => {
       }
     };
   }, [stepSize]);
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener('keydown', handleKeyPress);
+    // remove the event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   const handleSliderDrag = (e, data) => {
     const barIndex = Math.min(Math.floor(data.x / stepSize), totalBars - 1);
@@ -146,12 +169,21 @@ const MultiRowRangeSlider = ( {length} ) => {
       )
     );
   };
-  //FIXME make buttons work for previous and next, also make keyboard shortcuts work
+
+  const previous_frame = ( step = 1 ) => {
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue - stepValue);
+  }
+  const next_frame = ( step = 1 ) => {
+    console.log("step: ", step)
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue + stepValue);
+  }
 
   return (
     <>
-      <button disabled={store_idx === 0}>Previous</button>
-      <button>Next</button>
+      <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
+      <Button disabled={store_idx === length -1} onClick={() => next_frame(1)}>Next</Button>
       <p>{store_idx}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>

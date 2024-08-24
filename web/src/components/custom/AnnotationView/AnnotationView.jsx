@@ -1,115 +1,90 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
-import { useSelector, useDispatch } from "react-redux";
-import CanvasView from "../CanvasView.jsx";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import classes from './AnnotationView.module.css'
+import { useSelector } from "react-redux";
+import DataView from "../DataView/DataView.jsx";
+import CanvasView from "../CanvasView/CanvasView.jsx";
+import classes from "./AnnotationView.module.css";
 
 const AnnotationView = () => {
-  const [images, setImages] = useState([]);
+  const [imageList, setImageList] = useState([]);
+  const [preloadedImages, setPreloadedImages] = useState([]);
   const [camera, setCamera] = useState("BOTTOM");
-  const [loadedImages, setLoadedImages] = useState({});
-  const [url, setUrl] = useState("");
   const { id } = useParams();
   const store_idx = useSelector((state) => state.canvasReducer.index);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const preloadRange = 10;
+
+  // TODO in the future also preload a few of the other camera images. and then initialize the setPreloadedImages correctly
 
   useEffect(() => {
-    getImages();
-  }, []); // this list is called dependency array
+    get_image_data();
+    setPreloadedImages({});
+  }, [camera]); // this list is called dependency array
 
-  useEffect(() => {
-    //loadImage(images[store_idx]);
-    if (!images[store_idx]) {
-      return;
-    }
-    const new_url = 'https://logs.berlin-united.com/' + images[store_idx].image_url
-    console.log("url: ", new_url)
-    setUrl(new_url)
-  }, [store_idx, images]);
-
-  useEffect(() => {
-    // Preload current image and next few images
-    for (let i = 0; i < 5; i++) {
-      if (images[store_idx + i]) {
-        preloadImage(images[store_idx + i]);
-      }
-    }
-  }, [store_idx, images]);
-
-  const getImages = () => {
+  const get_image_data = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`)
+      .get(
+        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
+      )
       .then((res) => res.data)
       .then((data) => {
-        setImages(data);
+        setImageList(data);
         console.log("Image List", data);
+        setIsInitialLoading(false);
       })
       .catch((err) => alert(err));
   };
 
-  const preloadImage = (image_db_obj) => {
-    if (!image_db_obj) {
-      return;
-    }
-    const new_url = 'https://logs.berlin-united.com/' + image_db_obj.image_url
-    if (!loadedImages[new_url]) {
+  const loadImage = useCallback((url) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
-      img.src = new_url;
-      img.onload = () =>  
-        setLoadedImages((prev) => ({ ...prev, [new_url]: img }));
-    }
-  };
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
+  }, []);
 
-  const loadImage = (image_db_obj) => {
-    if (!image_db_obj) {
-      return;
+  const loadImagesProgressively = useCallback(async () => {
+    const startIndex = Math.max(0, store_idx - preloadRange);
+    const endIndex = Math.min(imageList.length, store_idx + preloadRange + 1);
+
+    for (let i = startIndex; i < endIndex; i++) {
+      if (!preloadedImages[i] && imageList[i]) {
+        const imageUrl = "https://logs.berlin-united.com/" + imageList[i].image_url;
+        try {
+          const loadedImage = await loadImage(imageUrl);
+          setPreloadedImages(prev => ({ ...prev, [i]: loadedImage }));
+        } catch (error) {
+          console.error(`Error loading image at index ${i}:`, error);
+        }
+      }
     }
-    const new_url = 'https://logs.berlin-united.com/' + image_db_obj.image_url
-    console.log(new_url);
-    //const url = image_db_obj.image_url
-    if (loadedImages[new_url]) {
-      //drawImageOnCanvas(loadedImages[new_url]);
-    } else {
-      const img = new Image();
-      img.onload = () => {
-        setLoadedImages((prev) => ({ ...prev, [new_url]: img }));
-        //drawImageOnCanvas(img);
-      };
-      img.src = new_url;
+  }, [store_idx, imageList, preloadedImages, loadImage, preloadRange, camera]);
+
+  useEffect(() => {
+    if (!isInitialLoading) {
+      loadImagesProgressively();
     }
-  };
+  }, [loadImagesProgressively, isInitialLoading]);
+
+  const currentImage = useMemo(() => preloadedImages[store_idx], [preloadedImages, store_idx]);
 
 
   return (
     <div className={classes.mainView}>
       <div className={classes.dataView}>
-        <CanvasView imageUrl={url} />
-        <div className="representationSelector">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
-              <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <div>
-          <code>
-            asdhoashdohiaosdijoaijsdasosuhdpuasiogdlbaiwhep 
-          </code>
-        </div>
+        {currentImage  ? (
+        <CanvasView image={currentImage}  setCamera={setCamera}/>
+      ) : (
+        <div>Image not loaded yet</div>
+      )}
+        <DataView />
       </div>
 
       <div className="p-4">
-        <MultiRowRangeSlider length={images.length}/>
+        <MultiRowRangeSlider length={imageList.length} />
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from . import models
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+
 class SensorLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SensorLog
@@ -26,16 +25,17 @@ class ImageAnnotationSerializer(serializers.ModelSerializer):
         model = models.ImageAnnotation
         fields = '__all__'
 
+
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         fields = '__all__'
 
+
 class RobotDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RobotData
         fields = '__all__'
-
 
     def create(self, validated_data):
         # TODO figure out why this works
@@ -49,24 +49,14 @@ class RobotDataSerializer(serializers.ModelSerializer):
         return instance
 
 
-
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
         fields = '__all__'
+
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = '__all__'
         # FIXME adding __all__ is bad practice, explicitely say what we send
-
-
-
-
-
-
-
-
-
-

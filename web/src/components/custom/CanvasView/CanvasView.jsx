@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Stage, Layer, Image } from 'react-konva';
-import useImage from 'use-image';
+import { Stage, Layer, Image } from "react-konva";
 import uuid4 from "uuid4";
-import Rectangle from "./Rectangle/Rectangle";
+import Rectangle from "../Rectangle/Rectangle";
+import classes from "./CanvasView.module.css";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-
-const CanvasView = ({ imageUrl }) => {
-  const [image] = useImage(imageUrl);
+const CanvasView = ({ image, setCamera }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -14,16 +13,24 @@ const CanvasView = ({ imageUrl }) => {
   const [boundingBoxes, setBoundingBoxes] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [selectedPower, setSelectedPower] = useState("TOP");
   const stageRef = useRef(null);
+  const powersList = ["TOP", "BOTTOM"];
+
+  const click = (value) => {
+    setSelectedPower(value);
+    setCamera(value)
+  };
 
   useEffect(() => {
     //TODO eventually load the existing annotations here
     setBoundingBoxes([]);
-  }, [imageUrl]); // this list is called dependency array
+  }, [image]); // this list is called dependency array
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
-    const clickedOnEmpty = e.target === e.target.getStage() || e.target.attrs.name === undefined;
+    const clickedOnEmpty =
+      e.target === e.target.getStage() || e.target.attrs.name === undefined;
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
@@ -35,7 +42,10 @@ const CanvasView = ({ imageUrl }) => {
   useEffect(() => {
     if (image) {
       const aspectRatio = image.width / image.height;
-      const initialScale = Math.min(canvasWidth / image.width, canvasHeight / image.height);
+      const initialScale = Math.min(
+        canvasWidth / image.width,
+        canvasHeight / image.height
+      );
       setScale(initialScale);
     }
   }, [image]);
@@ -46,7 +56,7 @@ const CanvasView = ({ imageUrl }) => {
     const maxX = 0;
     const minY = Math.min(0, canvasHeight - image.height * newScale);
     const maxY = 0;
-    
+
     const x = Math.max(minX, Math.min(newX, maxX));
     const y = Math.max(minY, Math.min(newY, maxY));
     return { x, y };
@@ -62,14 +72,21 @@ const CanvasView = ({ imageUrl }) => {
       y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
     };
     const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
-    const minScale = Math.min(canvasWidth / image.width, canvasHeight / image.height);
+    const minScale = Math.min(
+      canvasWidth / image.width,
+      canvasHeight / image.height
+    );
     const finalScale = Math.max(newScale, minScale);
-    
+
     const newPos = {
-      x: -(mousePointTo.x - stage.getPointerPosition().x / finalScale) * finalScale,
-      y: -(mousePointTo.y - stage.getPointerPosition().y / finalScale) * finalScale,
+      x:
+        -(mousePointTo.x - stage.getPointerPosition().x / finalScale) *
+        finalScale,
+      y:
+        -(mousePointTo.y - stage.getPointerPosition().y / finalScale) *
+        finalScale,
     };
-    
+
     const boundedPos = getBoundedPosition(newPos.x, newPos.y, finalScale);
     setScale(finalScale);
     setPosition(boundedPos);
@@ -78,11 +95,13 @@ const CanvasView = ({ imageUrl }) => {
   const handleMouseDown = (e) => {
     checkDeselect(e);
     const stage = e.target.getStage();
-    if (e.evt.button === 1) { // Middle mouse button
+    if (e.evt.button === 1) {
+      // Middle mouse button
       e.evt.preventDefault(); // Prevent default middle-click behavior
       setIsPanning(true);
       setLastMousePosition(stage.getPointerPosition());
-    } else if (e.evt.button === 0) { // Left mouse button
+    } else if (e.evt.button === 0) {
+      // Left mouse button
       const pos = stage.getRelativePointerPosition();
       setIsDrawing(true);
       const newBox = {
@@ -90,8 +109,8 @@ const CanvasView = ({ imageUrl }) => {
         y: pos.y,
         width: 0,
         height: 0,
-        fill: 'rgba(0, 255, 0, 0.5)',
-        stroke: 'rgba(0, 255, 0, 1)',
+        fill: "rgba(0, 255, 0, 0.5)",
+        stroke: "rgba(0, 255, 0, 1)",
         strokeWidth: 2,
         opacity: 0.5,
         id: uuid4(),
@@ -128,58 +147,61 @@ const CanvasView = ({ imageUrl }) => {
   };
 
   const handleMouseUp = (e) => {
-    if (e.evt.button === 1) { // Middle mouse button
+    if (e.evt.button === 1) {
+      // Middle mouse button
       setIsPanning(false);
       setLastMousePosition(null);
-    } else if (e.evt.button === 0) { // Left mouse button
+    } else if (e.evt.button === 0) {
+      // Left mouse button
       setIsDrawing(false);
     }
   };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Delete' && selectedId) {
+      if (e.key === "Delete" && selectedId) {
         deleteSelectedRect();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // Cleanup
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedId]); // Re-run effect if selectedId changes
 
   const deleteSelectedRect = () => {
-    setBoundingBoxes((prevBoxes) => 
+    setBoundingBoxes((prevBoxes) =>
       prevBoxes.filter((box) => box.id !== selectedId)
     );
     setSelectedId(null);
   };
 
   return (
-    <Stage
-      width={canvasWidth}
-      height={canvasHeight}
-      onWheel={handleWheel}
-      scaleX={scale}
-      scaleY={scale}
-      x={position.x}
-      y={position.y}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      ref={stageRef}
-    >
-      <Layer>
-        <Image image={image} />
-      </Layer>
-      <Layer>
-        {boundingBoxes.map((box, i) => (
-          <Rectangle
-            key={i}
-            shapeProps={box}
+    <div className={classes.canvasView}>
+      <Stage
+        width={canvasWidth}
+        height={canvasHeight}
+        onWheel={handleWheel}
+        scaleX={scale}
+        scaleY={scale}
+        x={position.x}
+        y={position.y}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        ref={stageRef}
+      >
+        <Layer>
+          <Image image={image} />
+        </Layer>
+        <Layer>
+          {boundingBoxes.map((box, i) => (
+            <Rectangle
+              key={i}
+              shapeProps={box}
               isSelected={box.id === selectedId}
               onSelect={() => {
                 setSelectedId(box.id);
@@ -189,11 +211,38 @@ const CanvasView = ({ imageUrl }) => {
                 rects[i] = newAttrs;
                 setBoundingBoxes(rects);
               }}
-            strokeWidth={2 / scale}
-          />
-        ))}
-      </Layer>
-    </Stage>
+              strokeWidth={2 / scale}
+            />
+          ))}
+        </Layer>
+      </Stage>
+      <div className={classes.controls}>
+        <ToggleGroup
+          type="single"
+          defaultValue={selectedPower.toString()}
+          value={selectedPower.toString()}
+          className=""
+          onValueChange={(value) => {
+            if (value) {
+              click(value);
+            }
+          }}
+        >
+          {powersList.map((value) => {
+            return (
+              <ToggleGroupItem
+                variant="outline"
+                value={value.toString()}
+                aria-label={`Toggle ${value}`}
+                className="data-[state=on]:bg-red-200"
+              >
+                {value}
+              </ToggleGroupItem>
+            );
+          })}
+        </ToggleGroup>
+      </div>
+    </div>
   );
 };
 
