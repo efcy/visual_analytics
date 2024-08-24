@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "@/reducers/canvasSlice";
 import classes from './MultiRowRangeSlider.module.css'
-
+import { Button } from "@/components/ui/button"
 
 const MultiRowRangeSlider = ( {length} ) => {
   const [sliderValue, setSliderValue] = useState(0);
@@ -146,12 +146,19 @@ const MultiRowRangeSlider = ( {length} ) => {
       )
     );
   };
-  //FIXME make buttons work for previous and next, also make keyboard shortcuts work
+
+  const previous_frame = () => {
+    setSliderValue(sliderValue - 1);
+  }
+  const next_frame = () => {
+    setSliderValue(sliderValue + 1);
+  }
+  //FIXME make keyboard shortcuts work
 
   return (
     <>
-      <button disabled={store_idx === 0}>Previous</button>
-      <button>Next</button>
+      <Button disabled={store_idx === 0} onClick={setSliderValue}>Previous</Button>
+      <Button disabled={store_idx === length -1} onClick={next_frame}>Next</Button>
       <p>{store_idx}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>

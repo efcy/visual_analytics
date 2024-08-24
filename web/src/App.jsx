@@ -9,8 +9,6 @@ import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
 import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
-import CanvasView from "./components/custom/CanvasView.jsx";
-
 
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";

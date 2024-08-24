@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { Stage, Layer, Image } from 'react-konva';
 import useImage from 'use-image';
 import uuid4 from "uuid4";
-import Rectangle from "./Rectangle/Rectangle";
+import Rectangle from "../Rectangle/Rectangle";
+import { Button } from "@/components/ui/button"
 
-
-const CanvasView = ({ imageUrl }) => {
+const CanvasView = ({ imageUrl, setCamera }) => {
   const [image] = useImage(imageUrl);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -159,6 +159,7 @@ const CanvasView = ({ imageUrl }) => {
   };
 
   return (
+    <>
     <Stage
       width={canvasWidth}
       height={canvasHeight}
@@ -194,6 +195,10 @@ const CanvasView = ({ imageUrl }) => {
         ))}
       </Layer>
     </Stage>
+    <Button onClick={() => setCamera("TOP")}>TOP</Button>
+    <Button onClick={() => setCamera("BOTTOM")}>BOTTOM</Button>
+    
+    </>
   );
 };
 

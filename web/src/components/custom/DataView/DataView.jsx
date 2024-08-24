@@ -4,12 +4,15 @@ import classes from "./DataView.module.css";
 const DataView = () => {
   return (
     <div className={classes.representationSelector}>
-      <Tabs className={classes.tabsContainer}>
+      <Tabs defaultValue="Annotations" className={classes.tabsContainer}>
         <TabsList className={`grid h-full grid-rows`}>
-          <TabsTrigger value="Representations" className={classes.verticalButton}>Representations</TabsTrigger>
           <TabsTrigger value="Annotations" className={classes.verticalButton}>Annotations</TabsTrigger>
+          <TabsTrigger value="Representations" className={classes.verticalButton}>Representations</TabsTrigger>
           <TabsTrigger value="Comments" className={classes.verticalButton}>Comments</TabsTrigger>
         </TabsList>
+        <TabsContent value="Annotations" className={classes.tabsContent}>
+          Annotations
+        </TabsContent>
         <TabsContent value="Representations" className={classes.tabsContent}>
           <Tabs
             defaultValue="MultiBallPercept"
@@ -77,9 +80,6 @@ const DataView = () => {
               Change your password here.
             </TabsContent>
           </Tabs>
-        </TabsContent>
-        <TabsContent value="Annotations" className={classes.tabsContent}>
-          Annotations
         </TabsContent>
         <TabsContent value="Comments" className={classes.tabsContent}>
           Comments

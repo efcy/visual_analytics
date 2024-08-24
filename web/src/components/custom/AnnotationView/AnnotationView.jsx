@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
+
 import { useSelector } from "react-redux";
 import DataView from "../DataView/DataView.jsx";
-import CanvasView from "../CanvasView.jsx";
+import CanvasView from "../CanvasView/CanvasView.jsx";
 import classes from "./AnnotationView.module.css";
 
 const AnnotationView = () => {
@@ -87,13 +88,11 @@ const AnnotationView = () => {
   return (
     <div className={classes.mainView}>
       <div className={classes.dataView}>
-        <CanvasView imageUrl={url} />
+        <CanvasView imageUrl={url} setCamera={setCamera}/>
         <DataView />
       </div>
 
       <div className="p-4">
-        <button onClick={() => setCamera("TOP")}>TOP</button>
-        <button onClick={() => setCamera("BOTTOM")}>BOTTOM</button>
         <MultiRowRangeSlider length={images.length} />
       </div>
     </div>
