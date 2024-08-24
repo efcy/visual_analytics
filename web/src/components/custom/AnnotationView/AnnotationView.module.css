@@ -10,15 +10,12 @@
 }
 
 .dataView {
-  display: grid;
-  grid-template-columns: 70% 10% 20%;
+  display: flex;
+  flex: 2;
+  flex-direction: row;
 }
 
 .dataView canvas {
    border: 3px solid #000;
    margin-bottom: 20px;
-}
-
-.representationSelector{
-  max-width: 300px;
 }
