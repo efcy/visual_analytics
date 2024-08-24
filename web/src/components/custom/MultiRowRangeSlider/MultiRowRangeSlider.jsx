@@ -51,6 +51,20 @@ const MultiRowRangeSlider = ( {length} ) => {
     updateGradientStyle();
   }, [stepSize, updateGradientStyle]);
 
+  const handleKeyPress = useCallback((event) => {
+    switch(event.key) {
+      // FIXME make step configurable
+      case 'ArrowRight':
+        next_frame(1);
+        break;
+      case 'ArrowLeft':
+        previous_frame(1);
+        break;
+      default:
+        console.log(`Key pressed: ${event.key}`);
+    }
+  }, []);
+
   useEffect(() => {
     const handleScroll = (e) => {
       e.preventDefault();
@@ -80,6 +94,15 @@ const MultiRowRangeSlider = ( {length} ) => {
       }
     };
   }, [stepSize]);
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener('keydown', handleKeyPress);
+    // remove the event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   const handleSliderDrag = (e, data) => {
     const barIndex = Math.min(Math.floor(data.x / stepSize), totalBars - 1);
@@ -147,18 +170,20 @@ const MultiRowRangeSlider = ( {length} ) => {
     );
   };
 
-  const previous_frame = () => {
-    setSliderValue(sliderValue - 1);
+  const previous_frame = ( step = 1 ) => {
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue - stepValue);
   }
-  const next_frame = () => {
-    setSliderValue(sliderValue + 1);
+  const next_frame = ( step = 1 ) => {
+    console.log("step: ", step)
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue + stepValue);
   }
-  //FIXME make keyboard shortcuts work
 
   return (
     <>
-      <Button disabled={store_idx === 0} onClick={setSliderValue}>Previous</Button>
-      <Button disabled={store_idx === length -1} onClick={next_frame}>Next</Button>
+      <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
+      <Button disabled={store_idx === length -1} onClick={() => next_frame(1)}>Next</Button>
       <p>{store_idx}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
