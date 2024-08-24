@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Stage, Layer, Image } from "react-konva";
-import useImage from "use-image";
 import uuid4 from "uuid4";
 import Rectangle from "../Rectangle/Rectangle";
-import { Button } from "@/components/ui/button";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const CanvasView = ({ imageUrl, setCamera }) => {
-  const [image] = useImage(imageUrl);
+const CanvasView = ({ image, setCamera }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -28,7 +25,7 @@ const CanvasView = ({ imageUrl, setCamera }) => {
   useEffect(() => {
     //TODO eventually load the existing annotations here
     setBoundingBoxes([]);
-  }, [imageUrl]); // this list is called dependency array
+  }, [image]); // this list is called dependency array
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
