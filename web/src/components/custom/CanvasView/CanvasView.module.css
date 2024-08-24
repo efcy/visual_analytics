@@ -1,0 +1,9 @@
+.canvasView{
+  display: flex;
+  flex-direction: column;
+}
+
+.controls{
+  display: flex;
+  flex-direction: row;
+}
