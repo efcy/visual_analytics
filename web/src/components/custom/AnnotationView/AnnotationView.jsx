@@ -14,7 +14,7 @@ const AnnotationView = () => {
   const { id } = useParams();
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const preloadRange = 10;
+  const preloadRange = 50;
 
   // TODO in the future also preload a few of the other camera images. and then initialize the setPreloadedImages correctly
 
@@ -76,7 +76,7 @@ const AnnotationView = () => {
     <div className={classes.mainView}>
       <div className={classes.dataView}>
         {currentImage  ? (
-        <CanvasView image={currentImage}  setCamera={setCamera}/>
+        <CanvasView image={currentImage}  currentCamera={camera} setCamera={setCamera}/>
       ) : (
         <div>Image not loaded yet</div>
       )}

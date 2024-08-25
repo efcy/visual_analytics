@@ -5,7 +5,7 @@ import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const CanvasView = ({ image, setCamera }) => {
+const CanvasView = ({ image, currentCamera, setCamera }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -13,12 +13,12 @@ const CanvasView = ({ image, setCamera }) => {
   const [boundingBoxes, setBoundingBoxes] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [selectedPower, setSelectedPower] = useState("TOP");
+  const [selectedCamera, setSelectedCamera] = useState(currentCamera);
   const stageRef = useRef(null);
-  const powersList = ["TOP", "BOTTOM"];
+  const cameraList = ["TOP", "BOTTOM"];
 
   const click = (value) => {
-    setSelectedPower(value);
+    setSelectedCamera(value);
     setCamera(value)
   };
 
@@ -219,8 +219,8 @@ const CanvasView = ({ image, setCamera }) => {
       <div className={classes.controls}>
         <ToggleGroup
           type="single"
-          defaultValue={selectedPower.toString()}
-          value={selectedPower.toString()}
+          defaultValue={selectedCamera.toString()}
+          value={selectedCamera.toString()}
           className=""
           onValueChange={(value) => {
             if (value) {
@@ -228,7 +228,7 @@ const CanvasView = ({ image, setCamera }) => {
             }
           }}
         >
-          {powersList.map((value) => {
+          {cameraList.map((value) => {
             return (
               <ToggleGroupItem
                 variant="outline"
