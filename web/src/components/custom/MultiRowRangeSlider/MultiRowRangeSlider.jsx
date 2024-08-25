@@ -51,19 +51,33 @@ const MultiRowRangeSlider = ( {length} ) => {
     updateGradientStyle();
   }, [stepSize, updateGradientStyle]);
 
+  const previous_frame = ( step = 1 ) => {
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue - stepValue);
+  }
+  const next_frame = ( step = 1 ) => {
+    
+    const stepValue = step === undefined ? 1 : Number(step);
+    setSliderValue(prevValue => prevValue + stepValue);
+  }
+
   const handleKeyPress = useCallback((event) => {
     switch(event.key) {
       // FIXME make step configurable
       case 'ArrowRight':
-        next_frame(1);
+        if (store_idx < length - 1) {
+          next_frame(1);
+        }
         break;
       case 'ArrowLeft':
-        previous_frame(1);
+        if (store_idx > 0) {
+          previous_frame(1);
+        }
         break;
       default:
         console.log(`Key pressed: ${event.key}`);
     }
-  }, []);
+  }, [store_idx, length, next_frame, previous_frame]);
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -170,15 +184,7 @@ const MultiRowRangeSlider = ( {length} ) => {
     );
   };
 
-  const previous_frame = ( step = 1 ) => {
-    const stepValue = step === undefined ? 1 : Number(step);
-    setSliderValue(prevValue => prevValue - stepValue);
-  }
-  const next_frame = ( step = 1 ) => {
-    console.log("step: ", step)
-    const stepValue = step === undefined ? 1 : Number(step);
-    setSliderValue(prevValue => prevValue + stepValue);
-  }
+
 
   return (
     <>
