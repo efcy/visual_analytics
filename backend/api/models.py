@@ -77,6 +77,9 @@ class Image(models.Model):
     class Meta:
         unique_together = ('log', 'camera', 'type', 'frame_number')
 
+    def __str__(self):
+        return f"{self.log}-{self.camera}-{self.type}-{self.frame_number}"
+    
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
     type  = models.CharField(max_length=100)
