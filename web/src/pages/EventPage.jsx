@@ -7,7 +7,7 @@ import Sidebar from "../components/custom/Sidebar"
 
 
 function EventPage() {
-
+  console.log("EventPage called")
   return (
     <div className="app-container">
       <Header />
