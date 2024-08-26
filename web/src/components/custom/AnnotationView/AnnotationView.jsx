@@ -38,7 +38,7 @@ const AnnotationView = () => {
       })
       .catch((err) => alert(err));
   };
-
+  
   const loadImage = useCallback((url) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -86,7 +86,11 @@ const AnnotationView = () => {
       </div>
 
       <div className="p-4">
+      {imageList  ? (
         <MultiRowRangeSlider length={imageList.length} />
+      ) : (
+        <div></div>
+      )}
       </div>
     </div>
   );

@@ -9,14 +9,9 @@ const MultiRowRangeSlider = ( {length} ) => {
   console.log("MultiRowRangeSlider called", length)
   const [sliderValue, setSliderValue] = useState(0);
   const [stepSize, setStepSize] = useState(51);
-  const [rows, setRows] = useState([
-    { id: 1, type: "slider" },
-    //{ id: 2, type: 'draggable', items: [{ id: 'item1', position: 0 }] },
-    //{ id: 3, type: 'draggable', items: [{ id: 'item2', position: 0 }] },
-  ]);
-  const [containerWidth, setContainerWidth] = useState(0);
   const [gradientStyle, setGradientStyle] = useState({});
   const containerRef = useRef(null);
+  const draggableRef = React.useRef(null);
 
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const dispatch = useDispatch();
@@ -36,17 +31,6 @@ const MultiRowRangeSlider = ( {length} ) => {
     setGradientStyle(newStyle);
   }, [stepSize]);
 
-  useEffect(() => {
-    const updateContainerWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-    };
-
-    updateContainerWidth();
-    window.addEventListener("resize", updateContainerWidth);
-    return () => window.removeEventListener("resize", updateContainerWidth);
-  }, []);
 
   useEffect(() => {
     updateGradientStyle();
@@ -165,27 +149,6 @@ const MultiRowRangeSlider = ( {length} ) => {
     }
   };
 
-  const handleItemDrag = (rowId, itemId, e, data) => {
-    const newPosition = Math.max(
-      0,
-      Math.min(data.x, containerWidth - stepSize)
-    );
-
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === rowId
-          ? {
-              ...row,
-              items: row.items.map((item) =>
-                item.id === itemId ? { ...item, position: newPosition } : item
-              ),
-            }
-          : row
-      )
-    );
-  };
-
-
 
   return (
     <>
@@ -209,8 +172,9 @@ const MultiRowRangeSlider = ( {length} ) => {
                   grid={[stepSize, 0]}
                   onDrag={handleSliderDrag}
                   position={{ x: getHandlePosition(), y: 0 }}
+                  nodeRef={draggableRef}
                 >
-                  <div className={classes.rangeHandle}>
+                  <div className={classes.rangeHandle} ref={draggableRef}>
                     <span className={classes.rsValue}>{sliderValue}</span>
                   </div>
                 </Draggable>
