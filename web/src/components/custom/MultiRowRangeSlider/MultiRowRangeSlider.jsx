@@ -6,16 +6,12 @@ import classes from './MultiRowRangeSlider.module.css'
 import { Button } from "@/components/ui/button"
 
 const MultiRowRangeSlider = ( {length} ) => {
+  console.log("MultiRowRangeSlider called", length)
   const [sliderValue, setSliderValue] = useState(0);
   const [stepSize, setStepSize] = useState(51);
-  const [rows, setRows] = useState([
-    { id: 1, type: "slider" },
-    //{ id: 2, type: 'draggable', items: [{ id: 'item1', position: 0 }] },
-    //{ id: 3, type: 'draggable', items: [{ id: 'item2', position: 0 }] },
-  ]);
-  const [containerWidth, setContainerWidth] = useState(0);
   const [gradientStyle, setGradientStyle] = useState({});
   const containerRef = useRef(null);
+  const draggableRef = React.useRef(null);
 
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const dispatch = useDispatch();
@@ -35,17 +31,6 @@ const MultiRowRangeSlider = ( {length} ) => {
     setGradientStyle(newStyle);
   }, [stepSize]);
 
-  useEffect(() => {
-    const updateContainerWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-    };
-
-    updateContainerWidth();
-    window.addEventListener("resize", updateContainerWidth);
-    return () => window.removeEventListener("resize", updateContainerWidth);
-  }, []);
 
   useEffect(() => {
     updateGradientStyle();
@@ -164,27 +149,6 @@ const MultiRowRangeSlider = ( {length} ) => {
     }
   };
 
-  const handleItemDrag = (rowId, itemId, e, data) => {
-    const newPosition = Math.max(
-      0,
-      Math.min(data.x, containerWidth - stepSize)
-    );
-
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === rowId
-          ? {
-              ...row,
-              items: row.items.map((item) =>
-                item.id === itemId ? { ...item, position: newPosition } : item
-              ),
-            }
-          : row
-      )
-    );
-  };
-
-
 
   return (
     <>
@@ -193,13 +157,10 @@ const MultiRowRangeSlider = ( {length} ) => {
       <p>{store_idx}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
-        {rows.map((row) => (
           <div
-            key={row.id}
             className={classes.range_slider_container}
             style={{ width: `${stepSize * totalBars}px` }}
           >
-            {row.type === "slider" ? (
               <div
                 className={classes.customRange}
                 style={gradientStyle}
@@ -211,34 +172,14 @@ const MultiRowRangeSlider = ( {length} ) => {
                   grid={[stepSize, 0]}
                   onDrag={handleSliderDrag}
                   position={{ x: getHandlePosition(), y: 0 }}
+                  nodeRef={draggableRef}
                 >
-                  <div className={classes.rangeHandle}>
+                  <div className={classes.rangeHandle} ref={draggableRef}>
                     <span className={classes.rsValue}>{sliderValue}</span>
                   </div>
                 </Draggable>
               </div>
-            ) : (
-              <div className={classes.draggableContainer}>
-                {row.items.map((item) => (
-                  <Draggable
-                    key={item.id}
-                    axis="x"
-                    bounds="parent"
-                    grid={[stepSize, 0]}
-                    position={{ x: item.position, y: 0 }}
-                    onDrag={(e, data) =>
-                      handleItemDrag(row.id, item.id, e, data)
-                    }
-                  >
-                    <div className={classes.dummy_video_track}>
-                      Draggable Item {item.id}
-                    </div>
-                  </Draggable>
-                ))}
-              </div>
-            )}
           </div>
-        ))}
       </div>
     </>
   );

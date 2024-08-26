@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-function Dashboard() {
+const Dashboard = () => {
   return (
     <div className="flex min-h-screen w-full flex-col projects-section">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
@@ -65,7 +64,6 @@ function Dashboard() {
                 </form>
               </CardContent>
             </Card>
-
         </div>
       </main>
     </div>

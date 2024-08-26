@@ -8,19 +8,21 @@ import CanvasView from "../CanvasView/CanvasView.jsx";
 import classes from "./AnnotationView.module.css";
 
 const AnnotationView = () => {
+  console.log("AnnotationView called")
   const [imageList, setImageList] = useState([]);
   const [preloadedImages, setPreloadedImages] = useState([]);
   const [camera, setCamera] = useState("BOTTOM");
   const { id } = useParams();
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const preloadRange = 50;
+  const preloadRange = 4;
 
   // TODO in the future also preload a few of the other camera images. and then initialize the setPreloadedImages correctly
 
   useEffect(() => {
+    setIsInitialLoading(true);
     get_image_data();
-    setPreloadedImages({});
+    setPreloadedImages([]);
   }, [camera]); // this list is called dependency array
 
   const get_image_data = () => {
@@ -36,7 +38,7 @@ const AnnotationView = () => {
       })
       .catch((err) => alert(err));
   };
-
+  
   const loadImage = useCallback((url) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -84,7 +86,11 @@ const AnnotationView = () => {
       </div>
 
       <div className="p-4">
+      {imageList  ? (
         <MultiRowRangeSlider length={imageList.length} />
+      ) : (
+        <div></div>
+      )}
       </div>
     </div>
   );

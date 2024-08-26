@@ -232,6 +232,7 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
             return (
               <ToggleGroupItem
                 variant="outline"
+                key={value}
                 value={value.toString()}
                 aria-label={`Toggle ${value}`}
                 className="data-[state=on]:bg-red-200"
