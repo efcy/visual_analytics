@@ -7,7 +7,7 @@ from user.models import VATUser,Organization
 from .serializers import VATUserSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
-
+from rest_framework.authtoken.models import Token
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
@@ -123,13 +123,23 @@ class GetUserProfileView(APIView):
             user = self.request.user
             username = user.username
 
-            user_profile = VATUser.objects.get(user=user)
+            user_profile = VATUser.objects.get(username=username)
             user_profile = VATUserSerializer(user_profile)
 
-            return Response({ 'profile': user_profile.data, 'username': str(username) })
+            # we don't want to send every user info to the frontend
+            # return Response({ 'profile': user_profile.data, 'username': str(username) })
+            return Response({ 'username': str(username) })
         except Exception as e:
             print(e)
             return Response({ 'error': 'Something went wrong when retrieving profile' })
+
+class GetUserToken(APIView):
+    def get(self,request,format=None):
+        user = self.request.user
+
+        token = Token.objects.get(user=user)
+        print(token)
+        return Response({"token":token.key})
 
 class UpdateUserProfileView(APIView):
     def put(self, request, format=None):
