@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from 'axios';
 import "@/styles/globals.css";
 import { Button } from "@/components/ui/button"
 import {
@@ -13,21 +14,34 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 const Dashboard = () => {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState('');
+  const [token, setToken] = useState(''); // State for token
 
   useEffect(() => {
     getUser();
-}); 
+    getToken();
+    // Add an empty dependency array to avoid infinite calls
+  }, []);
 
   const getUser = () => {
       axios
-          .get(`${import.meta.env.VITE_API_URL}/accounts/user/`)
+          .get(`${import.meta.env.VITE_API_URL}/accounts/user`)
           .then((res) => res.data)
           .then((data) => {
-              setUser(data);
-              console.log("User: ", data);
+              setUser(data.username);
+              console.log("User: ", data.username);
           })
           .catch((err) => alert(err));}
+  
+  const getToken = () => {
+    axios
+        .get(`${import.meta.env.VITE_API_URL}/accounts/token`)
+        .then((res) => res.data)
+        .then((data) => {
+            setToken(data.token);
+            console.log("User: ", data.token);
+        })
+        .catch((err) => alert(err));}
   return (
     <div className="flex min-h-screen w-full flex-col projects-section">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
@@ -48,7 +62,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="name" className="w-24 mr-4 text-right">First Name</Label>
-                  <Input placeholder="First Name" id="name"/>
+                  <Input placeholder="First Name" id="name" value={user}/>
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="surname" className="w-24 mr-4 text-right">Last Name</Label>
@@ -72,6 +86,7 @@ const Dashboard = () => {
                   <Input
                     placeholder="Project Name"
                     defaultValue="Token"
+                    value={token}
                   />
                   <div className="flex items-center space-x-2">
                   <Button>Copy</Button>
