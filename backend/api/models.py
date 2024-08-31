@@ -83,3 +83,4 @@ class Image(models.Model):
 class ImageAnnotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
     type  = models.CharField(max_length=100)
+    annotation = models.JSONField(blank=True, null=True)
