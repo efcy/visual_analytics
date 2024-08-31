@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import "@/styles/new.css";
 import EventBreadcrumb from "./EventBreadcrumb.jsx";
+
 function Header() {
   // State to track if the 'dark' class should be added
   const [isDarkMode, setIsDarkMode] = useState(false);
