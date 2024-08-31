@@ -1,4 +1,4 @@
-from client import client
+from sdk.vaapi.old import client
 import logging
 
 baseurl = "http://127.0.0.1:8000/api/"
