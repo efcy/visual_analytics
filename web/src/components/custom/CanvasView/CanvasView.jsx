@@ -16,10 +16,12 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
   const [selectedCamera, setSelectedCamera] = useState(currentCamera);
   const stageRef = useRef(null);
   const cameraList = ["TOP", "BOTTOM"];
+  const canvasWidth = 640;
+  const canvasHeight = 480;
 
   const click = (value) => {
     setSelectedCamera(value);
-    setCamera(value)
+    setCamera(value);
   };
 
   useEffect(() => {
@@ -27,6 +29,11 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
     setBoundingBoxes([]);
   }, [image]); // this list is called dependency array
 
+  useEffect(() => {
+    console.log("boundingBoxes: ", boundingBoxes);
+  }, [boundingBoxes]);
+
+  
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
     const clickedOnEmpty =
@@ -35,9 +42,6 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
       setSelectedId(null);
     }
   };
-
-  const canvasWidth = 640;
-  const canvasHeight = 480;
 
   useEffect(() => {
     if (image) {
@@ -103,20 +107,24 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
     } else if (e.evt.button === 0) {
       // Left mouse button
       const pos = stage.getRelativePointerPosition();
-      //FIXME check if I clicked inside a box
-      setIsDrawing(true);
-      const newBox = {
-        x: pos.x,
-        y: pos.y,
-        width: 0,
-        height: 0,
-        fill: "rgba(0, 255, 0, 0.5)",
-        stroke: "rgba(0, 255, 0, 1)",
-        strokeWidth: 2,
-        opacity: 0.5,
-        id: uuid4(),
-      };
-      setBoundingBoxes([...boundingBoxes, newBox]);
+      // check if we actually click on the image
+      const shape = stage.getIntersection(pos);
+      if (shape instanceof Konva.Image){
+        setIsDrawing(true);
+        const newBox = {
+          x: pos.x,
+          y: pos.y,
+          width: 0,
+          height: 0,
+          fill: "rgba(0, 255, 0, 0.5)",
+          stroke: "rgba(0, 255, 0, 1)",
+          strokeWidth: 2,
+          opacity: 0.5,
+          id: uuid4(),
+        };
+        console.log("handleMouseDown")
+        setBoundingBoxes([...boundingBoxes, newBox]);
+      }
     }
   };
 
@@ -155,6 +163,7 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
     } else if (e.evt.button === 0) {
       // Left mouse button
       setIsDrawing(false);
+      //TODO add post request here for annotation
     }
   };
 
@@ -205,6 +214,7 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
               shapeProps={box}
               isSelected={box.id === selectedId}
               onSelect={() => {
+                setIsDrawing(false);
                 setSelectedId(box.id);
               }}
               onChange={(newAttrs) => {
