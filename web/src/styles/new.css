@@ -2,12 +2,8 @@
 @import url("https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap");
 
 @import "tailwindcss/base";
-
 @import "tailwindcss/components";
-
 @import "tailwindcss/utilities";
-
-
 
 * {
   margin: 0;
@@ -144,14 +140,7 @@ button, a {
 .app-icon:after {
   bottom: -6px;
 }
-.app-name {
-  color: var(--main-color);
-  margin: 0;
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 700;
-  margin: 0 32px;
-}
+
 
 .mode-switch {
   background-color: transparent;
@@ -194,35 +183,6 @@ button, a {
 .search-input:placeholder {
   color: var(--main-color);
   opacity: 0.6;
-}
-
-.add-btn {
-  color: #fff;
-  background-color: var(--button-bg);
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.notification-btn {
-  color: var(--main-color);
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.page-content  {
-  flex: 1;
-  width: 100%;
 }
 
 .app-sidebar {
@@ -285,71 +245,9 @@ button, a {
 }
 
 
-.more-wrapper {
-  position: relative;
-}
-
-.box-content-header {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 700;
-  opacity: 0.7;
-}
-
-.box-content-subheader {
-  font-size: 14px;
-  line-height: 24px;
-  opacity: 0.7;
-}
-
-.box-progress {
-  display: block;
-  height: 4px;
-  border-radius: 6px;
-}
-.box-progress-bar {
-  width: 100%;
-  height: 4px;
-  border-radius: 6px;
-  overflow: hidden;
-  background-color: #fff;
-  margin: 8px 0;
-}
-.box-progress-header {
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 16px;
-  margin: 0;
-}
-.box-progress-percentage {
-  text-align: right;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 16px;
-}
-
-.project-box-footer {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 16px;
-  position: relative;
-}
-.project-box-footer:after {
-  content: "";
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.6);
-  width: calc(100% + 32px);
-  top: 0;
-  left: -16px;
-  height: 1px;
-}
-
 .mode-switch.active .moon {
   fill: var(--main-color);
 }
-
-
 
 @media screen and (max-width: 980px) {
   .project-boxes.jsGridView .project-box-wrapper {
@@ -358,15 +256,12 @@ button, a {
 }
 
 @media screen and (max-width: 720px) {
-  .app-name {
-    display: none;
-  }
 
-  .add-btn, .notification-btn, .mode-switch {
+  .mode-switch {
     width: 20px;
     height: 20px;
   }
-  .add-btn svg, .notification-btn svg, .mode-switch svg {
+  .mode-switch svg {
     width: 16px;
     height: 16px;
   }
@@ -410,24 +305,6 @@ button, a {
 
   .search-input {
     font-size: 14px;
-  }
-
-  .box-content-header {
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .box-content-subheader {
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .box-progress-header {
-    font-size: 12px;
-  }
-
-  .box-progress-percentage {
-    font-size: 10px;
   }
 }
 
