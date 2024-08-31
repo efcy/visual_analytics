@@ -103,6 +103,7 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
     } else if (e.evt.button === 0) {
       // Left mouse button
       const pos = stage.getRelativePointerPosition();
+      //FIXME check if I clicked inside a box
       setIsDrawing(true);
       const newBox = {
         x: pos.x,
