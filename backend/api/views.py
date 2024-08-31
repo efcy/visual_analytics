@@ -22,7 +22,7 @@ def health_check(request):
 
 class SensorLogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SensorLogSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     queryset = models.SensorLog.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -63,7 +63,7 @@ class CreateUserView(generics.CreateAPIView):
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = models.Event.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -90,7 +90,7 @@ class EventViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     """this approach to get games related to events is not really good 
         see serializers.py for an better example"""    
     def get_queryset(self):
@@ -101,7 +101,7 @@ class GameViewSet(viewsets.ModelViewSet):
             return models.Game.objects.all()
         
 class RobotDataViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = models.RobotData.objects.all()
     serializer_class = serializers.RobotDataSerializer
 
@@ -113,7 +113,7 @@ class RobotDataViewSet(viewsets.ModelViewSet):
             return models.RobotData.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
 
@@ -202,6 +202,6 @@ class ImageCountView(APIView):
 
 
 class ImageAnnotationViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = models.ImageAnnotation.objects.all()
     serializer_class = serializers.ImageAnnotationSerializer
