@@ -1,6 +1,6 @@
 import React from "react";
 import "@/styles/new.css"
-import "@/styles/event.css"
+
 import event_image from '@/assets/robocup.jpeg';
 import {
     Card,
