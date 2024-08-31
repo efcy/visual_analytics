@@ -99,58 +99,8 @@ button, a {
   overflow: hidden;
   
 }
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 16px 24px;
-  position: relative;
-}
-.app-header-left, .app-header-right {
-  display: flex;
-  align-items: center;
-}
-.app-header-left {
-  flex-grow: 1;
-}
-.app-header-right button {
-  margin-left: 10px;
-}
-.app-icon {
-  width: 26px;
-  height: 2px;
-  border-radius: 4px;
-  background-color: var(--main-color);
-  position: relative;
-}
-.app-icon:before, .app-icon:after {
-  content: "";
-  position: absolute;
-  width: 12px;
-  height: 2px;
-  border-radius: 4px;
-  background-color: var(--main-color);
-  left: 50%;
-  transform: translatex(-50%);
-}
-.app-icon:before {
-  top: -6px;
-}
-.app-icon:after {
-  bottom: -6px;
-}
 
 
-.mode-switch {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  color: var(--main-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .search-wrapper {
   border-radius: 20px;
@@ -219,68 +169,9 @@ button, a {
 }
 
 
-.mode-switch.active .moon {
-  fill: var(--main-color);
-}
 
-@media screen and (max-width: 980px) {
-  .project-boxes.jsGridView .project-box-wrapper {
-    width: 50%;
-  }
-}
 
-@media screen and (max-width: 720px) {
 
-  .mode-switch {
-    width: 20px;
-    height: 20px;
-  }
-  .mode-switch svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .app-header-right button {
-    margin-left: 4px;
-  }
-}
-@media screen and (max-width: 520px) {
-  .projects-section {
-    overflow: auto;
-  }
-
-  .project-boxes {
-    overflow-y: visible;
-  }
-
-  .app-sidebar, .app-icon {
-    display: none;
-  }
-
-  .app-header {
-    padding: 16px 10px;
-  }
-
-  .search-input {
-    max-width: 120px;
-  }
-
-  .project-boxes.jsGridView .project-box-wrapper {
-    width: 100%;
-  }
-
-  .projects-section {
-    padding: 24px 16px 0 16px;
-  }
-
-  .app-header {
-    padding: 10px;
-  }
-
-  .search-input {
-    font-size: 14px;
-  }
-}
 
 .project-boxes::-webkit-scrollbar{
   width: 8px;

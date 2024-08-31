@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import EventBreadcrumb from "../EventBreadcrumb.jsx";
 
+import classes from './Header.module.css'
+
 function Header() {
   // State to track if the 'dark' class should be added
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -18,14 +20,14 @@ function Header() {
     setIsDarkMode(!isDarkMode);
   };
   return (
-    <div className="app-header">
-      <div className="app-header-left">
-        <span className="app-icon"></span>
+    <div className={classes.header}>
+      <div className={classes.header_left}>
+        <span className={classes.app_icon}></span>
         <EventBreadcrumb />
       </div>
-      <div className="app-header-right">
+      <div className={classes.header_right}>
         <button
-          className="mode-switch"
+          className={classes.mode_switch}
           title="Switch Theme"
           onClick={switchTheme}
         >
