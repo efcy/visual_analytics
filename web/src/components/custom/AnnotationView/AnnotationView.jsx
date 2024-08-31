@@ -86,7 +86,7 @@ const AnnotationView = () => {
       </div>
 
       <div className="p-4">
-      {imageList  ? (
+      {imageList.length > 0  ? (
         <MultiRowRangeSlider length={imageList.length} />
       ) : (
         <div></div>
