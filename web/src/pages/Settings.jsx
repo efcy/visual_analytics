@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 const Dashboard = () => {
   const [user, setUser] = useState('');
   const [token, setToken] = useState(''); // State for token
-
+  const [email, setEmail] = useState('')
   useEffect(() => {
     getUser();
     getToken();
@@ -29,6 +29,7 @@ const Dashboard = () => {
           .then((res) => res.data)
           .then((data) => {
               setUser(data.username);
+              setEmail(data.email);
               console.log("User: ", data.username);
           })
           .catch((err) => alert(err));}
@@ -42,6 +43,37 @@ const Dashboard = () => {
             console.log("User: ", data.token);
         })
         .catch((err) => alert(err));}
+
+  const handleNameChange = (e) => {
+    setUser(e.target.value);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const updateUser = () => {
+    const payload = {
+      user_name: user,
+      email: email,
+    };
+    console.log("updating")
+    axios
+        .put(`${import.meta.env.VITE_API_URL}/accounts/update`,payload)
+        .then((res) => res.data)
+        .catch((err) => alert(err));}
+  
+  
+  const refreshToken = () => {
+    axios
+        .get(`${import.meta.env.VITE_API_URL}/accounts/regentoken`)
+        .then((res) => res.data)
+        .then((data) => {
+            setToken(data.token);
+            console.log("User: ", data.token);
+        })
+        .catch((err) => alert(err));}
+
+
   return (
     <div className="flex min-h-screen w-full flex-col projects-section">
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
@@ -58,11 +90,11 @@ const Dashboard = () => {
               <div className="p-0">
                 <div className="flex items-center mb-4">
                 <Label htmlFor="email" className="w-24 mr-4 text-right">Email</Label>
-                <Input placeholder="Email" id="email" />
+                <Input placeholder="Email" id="email" value={email} onChange={handleEmailChange} />
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="name" className="w-24 mr-4 text-right">First Name</Label>
-                  <Input placeholder="First Name" id="name" value={user}/>
+                  <Input placeholder="First Name" id="name" value={user} onChange={handleNameChange}/>
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="surname" className="w-24 mr-4 text-right">Last Name</Label>
@@ -71,7 +103,7 @@ const Dashboard = () => {
                   </div>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
-                <Button>Save</Button>
+                <Button onClick={updateUser}>Save</Button>
               </CardFooter>
             </Card>
             <Card>
@@ -90,7 +122,13 @@ const Dashboard = () => {
                   />
                   <div className="flex items-center space-x-2">
                   <Button>Copy</Button>
-                  <Button>Renew</Button>
+                  <Button onClick={(e) => {
+                      e.preventDefault(); // Prevent default form submission on button click
+                      refreshToken();
+                    }}
+                  >
+                    Renew
+                  </Button>
                   </div>
                 </form>
               </CardContent>
