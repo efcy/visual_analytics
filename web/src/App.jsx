@@ -14,9 +14,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./store";
 
-//Hack
-import axios from "axios";
-axios.defaults.withCredentials = true;
 
 function Logout() {
   localStorage.clear();

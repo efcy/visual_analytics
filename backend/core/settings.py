@@ -24,7 +24,7 @@ INTERNAL_IPS = [
 ]
 #list of allowed hosts that can perform requests to django
 #matches with host headers in requests
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 #configures default authentication and permissions
 #users need to authenticate with session or token to use any endpoint
@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "api",  # I see other using api.apps.ApiConfig here
-    "rest_framework",
     "corsheaders",
+    "rest_framework",
     'drf_spectacular',
     'rest_framework.authtoken',
     'user',
@@ -60,11 +60,10 @@ INSTALLED_APPS = [
 #these components process requests before reaching or leaving a view
 #the order is very important in this list for more see https://docs.djangoproject.com/en/5.1/ref/middleware/#middleware-ordering
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -148,17 +147,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://github.com/adamchainz/django-cors-headers
-CORS_ALLOW_ALL_ORIGINS = True #we shouldn't to this because it makes the cors allowed origins obsolete
-CORS_ALLOWS_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False #we shouldn't to this because it makes the cors allowed origins obsolete
+CORS_ALLOWS_CREDENTIALS = False
 CORS_ALLOWED_ORIGINS = ['https://api.berlin-united.com','https://vat.berlin-united.com', 'http://localhost:5173', 'http://localhost:8000']
 
 #makes csrf cookie valid on all subdomains
-CSRF_COOKIE_DOMAIN = ".berlin-united.com"
+#CSRF_COOKIE_DOMAIN = ".berlin-united.com"
 #specifies all domains where django accepts POST requests from with CSRF tokens
 CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'https://vat.berlin-united.com', 'http://localhost:8000', 'http://localhost:5173']
 
 #requiered if there is a loadbalancer in front of django that forwards requests over http
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #we only want tokenauth in the swagger view
 SPECTACULAR_SETTINGS = {
@@ -170,3 +169,14 @@ AUTH_USER_MODEL = 'user.VATUser'
 
 #maximum fields allowed in one post request
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
+
+CORS_ALLOW_METHODS = [
+    'OPTIONS',
+    'POST',
+]
+
+# If you need to allow specific headers
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+]

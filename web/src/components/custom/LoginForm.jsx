@@ -31,7 +31,6 @@ const LoginForm = ({ login, isAuthenticated }) => {
 
     return (
         <form onSubmit={e => onSubmit(e)} className="form-container">
-            <CSRFToken />
             <h1>Login</h1>
             <input
                 className="form-input"

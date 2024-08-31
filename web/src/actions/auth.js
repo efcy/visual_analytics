@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { load_user } from './profile';
+//import { load_user } from './profile';
+import api from "@/api";
 import {
     REGISTER_SUCCESS,
     REGISTER_FAIL,
@@ -52,20 +53,21 @@ export const checkAuthenticated = () => async dispatch => {
 };
 
 export const login = (username, password) => async dispatch => {
-    const a = Cookies.get('csrftoken');
-    console.log("cookie in login function: ", a)
     const config = {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'X-CSRFToken': Cookies.get('csrftoken')
         }
     };
 
     const body = JSON.stringify({ username, password });
-    console.log("login:", config)
+    //console.log("login:", config)
     try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/accounts/login`, body, config);
+        const res = await api.post(`${import.meta.env.VITE_API_URL}/api/token/`, body);
+
+        if (res.data.success) {
+            localStorage.setItem('user', JSON.stringify(res.data));
+        }
 
         if (res.data.success) {
             dispatch({

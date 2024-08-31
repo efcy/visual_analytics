@@ -22,7 +22,7 @@ def health_check(request):
 
 class SensorLogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SensorLogSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = models.SensorLog.objects.all()
 
     def list(self, request, *args, **kwargs):
