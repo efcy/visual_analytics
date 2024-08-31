@@ -1,0 +1,57 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 24px;
+    position: relative;
+}
+    .header_left, .header_right {
+    display: flex;
+    align-items: center;
+}
+.header_left {
+    flex-grow: 1;
+}
+.header_right button {
+    margin-left: 10px;
+}
+
+
+.app_icon {
+    width: 26px;
+    height: 2px;
+    border-radius: 4px;
+    background-color: var(--main-color);
+    position: relative;
+}
+.app_icon:before, .app_icon:after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    border-radius: 4px;
+    background-color: var(--main-color);
+    left: 50%;
+    transform: translatex(-50%);
+}
+.app_icon:before {
+    top: -6px;
+}
+.app_icon:after {
+    bottom: -6px;
+}
+
+.mode_switch {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: var(--main-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mode_switch.active .moon {
+    fill: var(--main-color);
+}

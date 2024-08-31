@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
-//import "@/styles/new.css"
-import { Routes, Route, Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
-import Header from "../components/custom/Header"
-import Sidebar from "../components/custom/Sidebar"
-
+import Header from "../components/custom/Header/Header.jsx"
+import Sidebar from "../components/custom/Sidebar/Sidebar.jsx"
 
 function EventPage() {
   console.log("EventPage called")
@@ -14,11 +11,8 @@ function EventPage() {
       <div className="app-content">
         <Sidebar />
         <Outlet />
-        
       </div>
     </div>
-    
-
   );
 }
 

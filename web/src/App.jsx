@@ -3,11 +3,9 @@ import LoginPage from "./pages/LoginPage.jsx";
 import EventListView from "./components/custom/EventListView.jsx";
 import GameListView from "./components/custom/GameListView.jsx";
 import LogListView from "./components/custom/LogListView.jsx";
-import Register from "./pages/Register.jsx";
 import EventPage from "./pages/EventPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
-import ProtectedRoute from "./components/custom/ProtectedRoute.jsx";
 import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
 
 import { Provider } from "react-redux";
@@ -20,10 +18,6 @@ function Logout() {
   return <Navigate to="/login" />;
 }
 
-function RegisterAndLogout() {
-  localStorage.clear();
-  return <Register />;
-}
 
 function App() {
   //<Route exact path="/" element={<Navigate to="/events" replace />}/>
@@ -43,7 +37,6 @@ function App() {
 
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/register" element={<RegisterAndLogout />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </BrowserRouter>
