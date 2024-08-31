@@ -3,7 +3,8 @@ from .models import Event, Game, RobotData, Image, SensorLog
 
 
 class ImageAdmin(admin.ModelAdmin):
-    search_fields = ['image_url__icontains']
+    search_fields = ['log__log_path','image_url__icontains']
+    list_display = ["log","frame_number"]
 
 class RobotDataAdmin(admin.ModelAdmin):
     search_fields = ['log_path__icontains']
