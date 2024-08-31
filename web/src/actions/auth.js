@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 import axios from 'axios';
-//import { load_user } from './profile';
 import api from "@/api";
 import {
     REGISTER_SUCCESS,
@@ -53,15 +52,7 @@ export const checkAuthenticated = () => async dispatch => {
 };
 
 export const login = (username, password) => async dispatch => {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-    };
-
     const body = JSON.stringify({ username, password });
-    //console.log("login:", config)
     try {
         const res = await api.post(`${import.meta.env.VITE_API_URL}/api/token/`, body);
 
@@ -73,8 +64,6 @@ export const login = (username, password) => async dispatch => {
             dispatch({
                 type: LOGIN_SUCCESS
             });
-
-            //dispatch(load_user());
         } else {
             dispatch({
                 type: LOGIN_FAIL
@@ -87,35 +76,6 @@ export const login = (username, password) => async dispatch => {
     }
 };
 
-export const register = (username, password, re_password) => async dispatch => {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRFToken': Cookies.get('csrftoken')
-        }
-    };
-
-    const body = JSON.stringify({ username, password, re_password });
-
-    try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/accounts/register`, body, config);
-
-        if (res.data.error) {
-            dispatch({
-                type: REGISTER_FAIL
-            });
-        } else {
-            dispatch({
-                type: REGISTER_SUCCESS
-            });
-        }
-    } catch (err) {
-        dispatch({
-            type: REGISTER_FAIL
-        });
-    }
-};
 
 export const logout = () => async dispatch => {
     const config = {
