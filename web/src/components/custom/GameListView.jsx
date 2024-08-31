@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from "@/api";
 import GameCard from "./GameCard"
 import useDebounce from "@/hooks/use_debounce";
 import { useDispatch } from "react-redux";
@@ -19,7 +19,7 @@ function LogListView() {
 
     const getGames = () => {
         //TODO enforce csrf in the backend and then add cockies here
-        axios
+        api
             .get(`${import.meta.env.VITE_API_URL}/api/games?event=${id}`)
             .then((res) => res.data)
             .then((data) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
+import api from "@/api";
 import { useParams } from "react-router-dom";
 import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
 import { useSelector } from "react-redux";
@@ -26,7 +26,7 @@ const AnnotationView = () => {
   }, [camera]); // this list is called dependency array
 
   const get_image_data = () => {
-    axios
+    api
       .get(
         `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
       )

@@ -7,7 +7,7 @@ import EventPage from "./pages/EventPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
-
+import ProtectedRoute from "./components/custom/ProtectedRoute"
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./store";
@@ -26,15 +26,14 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<EventPage />}>
-              <Route index element={<EventListView />} />
-              <Route path="/" element={<EventListView />} />
-              <Route path="/events/:id" element={<GameListView />} />
-              <Route path="/games/:id" element={<LogListView />} />
-              <Route path="/settings" element={<Dashboard />} />
-              <Route path="/images/:id" element={<AnnotationView />} />
-            </Route>
-
+              <Route path="/" element={<ProtectedRoute><EventPage /></ProtectedRoute>}>
+                <Route index element={<ProtectedRoute><EventListView /></ProtectedRoute>} />
+                <Route path="/" element={<ProtectedRoute><EventListView /></ProtectedRoute>} />
+                <Route path="/events/:id" element={<GameListView />} />
+                <Route path="/games/:id" element={<LogListView />} />
+                <Route path="/settings" element={<Dashboard />} />
+                <Route path="/images/:id" element={<AnnotationView />} />
+              </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />}></Route>
