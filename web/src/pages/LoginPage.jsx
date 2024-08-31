@@ -13,7 +13,7 @@ const LoginPage = ({ login, isAuthenticated }) => {
         </div>
       </div>
       <div className="right-container">
-        <LoginForm />
+        <LoginForm route="/api/token/" method="login"/>
       </div>
     </div>
   );

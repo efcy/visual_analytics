@@ -1,43 +1,43 @@
 import { useState, useEffect } from "react";
-import { connect } from 'react-redux';
-import { login } from '@/actions/auth';
-import CSRFToken from './CSRFToken';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants";
 import "@/styles/login.css"
+import api from "@/api";
 import { useNavigate } from "react-router-dom";
 
 
-const LoginForm = ({ login, isAuthenticated }) => {
-
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
-
-    const { username, password } = formData;
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    const onSubmit = e => {
-        e.preventDefault();
-        console.log(username)
-        login(username, password);
-    };
+const LoginForm = ({ route, method }) => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await api.post(route, { username, password })
+            if (method === "login") {
+                localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+                navigate("/")
+            } else {
+                navigate("/login")
+            }
+        } catch (error) {
+            alert(error)
+        } finally {
+            setLoading(false)
         }
-    }, [isAuthenticated, navigate]);
+    };
 
     return (
-        <form onSubmit={e => onSubmit(e)} className="form-container">
+        <form onSubmit={e => handleSubmit(e)} className="form-container">
             <h1>Login</h1>
             <input
                 className="form-input"
                 type="text"
                 name='username'
                 value={username}
-                onChange={e => onChange(e)}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
             <input
@@ -45,10 +45,9 @@ const LoginForm = ({ login, isAuthenticated }) => {
                 type="password"
                 name='password' 
                 value={password}
-                onChange={e => onChange(e)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
-            
             <button className="form-button" type="submit">
                 Login
             </button>
@@ -56,8 +55,4 @@ const LoginForm = ({ login, isAuthenticated }) => {
     );
 }
 
-const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-  });
-
-export default connect(mapStateToProps, { login })(LoginForm);
+export default LoginForm

@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 #users need to authenticate with session or token to use any endpoint
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework.authentication.SessionAuthentication',
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         'rest_framework.authentication.TokenAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
@@ -38,6 +38,11 @@ REST_FRAMEWORK = {
     ],
     #generates API documentation based on the OpenAPI 3.0 standard.
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 # Application definition

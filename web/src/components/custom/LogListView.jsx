@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
 import LogCard from "./LogCard"
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
@@ -18,7 +17,7 @@ function LogListView() {
     }, [debounce]); // this list is called dependency array
 
     const getLogs = () => {
-        axios
+        api
             .get(`${import.meta.env.VITE_API_URL}/api/robotdata?game=${id}`)
             .then((res) => res.data)
             .then((data) => {

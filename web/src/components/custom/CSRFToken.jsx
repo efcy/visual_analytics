@@ -35,7 +35,7 @@ const CSRFToken = () => {
                     withCredentials: true
                 };
 
-                await axios.get(`${import.meta.env.VITE_API_URL}/accounts/csrf_cookie`, config);
+                await api.get(`${import.meta.env.VITE_API_URL}/accounts/csrf_cookie`, config);
                 console.log("successfully got crsf token from cookies")
                 setcsrftoken(getCookie('csrftoken'));
             } catch (err) {

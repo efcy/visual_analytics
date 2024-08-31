@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from "@/api";
 import EventCard from "./EventCard"
 import { useDispatch } from "react-redux";
 import { set_event, reset_event, reset_game } from "@/reducers/breadcrumbSlice";
@@ -19,7 +19,7 @@ function EventListView() {
     }, [debounce]); // this list is called dependency array
 
     const getEvents = () => {
-        axios
+        api
             .get(`${import.meta.env.VITE_API_URL}/api/events?name=${searchtxt}`)
             .then((res) => res.data)
             .then((data) => {

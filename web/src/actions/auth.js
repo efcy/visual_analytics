@@ -23,7 +23,7 @@ export const checkAuthenticated = () => async dispatch => {
     };
 
     try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/accounts/authenticated`, config);
+        const res = await api.get(`${import.meta.env.VITE_API_URL}/accounts/authenticated`, config);
 
         if (res.data.error || res.data.isAuthenticated === 'error') {
             dispatch({
@@ -91,7 +91,7 @@ export const logout = () => async dispatch => {
     });
 
     try {
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/accounts/logout`, body, config);
+        const res = await api.post(`${import.meta.env.VITE_API_URL}/accounts/logout`, body, config);
 
         if (res.data.success) {
             dispatch({
@@ -123,7 +123,7 @@ export const delete_account = () => async dispatch => {
     });
 
     try {
-        const res = await axios.delete(`${import.meta.env.VITE_API_URL}/accounts/delete`, config, body);
+        const res = await api.delete(`${import.meta.env.VITE_API_URL}/accounts/delete`, config, body);
 
         if (res.data.success) {
             dispatch({
