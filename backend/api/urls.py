@@ -16,7 +16,7 @@ router.register('events',views.EventViewSet)
 router.register('games', views.GameViewSet)
 router.register('robotdata',views.RobotDataViewSet)
 router.register('image',views.ImageViewSet)
-router.register('imageannotation',views.ImageAnnotationViewSet)
+router.register('annotation',views.AnnotationViewSet)
 router.register("sensorlogs",views.SensorLogViewSet)
 
 urlpatterns += router.urls

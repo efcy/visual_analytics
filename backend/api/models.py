@@ -80,7 +80,7 @@ class Image(models.Model):
     def __str__(self):
         return f"{self.log}-{self.camera}-{self.type}-{self.frame_number}"
     
-class ImageAnnotation(models.Model):
-    image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='ImageAnnotation')
-    type  = models.CharField(max_length=100)
+class Annotation(models.Model):
+    image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='Annotation')
+    annotation_id  = models.CharField(max_length=100)
     annotation = models.JSONField(blank=True, null=True)

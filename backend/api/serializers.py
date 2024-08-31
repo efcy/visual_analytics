@@ -20,9 +20,9 @@ class SensorLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ImageAnnotationSerializer(serializers.ModelSerializer):
+class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ImageAnnotation
+        model = models.Annotation
         fields = '__all__'
 
 

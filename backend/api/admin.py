@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Game, RobotData, Image, SensorLog
+from .models import Event, Game, RobotData, Image, SensorLog, Annotation
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ admin.site.register(Game)
 admin.site.register(RobotData, RobotDataAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(SensorLog)
+admin.site.register(Annotation)

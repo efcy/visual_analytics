@@ -201,7 +201,7 @@ class ImageCountView(APIView):
         return Response({'count': count}, status=status.HTTP_200_OK)
 
 
-class ImageAnnotationViewSet(viewsets.ModelViewSet):
+class AnnotationViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = models.ImageAnnotation.objects.all()
-    serializer_class = serializers.ImageAnnotationSerializer
+    queryset = models.Annotation.objects.all()
+    serializer_class = serializers.AnnotationSerializer
