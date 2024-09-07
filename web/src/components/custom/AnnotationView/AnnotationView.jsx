@@ -10,7 +10,8 @@ import classes from "./AnnotationView.module.css";
 const AnnotationView = () => {
   console.log("AnnotationView called")
   const [imageList, setImageList] = useState([]);
-  const [preloadedImages, setPreloadedImages] = useState([]);
+  const [preloadedImagesBottom, setPreloadedImagesBottom] = useState([]);
+  const [preloadedImagesTop, setPreloadedImagesTop] = useState([]);
   const [camera, setCamera] = useState("BOTTOM");
   const { id } = useParams();
   const store_idx = useSelector((state) => state.canvasReducer.index);
@@ -21,11 +22,13 @@ const AnnotationView = () => {
 
   useEffect(() => {
     setIsInitialLoading(true);
-    get_image_data();
-    setPreloadedImages([]);
+    get_image_list();
+    setPreloadedImagesBottom([]);
+    setPreloadedImagesTop([]);
+    console.log("switch camera")
   }, [camera]); // this list is called dependency array
 
-  const get_image_data = () => {
+  const get_image_list = () => {
     api
       .get(
         `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
@@ -33,11 +36,17 @@ const AnnotationView = () => {
       .then((res) => res.data)
       .then((data) => {
         setImageList(data);
-        console.log("Image List", data);
         setIsInitialLoading(false);
       })
       .catch((err) => alert(err));
   };
+
+  useEffect(() => {
+    if(imageList.length > 0){
+      console.log(imageList[0])
+    }
+    
+  }, [imageList]); // this list is called dependency array
   
   const loadImage = useCallback((url) => {
     return new Promise((resolve, reject) => {
@@ -50,28 +59,70 @@ const AnnotationView = () => {
 
   const loadImagesProgressively = useCallback(async () => {
     const startIndex = Math.max(0, store_idx - preloadRange);
-    const endIndex = Math.min(imageList.length, store_idx + preloadRange + 1);
+    const endIndex = Math.min(imageList.length - 1, store_idx + preloadRange + 1);
+    var updatedArray = [];
+    var preloaded_images = Object()
+
+    if (camera === "TOP"){
+      preloaded_images = preloadedImagesTop
+      updatedArray = [...preloadedImagesTop];
+    }else{
+      preloaded_images = preloadedImagesBottom
+      updatedArray = [...preloadedImagesBottom];
+    }
 
     for (let i = startIndex; i < endIndex; i++) {
-      if (!preloadedImages[i] && imageList[i]) {
+      if (!preloaded_images[i] && imageList[i]) {
         const imageUrl = "https://logs.berlin-united.com/" + imageList[i].image_url;
         try {
           const loadedImage = await loadImage(imageUrl);
-          setPreloadedImages(prev => ({ ...prev, [i]: loadedImage }));
+          // copy existing array => research better ways
+          // one idea is to not have it in state
+          updatedArray[i] = loadedImage;
         } catch (error) {
           console.error(`Error loading image at index ${i}:`, error);
         }
       }
     }
-  }, [store_idx, imageList, preloadedImages, loadImage, preloadRange, camera]);
+    // delete previous entries
+    for (let i = 0; i < startIndex; i++) {
+      updatedArray[i] = null;
+    }
+    // delete images after the range
+    for (let i = endIndex; i < imageList.length - 1; i++) {
+      updatedArray[i] = null;
+    }
+
+    // set state
+    if (camera === "TOP"){
+      setPreloadedImagesTop(updatedArray);
+    }else{
+      setPreloadedImagesBottom(updatedArray);
+    }
+
+  }, [store_idx, imageList, loadImage, preloadRange, camera]);
 
   useEffect(() => {
     if (!isInitialLoading) {
       loadImagesProgressively();
     }
   }, [loadImagesProgressively, isInitialLoading]);
+  /*
+  useEffect(() => {
+    console.log(preloadedImages)
+  }, [preloadedImages]); // this list is called dependency array
+  */
 
-  const currentImage = useMemo(() => preloadedImages[store_idx], [preloadedImages, store_idx]);
+  // FIXME
+  const currentImage = useMemo(() => {
+    if (camera === "TOP"){
+      return preloadedImagesTop[store_idx];
+    }else{
+      return preloadedImagesBottom[store_idx];
+    }
+    
+  },
+  [preloadedImagesBottom, preloadedImagesTop, store_idx, camera]);
 
 
   return (
