@@ -178,6 +178,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
 CORS_ALLOW_METHODS = [
     'OPTIONS',
     'POST',
+    'PUT',
 ]
 
 # If you need to allow specific headers
