@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import api from "@/api";
 import "@/styles/globals.css";
 import { Button } from "@/components/ui/button"
 import {
@@ -24,25 +24,25 @@ const Dashboard = () => {
   }, []);
 
   const getUser = () => {
-      axios
-          .get(`${import.meta.env.VITE_API_URL}/accounts/user`)
-          .then((res) => res.data)
-          .then((data) => {
-              setUser(data.username);
-              setEmail(data.email);
-              console.log("User: ", data.username);
-          })
-          .catch((err) => alert(err));}
+    api
+      .get(`${import.meta.env.VITE_API_URL}/accounts/user`)
+      .then((res) => res.data)
+      .then((data) => {
+          setUser(data.username);
+          setEmail(data.email);
+          console.log("User: ", data.username);
+      })
+      .catch((err) => alert(err));}
   
   const getToken = () => {
-    axios
-        .get(`${import.meta.env.VITE_API_URL}/accounts/token`)
-        .then((res) => res.data)
-        .then((data) => {
-            setToken(data.token);
-            console.log("User: ", data.token);
-        })
-        .catch((err) => alert(err));}
+    api
+      .get(`${import.meta.env.VITE_API_URL}/accounts/token`)
+      .then((res) => res.data)
+      .then((data) => {
+          setToken(data.token);
+          console.log("User: ", data.token);
+      })
+      .catch((err) => alert(err));}
 
   const handleNameChange = (e) => {
     setUser(e.target.value);
@@ -57,21 +57,21 @@ const Dashboard = () => {
       email: email,
     };
     console.log("updating")
-    axios
-        .put(`${import.meta.env.VITE_API_URL}/accounts/update`,payload)
-        .then((res) => res.data)
-        .catch((err) => alert(err));}
+    api
+      .put(`${import.meta.env.VITE_API_URL}/accounts/update`,payload)
+      .then((res) => res.data)
+      .catch((err) => alert(err));}
   
   
   const refreshToken = () => {
-    axios
-        .get(`${import.meta.env.VITE_API_URL}/accounts/regentoken`)
-        .then((res) => res.data)
-        .then((data) => {
-            setToken(data.token);
-            console.log("User: ", data.token);
-        })
-        .catch((err) => alert(err));}
+    api
+      .get(`${import.meta.env.VITE_API_URL}/accounts/regentoken`)
+      .then((res) => res.data)
+      .then((data) => {
+          setToken(data.token);
+          console.log("User: ", data.token);
+      })
+      .catch((err) => alert(err));}
 
 
   return (
