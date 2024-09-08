@@ -7,7 +7,7 @@ from user.models import VATUser,Organization
 from .serializers import VATUserSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
-
+from rest_framework.authtoken.models import Token
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
@@ -122,14 +122,33 @@ class GetUserProfileView(APIView):
         try:
             user = self.request.user
             username = user.username
+            email = user.email
 
-            user_profile = VATUser.objects.get(user=user)
+            user_profile = VATUser.objects.get(username=username)
             user_profile = VATUserSerializer(user_profile)
 
-            return Response({ 'profile': user_profile.data, 'username': str(username) })
+            # we don't want to send every user info to the frontend
+            # return Response({ 'profile': user_profile.data, 'username': str(username) })
+            return Response({ 'username': str(username),'email':email})
         except Exception as e:
             print(e)
             return Response({ 'error': 'Something went wrong when retrieving profile' })
+
+class GetUserToken(APIView):
+    def get(self,request,format=None):
+        user = self.request.user
+
+        token = Token.objects.get(user=user)
+        
+        return Response({"token":token.key})
+
+class RegenerateUserToken(APIView):
+    def get(self,request,format=None):
+        user = self.request.user
+        t = Token.objects.get(user=user) 
+        t.delete()
+        t = Token.objects.create(user=user)
+        return Response({"token":t.key})
 
 class UpdateUserProfileView(APIView):
     def put(self, request, format=None):
@@ -138,12 +157,12 @@ class UpdateUserProfileView(APIView):
             username = user.username
 
             data = self.request.data
+            new_user = data['user_name']
             first_name = data['first_name']
             last_name = data['last_name']
-            phone = data['phone']
-            city = data['city']
+            email =  data['email']
 
-            User.objects.filter(user=user).update(first_name=first_name, last_name=last_name, phone=phone, city=city)
+            User.objects.filter(user=user).update(username=username,email=email)
 
             user_profile = VATUser.objects.get(user=user)
             user_profile = VATUserSerializer(user_profile)

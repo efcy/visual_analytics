@@ -11,5 +11,7 @@ urlpatterns = [
     path('csrf_cookie', GetCSRFToken.as_view(), name='csrf_cookie'),
     path('user', GetUserProfileView.as_view(), name='user_profile'),
     path('update', UpdateUserProfileView.as_view(), name='update_profile'),
-    path('api-token-auth/', views.obtain_auth_token)
+    path('api-token-auth/', views.obtain_auth_token),
+    path('token',GetUserToken.as_view(),name='get_token'),
+    path('regentoken',RegenerateUserToken.as_view(),name='regenerate_token')
 ]
