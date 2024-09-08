@@ -1,14 +1,13 @@
 from django.db import models
-#from django.contrib.gis.db import models as geo_models
-from django.contrib.postgres.fields import DateTimeRangeField
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    time = DateTimeRangeField(blank=True, null=True) # this is the reason swagger won't work anymore
+    start_day = models.DateField(blank=True, null=True)
+    end_day = models.DateField(blank=True, null=True)
+    timezone = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
-    # location = geo_models.PointField() # TODO figure out how to use this with our postgres and with testing 
+    location = models.CharField(max_length=100, blank=True, null=True) # latitude and longitude in Degrees, minutes, and seconds (DMS)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
