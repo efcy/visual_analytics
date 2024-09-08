@@ -3,7 +3,6 @@ import typing
 
 from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
-from .annotation_last_action import AnnotationLastAction
 
 
 class Annotation(pydantic_v1.BaseModel):
