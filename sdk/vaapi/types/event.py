@@ -17,9 +17,16 @@ class Event(pydantic_v1.BaseModel):
     name: typing.Optional[str] = pydantic_v1.Field(default=None)
     
     """
-    List of annotation results for the task
+    First Setup Day
+    FIXME change type
     """
-    time: typing.Optional[str] = None
+    start_day: typing.Optional[str] = None
+
+    """
+    Last Game Day
+    FIXME change type
+    """
+    end_day: typing.Optional[str] = None
 
     """
     Country the event took place
