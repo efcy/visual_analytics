@@ -147,7 +147,7 @@ const Dashboard = () => {
               <CardContent>
                 <form className="flex flex-col gap-4">
                   <Input
-                    placeholder="Project Name"
+                    disabled 
                     defaultValue={token}
                   />
                   <div className="flex items-center space-x-2">
