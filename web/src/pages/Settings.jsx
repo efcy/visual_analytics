@@ -117,7 +117,7 @@ const Dashboard = () => {
               <div className="p-0">
               <div className="flex items-center mb-4">
                 <Label htmlFor="username" className="w-24 mr-4 text-right">Username</Label>
-                <Input placeholder="username" id="username" value={user} />
+                <Input placeholder="username" id="username" value={user} onChange={handleNameChange} />
                 </div>
                 <div className="flex items-center mb-4">
                 <Label htmlFor="email" className="w-24 mr-4 text-right">Email</Label>
@@ -148,8 +148,7 @@ const Dashboard = () => {
                 <form className="flex flex-col gap-4">
                   <Input
                     placeholder="Project Name"
-                    defaultValue="Token"
-                    value={token}
+                    defaultValue={token}
                   />
                   <div className="flex items-center space-x-2">
                   <Button onClick={(e) => {
