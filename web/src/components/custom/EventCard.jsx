@@ -22,6 +22,13 @@ function EventCard({ event }) {
       </CardHeader>
       <CardContent>
         <CardTitle>Event: {event.name}</CardTitle>
+        <p>
+          <a target='_blank' 
+          rel='noopener noreferrer' 
+          href={`https://www.google.com/maps/place/${event.location}`}
+          onClick={(e) => e.stopPropagation()} // Prevents parent navigation 
+          >Location</a>
+        </p>
       </CardContent>
       <CardFooter className="px-6">
         <Progress value={33} />
