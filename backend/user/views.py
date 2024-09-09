@@ -154,18 +154,17 @@ class RegenerateUserToken(APIView):
 
 class UpdateUserProfileView(APIView):
     def put(self, request, format=None):
-        # try:
-        user = self.request.user
-        username = user.username
+        try:
+            user = self.request.user
+            username = user.username
 
-        data = self.request.data
-        new_user = data['user_name']
-        first_name = data['first_name']
-        last_name = data['last_name']
-        email =  data['email']
-        print(email)
-        VATUser.objects.filter(username=username).update(email=email,first_name=first_name,last_name=last_name)
+            data = self.request.data
+            new_user = data['user_name']
+            first_name = data['first_name']
+            last_name = data['last_name']
+            email =  data['email']
+            VATUser.objects.filter(username=username).update(email=email,first_name=first_name,last_name=last_name, username=new_user)
 
-        return Response({'sucess':f'Updated profile of {username}'})
-        # except:
-        #     return Response({ 'error': 'Something went wrong when updating profile' })
+            return Response({'sucess':f'Updated profile of {username}'})
+        except:
+            return Response({ 'error': 'Something went wrong when updating profile' })
