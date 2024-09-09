@@ -122,14 +122,16 @@ class GetUserProfileView(APIView):
         try:
             user = self.request.user
             username = user.username
-            email = user.email
+            
 
             user_profile = VATUser.objects.get(username=username)
-            user_profile = VATUserSerializer(user_profile)
-
+            #user_profile = VATUserSerializer(user_profile)
+            email=user_profile.email
+            first_name = user_profile.first_name
+            last_name = user_profile.last_name
             # we don't want to send every user info to the frontend
             # return Response({ 'profile': user_profile.data, 'username': str(username) })
-            return Response({ 'username': str(username),'email':email})
+            return Response({ 'username': str(username),'email':email,'first_name':first_name,'last_name':last_name})
         except Exception as e:
             print(e)
             return Response({ 'error': 'Something went wrong when retrieving profile' })
@@ -152,21 +154,18 @@ class RegenerateUserToken(APIView):
 
 class UpdateUserProfileView(APIView):
     def put(self, request, format=None):
-        try:
-            user = self.request.user
-            username = user.username
+        # try:
+        user = self.request.user
+        username = user.username
 
-            data = self.request.data
-            new_user = data['user_name']
-            first_name = data['first_name']
-            last_name = data['last_name']
-            email =  data['email']
+        data = self.request.data
+        new_user = data['user_name']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email =  data['email']
+        print(email)
+        VATUser.objects.filter(username=username).update(email=email,first_name=first_name,last_name=last_name)
 
-            User.objects.filter(user=user).update(username=username,email=email)
-
-            user_profile = VATUser.objects.get(user=user)
-            user_profile = VATUserSerializer(user_profile)
-
-            return Response({ 'profile': user_profile.data, 'username': str(username) })
-        except:
-            return Response({ 'error': 'Something went wrong when updating profile' })
+        return Response({'sucess':f'Updated profile of {username}'})
+        # except:
+        #     return Response({ 'error': 'Something went wrong when updating profile' })

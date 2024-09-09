@@ -15,13 +15,30 @@ import { Label } from "@/components/ui/label"
 
 const Dashboard = () => {
   const [user, setUser] = useState('');
-  const [token, setToken] = useState(''); // State for token
-  const [email, setEmail] = useState('')
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
+  const [token, setToken] = useState(''); 
+  const [email, setEmail] = useState('');
+  const [copySuccess, setCopySuccess] = useState('');
+
+
+
   useEffect(() => {
     getUser();
     getToken();
     // Add an empty dependency array to avoid infinite calls
   }, []);
+
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopySuccess('Copied!');
+    } catch (err) {
+      setCopySuccess('Failed to copy!');
+    }
+  };
+
 
   const getUser = () => {
     api
@@ -30,6 +47,8 @@ const Dashboard = () => {
       .then((data) => {
           setUser(data.username);
           setEmail(data.email);
+          setFirst(data.first_name);
+          setLast(data.last_name);
           console.log("User: ", data.username);
       })
       .catch((err) => alert(err));}
@@ -50,11 +69,19 @@ const Dashboard = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+  const handleFirstChange = (e) => {
+    setFirst(e.target.value);
+  };
+  const handleLastChange = (e) => {
+    setLast(e.target.value);
+  };
 
   const updateUser = () => {
     const payload = {
       user_name: user,
       email: email,
+      first_name:first,
+      last_name:last
     };
     console.log("updating")
     api
@@ -88,17 +115,21 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
               <div className="p-0">
+              <div className="flex items-center mb-4">
+                <Label htmlFor="username" className="w-24 mr-4 text-right">Username</Label>
+                <Input placeholder="username" id="username" value={user} />
+                </div>
                 <div className="flex items-center mb-4">
                 <Label htmlFor="email" className="w-24 mr-4 text-right">Email</Label>
                 <Input placeholder="Email" id="email" value={email} onChange={handleEmailChange} />
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="name" className="w-24 mr-4 text-right">First Name</Label>
-                  <Input placeholder="First Name" id="name" value={user} onChange={handleNameChange}/>
+                  <Input placeholder="First Name" id="name" value={first} onChange={handleFirstChange}/>
                 </div>
                 <div className="flex items-center mb-4">
                   <Label htmlFor="surname" className="w-24 mr-4 text-right">Last Name</Label>
-                    <Input placeholder="Last Name" id="surname" />
+                    <Input placeholder="Last Name" id="surname" value={last} onChange={handleLastChange} />
                   </div>
                   </div>
               </CardContent>
@@ -121,7 +152,12 @@ const Dashboard = () => {
                     value={token}
                   />
                   <div className="flex items-center space-x-2">
-                  <Button>Copy</Button>
+                  <Button onClick={(e) => {
+                    e.preventDefault(); 
+                    copyToClipboard(token);
+                  }}
+                    >
+                    Copy</Button>
                   <Button onClick={(e) => {
                       e.preventDefault(); // Prevent default form submission on button click
                       refreshToken();

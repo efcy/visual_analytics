@@ -45,8 +45,8 @@ class CustomUserManager(BaseUserManager):
 class VATUser(AbstractUser):
     # implicit django behavior: if you inherit from AbstractUser those fields exists by default
     # deactivate them by setting them to None
-    first_name = None
-    last_name = None
+    first_name = models.EmailField(max_length=254,blank=True)
+    last_name = models.EmailField(max_length=254,blank=True)
 
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=254,blank=True)
