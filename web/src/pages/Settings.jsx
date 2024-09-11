@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 const Dashboard = () => {
   const [user, setUser] = useState('');
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
+      toast("Token has ben copied!")
       setCopySuccess('Copied!');
     } catch (err) {
       setCopySuccess('Failed to copy!');
@@ -165,6 +167,7 @@ const Dashboard = () => {
                     Renew
                   </Button>
                   </div>
+
                 </form>
               </CardContent>
             </Card>
