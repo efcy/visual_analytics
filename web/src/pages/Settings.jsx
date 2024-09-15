@@ -167,13 +167,12 @@ const Dashboard = () => {
                     Renew
                   </Button>
                   </div>
-
                 </form>
               </CardContent>
             </Card>
         </div>
       </main>
-      <Toaster />  {/* Adding Toaster here */}
+      <Toaster />
     </div>
   )
 }

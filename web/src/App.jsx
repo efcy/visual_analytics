@@ -37,7 +37,6 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
-          
         </BrowserRouter>
       </PersistGate>
     </Provider>
