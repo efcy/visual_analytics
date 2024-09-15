@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-
+import { Toaster } from "@/components/ui/sonner"
 const Dashboard = () => {
   const [user, setUser] = useState('');
   const [first, setFirst] = useState('');
@@ -173,6 +173,7 @@ const Dashboard = () => {
             </Card>
         </div>
       </main>
+      <Toaster />  {/* Adding Toaster here */}
     </div>
   )
 }

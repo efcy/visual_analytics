@@ -11,7 +11,7 @@ import ProtectedRoute from "./components/custom/ProtectedRoute"
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./store";
-import { Toaster } from "@/components/ui/sonner"
+
 
 function Logout() {
   localStorage.clear();
@@ -20,7 +20,6 @@ function Logout() {
 
 
 function App() {
-  //<Route exact path="/" element={<Navigate to="/events" replace />}/>
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -38,7 +37,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
-          <Toaster />  {/* Adding Toaster here */}
+          
         </BrowserRouter>
       </PersistGate>
     </Provider>
