@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import api from "@/api";
 import EventCard from "./EventCard"
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { set_event, reset_event, reset_game } from "@/reducers/breadcrumbSlice";
 import useDebounce from "@/hooks/use_debounce";
 
@@ -13,6 +14,7 @@ function EventListView() {
 
     const debounce = useDebounce(searchtxt, 300)
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getEvents();
@@ -31,8 +33,9 @@ function EventListView() {
         dispatch(reset_game());
     };
 
-    const set_current_event = (name) =>{
-        dispatch(set_event(name));
+    const event_nav_func = (event) =>{
+        dispatch(set_event(event.name));
+        navigate(`/events/${event.id}`)
     }
 
     return (
@@ -48,12 +51,8 @@ function EventListView() {
                 </div>
             </div>
             <div className="project-boxes jsGridView">
-
-
                 {events.map((event) => (
-                    <Link to={`/events/${event.id}`} className="project-box-wrapper" key={event.name} onClick={() => set_current_event(event.name)}>
-                        <EventCard event={event} ></EventCard>
-                    </Link>
+                    <EventCard event={event} key={event.name} event_nav_func={event_nav_func}></EventCard>
                 ))}
             </div>
         </div>

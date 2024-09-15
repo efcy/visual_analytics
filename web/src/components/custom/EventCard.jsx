@@ -14,9 +14,9 @@ import { Progress } from "@/components/ui/progress";
 // TODO have three dots here that open a context menu -> maybe open a dialog directly for editing the event
 // could also open a drawer to the side for all the context (location, comments, number of games, etc)
 // TODO add statistics here
-function EventCard({ event }) {
+function EventCard({ event, event_nav_func  }) {
   return (
-    <Card>
+    <Card onClick={() => event_nav_func(event)}>
       <CardHeader>
         <img src={event_image} alt="" />
       </CardHeader>
