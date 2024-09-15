@@ -20,7 +20,6 @@ function Logout() {
 
 
 function App() {
-  //<Route exact path="/" element={<Navigate to="/events" replace />}/>
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

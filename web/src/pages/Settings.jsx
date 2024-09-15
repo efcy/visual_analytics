@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 const Dashboard = () => {
   const [user, setUser] = useState('');
   const [first, setFirst] = useState('');
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
+      toast("Token has ben copied!")
       setCopySuccess('Copied!');
     } catch (err) {
       setCopySuccess('Failed to copy!');
@@ -170,6 +172,7 @@ const Dashboard = () => {
             </Card>
         </div>
       </main>
+      <Toaster />
     </div>
   )
 }
