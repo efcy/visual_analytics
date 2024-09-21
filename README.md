@@ -17,8 +17,7 @@ python manage.py runserver
 
 ```
 
-Now roughly following: https://www.youtube.com/watch?v=c-QsfbznSXI&t=1s
-- this uses jwt instead of token based auth -> see where problems might be later on
+
 
 created the web folder like this:
 npm create vite@latest web -- --template react

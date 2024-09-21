@@ -26,12 +26,12 @@ function App() {
         <BrowserRouter>
           <Routes>
               <Route path="/" element={<ProtectedRoute><EventPage /></ProtectedRoute>}>
-                <Route index element={<ProtectedRoute><EventListView /></ProtectedRoute>} />
+                <Route index element={<EventListView />} />
                 <Route path="/" element={<ProtectedRoute><EventListView /></ProtectedRoute>} />
-                <Route path="/events/:id" element={<GameListView />} />
-                <Route path="/games/:id" element={<LogListView />} />
-                <Route path="/settings" element={<Dashboard />} />
-                <Route path="/images/:id" element={<AnnotationView />} />
+                <Route path="/events/:id" element={<ProtectedRoute><GameListView /></ProtectedRoute>} />
+                <Route path="/games/:id" element={<ProtectedRoute><LogListView /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/images/:id" element={<ProtectedRoute><AnnotationView /></ProtectedRoute>} />
               </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<Logout />} />
