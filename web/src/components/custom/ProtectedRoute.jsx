@@ -41,7 +41,7 @@ function ProtectedRoute({ children }) {
         const now = Date.now() / 1000;
 
         if (tokenExpiration < now) {
-            console.log("get new refresh tolen")
+            console.log("get new refresh token")
             await refreshToken();
         } else {
             setIsAuthorized(true);

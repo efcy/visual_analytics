@@ -37,6 +37,7 @@ const refreshToken = async () => {
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
+    //TODO check for token validity and get a new token if not valid
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

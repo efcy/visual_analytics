@@ -1,0 +1,10 @@
+.card_title_wrapper{
+    display: flex;
+    justify-content : space-between;
+}
+
+.event_title{
+    letter-spacing: -0.025em;
+    line-height: 1;
+    font-weight: 600;
+}
