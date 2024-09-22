@@ -6,6 +6,10 @@ Access to the V7 tool for inspiration can be given on request.
 ## SDK
 Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
 
+## Development Setup
+Guide on how to setup the development enviroment: [dev setup](docs/dev-setup.md)
+
+
 ### Old
 Labelstudio Implementation for RoboCup SPL Data
 
