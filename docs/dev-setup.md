@@ -95,3 +95,10 @@ Make sure you have the log folder mounted via sshfs.
 ```bash
 export VAT_LOG_ROOT=<path to folder containing all the events>
 ```
+
+Make sure all events you want to add are stored in the event_list variable
+
+```bash
+python utils/input_data.py
+python utils/input_images.py
+```
