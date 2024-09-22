@@ -9,6 +9,12 @@ Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
 ## Development Setup
 Guide on how to setup the development enviroment: [dev setup](docs/dev-setup.md)
 
+## Usage
+Check out [usage](docs/usage.md)
+
+## Deployment
+Learn how to deploy the tool [deployment](docs/deployment.md)
+
 
 ### Old
 Labelstudio Implementation for RoboCup SPL Data
