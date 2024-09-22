@@ -1,6 +1,7 @@
 import React from "react";
 import "@/styles/new.css";
-import  DatePicker from "./DatePicker"
+import DatePicker from "./DatePicker";
+import MapComponent from "./MapComponent";
 import event_image from "@/assets/robocup.jpeg";
 import {
   Card,
@@ -11,8 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import  TimezonePicker from "@/components/custom/TimezonePicker/TimezonePicker.jsx";
-import  CountryPicker from "@/components/custom/CountryPicker/CountryPicker.jsx";
+import TimezonePicker from "@/components/custom/TimezonePicker/TimezonePicker.jsx";
+import CountryPicker from "@/components/custom/CountryPicker/CountryPicker.jsx";
 import {
   Dialog,
   DialogClose,
@@ -39,52 +40,60 @@ function EventCard({ event, event_nav_func }) {
       <CardContent>
         <div className={classes.card_title_wrapper}>
           <p className={classes.event_title}>Event: {event.name}</p>
-          <Dialog>
+          <Dialog className={classes.dialog}>
             <DialogTrigger>
               <FaEllipsisV />
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Update Event {event.name}</DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              <div className="p-0">
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="event_name" className="w-24 mr-4 text-right">
-                    Name
-                  </Label>
-                  <Input placeholder="event_name" id="event_name" />
+            <DialogContent>
+              <div className={classes.dialog_wrapper}>
+              <div className={classes.dialog_event_data}>
+                <DialogHeader>
+                  <DialogTitle>Update Event {event.name}</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <div className="p-0">
+                  <div className="flex items-center mb-4">
+                    <Label
+                      htmlFor="event_name"
+                      className="w-24 mr-4 text-right"
+                    >
+                      Name
+                    </Label>
+                    <Input placeholder="event_name" id="event_name" />
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Label htmlFor="start_day" className="w-24 mr-4 text-right">
+                      Start Day
+                    </Label>
+                    <DatePicker />
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Label htmlFor="end_day" className="w-24 mr-4 text-right">
+                      End Day
+                    </Label>
+                    <DatePicker />
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Label htmlFor="timezone" className="w-24 mr-4 text-right">
+                      Timezone
+                    </Label>
+                    <TimezonePicker />
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Label htmlFor="country" className="w-24 mr-4 text-right">
+                      Country
+                    </Label>
+                    <CountryPicker />
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Label htmlFor="location" className="w-24 mr-4 text-right">
+                      Location
+                    </Label>
+                    <Input placeholder="Location" id="location" />
+                  </div>
                 </div>
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="start_day" className="w-24 mr-4 text-right">
-                    Start Day
-                  </Label>
-                  <DatePicker />
-                </div>
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="end_day" className="w-24 mr-4 text-right">
-                    End Day
-                  </Label>
-                  <DatePicker />
-                </div>
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="timezone" className="w-24 mr-4 text-right">
-                    Timezone
-                  </Label>
-                  <TimezonePicker />
-                </div>
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="country" className="w-24 mr-4 text-right">
-                    Country
-                  </Label>
-                  <CountryPicker />
-                </div>
-                <div className="flex items-center mb-4">
-                  <Label htmlFor="location" className="w-24 mr-4 text-right">
-                    Location
-                  </Label>
-                  <Input placeholder="Location" id="location" />
-                </div>
+              </div>
+              <MapComponent />
               </div>
             </DialogContent>
           </Dialog>
