@@ -34,7 +34,7 @@ class Game(models.Model):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
 class Logs(models.Model):
-    game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
+    game_id = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)
