@@ -61,7 +61,7 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RepresentationSerializer(serializers.ModelSerializer):
+class CognitionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Representations
+        model = models.CognitionRepresentation
         fields = '__all__'

@@ -201,10 +201,10 @@ class ImageCountView(APIView):
         return Response({'count': count}, status=status.HTTP_200_OK)
 
 
-class RepresentationViewSet(viewsets.ModelViewSet):
+class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.Image.objects.all()
-    serializer_class = serializers.RepresentationSerializer
+    queryset = models.CognitionRepresentation.objects.all()
+    serializer_class = serializers.CognitionRepresentationSerializer
 
     def list(self, request, *args, **kwargs):
         # Keep the original list behavior
@@ -214,8 +214,8 @@ class RepresentationViewSet(viewsets.ModelViewSet):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
         if log_id is not None:
-            queryset = models.Representations.objects.filter(log=log_id)
+            queryset = models.CognitionRepresentation.objects.filter(log=log_id)
         else:
-            queryset = models.Representations.objects.all()
+            queryset = models.CognitionRepresentation.objects.all()
 
         return queryset.order_by('frame_number')

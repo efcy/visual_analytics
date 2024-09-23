@@ -86,8 +86,8 @@ class Annotation(models.Model):
     annotation = models.JSONField(blank=True, null=True)
 
 
-class Representations(models.Model):
-    log = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='representations')
+class CognitionRepresentation(models.Model):
+    log = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='cognition_repr')
     frame_number = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=100)
     data = models.JSONField(blank=True, null=True)
