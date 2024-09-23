@@ -20,42 +20,6 @@ def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
 
-class SensorLogViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.SensorLogSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = models.SensorLog.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        # Keep the original list behavior
-        return super().list(request, *args, **kwargs)
-
-    #overloading the create function to allow lists and single objects as input
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        print("request.data:", data)
-        if isinstance(data, list):
-            serializer = self.get_serializer(data=data, many=True)
-        else:
-            serializer = self.get_serializer(data=data)
-        print("serializer created")
-        
-
-        serializer.is_valid(raise_exception=False)
-        print(serializer.errors)
-        print("serializer.is_valid")
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        print(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    def destroy(self, request, *args, **kwargs):
-        # Override destroy method to handle both single and bulk delete
-        if kwargs.get('pk') == 'all':
-            deleted_count, _ = self.get_queryset().delete()
-            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
-        return super().destroy(request, *args, **kwargs)
-
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
@@ -219,3 +183,39 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             queryset = models.CognitionRepresentation.objects.all()
 
         return queryset.order_by('frame_number')
+    
+class MotionRepresentationViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MotionRepresentationSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.MotionRepresentation.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        # Keep the original list behavior
+        return super().list(request, *args, **kwargs)
+
+    #overloading the create function to allow lists and single objects as input
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        print("request.data:", data)
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        print("serializer created")
+        
+
+        serializer.is_valid(raise_exception=False)
+        print(serializer.errors)
+        print("serializer.is_valid")
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def destroy(self, request, *args, **kwargs):
+        # Override destroy method to handle both single and bulk delete
+        if kwargs.get('pk') == 'all':
+            deleted_count, _ = self.get_queryset().delete()
+            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
+        return super().destroy(request, *args, **kwargs)

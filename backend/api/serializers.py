@@ -14,12 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class SensorLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.SensorLog
-        fields = '__all__'
-
-
 class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Annotation
@@ -64,4 +58,10 @@ class GameSerializer(serializers.ModelSerializer):
 class CognitionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CognitionRepresentation
+        fields = '__all__'
+
+
+class MotionRepresentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MotionRepresentation
         fields = '__all__'

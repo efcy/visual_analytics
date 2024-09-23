@@ -52,13 +52,6 @@ class RobotData(models.Model):
     def __str__(self):
         return f"{self.log_path}"
 
-class SensorLog(models.Model):
-    robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='sensorlogs')
-    sensor_frame_number = models.IntegerField(blank=True, null=True)
-    sensor_frame_time = models.IntegerField(blank=True, null=True)
-    representation_name = models.CharField(max_length=40, blank=True, null=True)
-    representation_data = models.JSONField(blank=True, null=True)
-    
 class Image(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
@@ -97,3 +90,11 @@ class CognitionRepresentation(models.Model):
 
     def __str__(self):
         return f"{self.log}-{self.frame_number}-{self.name}"
+
+
+class MotionRepresentation(models.Model):
+    robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='motion_repr')
+    sensor_frame_number = models.IntegerField(blank=True, null=True)
+    sensor_frame_time = models.IntegerField(blank=True, null=True)
+    representation_name = models.CharField(max_length=40, blank=True, null=True)
+    representation_data = models.JSONField(blank=True, null=True)
