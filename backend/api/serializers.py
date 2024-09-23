@@ -59,4 +59,9 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = '__all__'
-        # FIXME adding __all__ is bad practice, explicitely say what we send
+
+
+class RepresentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Representations
+        fields = '__all__'
