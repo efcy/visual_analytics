@@ -16,35 +16,6 @@ class AnnotationsClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Annotation:
-        """
-        Tasks can have multiple annotations. Use this call to retrieve a specific annotation using its ID.
-
-        You can find the ID in the Label Studio UI listed at the top of the annotation in its tab. It is also listed in the History panel when viewing the annotation. Or you can use [Get all task annotations](list) to find all annotation IDs.
-
-        Parameters
-        ----------
-        id : int
-            A unique integer value identifying this annotation.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Annotation
-            Retrieved annotation
-
-        Examples
-        --------
-        from label_studio_sdk.client import LabelStudio
-
-        client = LabelStudio(
-            api_key="YOUR_API_KEY",
-        )
-        client.annotations.get(
-            id=1,
-        )
-        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/annotations/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )

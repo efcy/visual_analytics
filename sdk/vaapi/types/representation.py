@@ -5,45 +5,31 @@ from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
-class Event(pydantic_v1.BaseModel):
+class Representations(pydantic_v1.BaseModel):
     """
     Id assigned by django
     """
     id: typing.Optional[int] = None
 
     """
-    Event Name
+    Log ID: Id of related log / robot data
     """
-    name: typing.Optional[str] = pydantic_v1.Field(default=None)
+    log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
     
     """
-    First Setup Day
-    FIXME change type
+    Frame Number from game.log or combined.log
     """
-    start_day: typing.Optional[dt.date] = None
+    start_day: typing.Optional[int] = None
 
     """
-    Last Game Day
-    FIXME change type
+    Representation Name
     """
-    end_day: typing.Optional[dt.date] = None
+    name: typing.Optional[str] = None
 
     """
-    Country the event took place
+    JSON data of a representation
     """
-    country: typing.Optional[str] = pydantic_v1.Field(default=None)
-    
-    """
-    Latitude and Longitude of event location
-    Right click anywhere in google maps to get the coordinates. It should look like
-    51.41388562549216, 5.477373810494177
-    """
-    location: typing.Optional[str] = pydantic_v1.Field(default=None)
-
-    """
-    comment
-    """
-    comment: typing.Optional[str] = pydantic_v1.Field(default=None)
+    data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

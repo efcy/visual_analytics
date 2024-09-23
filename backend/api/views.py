@@ -82,7 +82,7 @@ class EventViewSet(viewsets.ModelViewSet):
         # For other cases, proceed with normal list behavior
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
+    
     def get_queryset(self):
         return models.Event.objects.all()
 
@@ -201,3 +201,21 @@ class ImageCountView(APIView):
         return Response({'count': count}, status=status.HTTP_200_OK)
 
 
+class RepresentationViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Image.objects.all()
+    serializer_class = serializers.RepresentationSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Keep the original list behavior
+        return super().list(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        log_id = self.request.query_params.get("log")
+        print("log_id", log_id)
+        if log_id is not None:
+            queryset = models.Representations.objects.filter(log=log_id)
+        else:
+            queryset = models.Representations.objects.all()
+
+        return queryset.order_by('frame_number')

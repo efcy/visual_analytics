@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css"
-import { Link } from 'react-router-dom';
 import api from "@/api";
-import EventCard from "./EventCard"
+import EventCard from "./EventCard/EventCard"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { set_event, reset_event, reset_game } from "@/reducers/breadcrumbSlice";

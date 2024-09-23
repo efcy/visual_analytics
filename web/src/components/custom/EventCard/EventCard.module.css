@@ -1,0 +1,23 @@
+.card_title_wrapper{
+    display: flex;
+    justify-content : space-between;
+}
+
+.event_title{
+    letter-spacing: -0.025em;
+    line-height: 1;
+    font-weight: 600;
+}
+
+
+.dialog{
+    max-width: 80% !important;
+}
+
+.dialog_wrapper{
+    display: flex;
+}
+
+.dialog_event_data{
+    margin: 5px;
+}

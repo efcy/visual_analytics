@@ -40,7 +40,7 @@ class RobotData(models.Model):
     head_number = models.IntegerField(blank=True, null=True)
     body_serial = models.CharField(max_length=20, blank=True, null=True)
     head_serial = models.CharField(max_length=20, blank=True, null=True)
-    representations = models.JSONField(blank=True, null=True)
+    representation_list = models.JSONField(blank=True, null=True)
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     log_path = models.CharField(max_length=200, blank=True, null=True)
 
@@ -78,8 +78,22 @@ class Image(models.Model):
 
     def __str__(self):
         return f"{self.log}-{self.camera}-{self.type}-{self.frame_number}"
-    
+
+
 class Annotation(models.Model):
     image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='Annotation')
     annotation_id  = models.CharField(max_length=100)
     annotation = models.JSONField(blank=True, null=True)
+
+
+class Representations(models.Model):
+    log = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='representations')
+    frame_number = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=100)
+    data = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('log', 'frame_number', 'name')
+
+    def __str__(self):
+        return f"{self.log}-{self.frame_number}-{self.name}"
