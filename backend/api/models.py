@@ -33,7 +33,7 @@ class Game(models.Model):
     def __str__(self):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
-class RobotData(models.Model):
+class Logs(models.Model):
     game = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
@@ -60,7 +60,7 @@ class Image(models.Model):
         raw = "RAW", _("raw")
         jpeg = "JPEG", _("jpeg")
     # FIXME playernumber, robotnumber and serial must be part of the foreign key, we can change robots midgame when one robot breaks
-    log = models.ForeignKey(RobotData,on_delete=models.CASCADE,related_name='images')
+    log = models.ForeignKey(Logs,on_delete=models.CASCADE,related_name='images')
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     frame_number = models.IntegerField(blank=True, null=True)
@@ -80,7 +80,7 @@ class Annotation(models.Model):
 
 
 class CognitionRepresentation(models.Model):
-    log = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='cognition_repr')
+    log = models.ForeignKey(Logs,on_delete=models.CASCADE, related_name='cognition_repr')
     frame_number = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=100)
     data = models.JSONField(blank=True, null=True)
@@ -93,7 +93,7 @@ class CognitionRepresentation(models.Model):
 
 
 class MotionRepresentation(models.Model):
-    robotdata = models.ForeignKey(RobotData,on_delete=models.CASCADE, related_name='motion_repr')
+    robotdata = models.ForeignKey(Logs,on_delete=models.CASCADE, related_name='motion_repr')
     sensor_frame_number = models.IntegerField(blank=True, null=True)
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)

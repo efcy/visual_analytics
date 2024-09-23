@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Event, Game, RobotData, Image, MotionRepresentation, Annotation
+from .models import Event, Game, Logs, Image, MotionRepresentation, Annotation
 
 class AnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -31,7 +31,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Event)
 admin.site.register(Game)
-admin.site.register(RobotData, RobotDataAdmin)
+admin.site.register(Logs, RobotDataAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(MotionRepresentation)
 admin.site.register(Annotation, AnnotationAdmin)

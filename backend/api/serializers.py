@@ -26,14 +26,14 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RobotDataSerializer(serializers.ModelSerializer):
+class LogsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.RobotData
+        model = models.Logs
         fields = '__all__'
 
     def create(self, validated_data):
         # TODO figure out why this works
-        instance, created = models.RobotData.objects.get_or_create(
+        instance, created = models.Logs.objects.get_or_create(
             game=validated_data.get('game'),
             player_number=validated_data.get('player_number'),
             head_number=validated_data.get('head_number'),
