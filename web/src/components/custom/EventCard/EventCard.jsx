@@ -1,14 +1,13 @@
 import React from "react";
 import "@/styles/new.css";
-import DatePicker from "./DatePicker";
-import MapComponent from "./MapComponent";
+import DatePicker from "../Datepicker/DatePicker";
+import MapComponent from "../MapView/MapComponent";
 import event_image from "@/assets/robocup.jpeg";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,9 +26,8 @@ import {
 import { FaEllipsisV } from "react-icons/fa";
 import { Progress } from "@/components/ui/progress";
 import classes from "./EventCard.module.css";
+import { cn } from "@/lib/utils";
 
-// TODO have three dots here that open a context menu -> maybe open a dialog directly for editing the event
-// could also open a drawer to the side for all the context (location, comments, number of games, etc)
 // TODO add statistics here
 function EventCard({ event, event_nav_func }) {
   return (
@@ -40,16 +38,15 @@ function EventCard({ event, event_nav_func }) {
       <CardContent>
         <div className={classes.card_title_wrapper}>
           <p className={classes.event_title}>Event: {event.name}</p>
-          <Dialog className={classes.dialog}>
+          <Dialog>
             <DialogTrigger>
               <FaEllipsisV />
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className={cn(classes.dialog)}>
               <div className={classes.dialog_wrapper}>
               <div className={classes.dialog_event_data}>
                 <DialogHeader>
                   <DialogTitle>Update Event {event.name}</DialogTitle>
-                  <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="p-0">
                   <div className="flex items-center mb-4">
