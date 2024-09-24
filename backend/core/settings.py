@@ -24,7 +24,7 @@ INTERNAL_IPS = [
 ]
 #list of allowed hosts that can perform requests to django
 #matches with host headers in requests
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://api.berlin-united.com']
 
 #configures default authentication and permissions
 #users need to authenticate with session or token to use any endpoint
