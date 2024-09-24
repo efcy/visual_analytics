@@ -5,7 +5,7 @@ from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
-class Logs(pydantic_v1.BaseModel):
+class Log(pydantic_v1.BaseModel):
     """
     Id assigned by django
     """
@@ -24,7 +24,7 @@ class Logs(pydantic_v1.BaseModel):
     """
     player_number
     """
-    player_number: typing.Optional[dt.date] = None
+    player_number: typing.Optional[int] = None
 
     """
     head_number
@@ -43,7 +43,7 @@ class Logs(pydantic_v1.BaseModel):
     """
     representation_list
     """
-    representation_list: typing.Optional[str] = pydantic_v1.Field(default=None)
+    representation_list: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
     """
     sensor_log_path
     """

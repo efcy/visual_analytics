@@ -7,22 +7,22 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
-from ..types.event import Event
+from ..types.log import Log
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
-class LogsClient:
+class LogClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Event:
+    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Log:
         _response = self._client_wrapper.httpx_client.request(
             f"api/logs/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Event, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(Log, _response.json())  # type: ignore
             _response_json = _response.json()
             
         except JSONDecodeError:
@@ -31,12 +31,12 @@ class LogsClient:
 
     def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
-        Delete an event.
+        Delete a Log., this will also delete all images and representations
 
         <Warning>This action can't be undone!</Warning>
 
-        You will need to supply the events's unique ID. You can find the ID in 
-        the django admin panel or in the events settings in the UI. 
+        You will need to supply the logs's unique ID. You can find the ID in 
+        the django admin panel or in the log settings in the UI. 
         Parameters
         ----------
         id : int
@@ -61,7 +61,7 @@ class LogsClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/events/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
+            f"api/logs/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
@@ -75,14 +75,21 @@ class LogsClient:
         self,
         id: int,
         *,
-        name: typing.Optional[str] = OMIT,
-        start_day: typing.Optional[dt.date] = OMIT,
-        end_day: typing.Optional[dt.date] = OMIT,
-        country: typing.Optional[str] = OMIT,
-        location: typing.Optional[str] = OMIT,
-        comment: typing.Optional[str] = OMIT,
+        game_id: typing.Optional[str] = OMIT,
+        robot_version: typing.Optional[str] = OMIT,
+        player_number: typing.Optional[dt.date] = OMIT,
+        head_number: typing.Optional[str] = OMIT,
+        body_serial: typing.Optional[str] = OMIT,
+        head_serial: typing.Optional[str] = OMIT,
+        representation_list: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        sensor_log_path: typing.Optional[str] = OMIT,
+        log_path: typing.Optional[str] = OMIT,
+        num_jpg_bottom: typing.Optional[int] = OMIT,
+        num_jpg_top: typing.Optional[int] = OMIT,
+        num_bottom: typing.Optional[int] = OMIT,
+        num_top: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Event:
+    ) -> Log:
         """
         Update attributes for an existing annotation.
 
@@ -159,45 +166,52 @@ class LogsClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/events/{jsonable_encoder(id)}/",
+            f"api/logs/{jsonable_encoder(id)}/",
             method="PATCH",
             json={
-                "name": name,
-                "start_day": start_day,
-                "end_day": end_day,
-                "country": country,
-                "location": location,
-                "comment": comment,
+                "game_id": game_id,
+                "robot_version": robot_version,
+                "player_number": player_number,
+                "head_number": head_number,
+                "body_serial": body_serial,
+                "head_serial": head_serial,
+                "representation_list": representation_list,
+                "sensor_log_path": sensor_log_path,
+                "log_path": log_path,
+                "num_jpg_bottom": num_jpg_bottom,
+                "num_jpg_top": num_jpg_top,
+                "num_bottom": num_bottom,
+                "num_top": num_top,
             },
             request_options=request_options,
             omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Event, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(Log, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[Event]:
+    def list(self, game_id: int, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[Log]:
         """
-        List all annotations for a task.
+        List all logs.
 
-        You will need to supply the task ID. You can find this in Label Studio by opening a task and checking the URL. It is also listed at the top of the labeling interface. Or you can use [Get tasks list](../tasks/list).
+        You will need to supply the event ID. You can find this in ...
 
         Parameters
         ----------
-        id : int
-            Task ID
+        game_id : int
+            Game ID
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[Annotation]
-            Annotation
+        typing.List[Log]
+            Log
 
         Examples
         --------
@@ -211,11 +225,11 @@ class LogsClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/events/", method="GET", request_options=request_options
+            f"api/logs/?game={jsonable_encoder(game_id)}", method="GET", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.List[Event], _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(typing.List[Log], _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
@@ -224,14 +238,21 @@ class LogsClient:
     def create(
         self,
         *,
-        name: typing.Optional[str] = OMIT,
-        start_day: typing.Optional[dt.date] = OMIT,
-        end_day: typing.Optional[dt.date] = OMIT,
-        country: typing.Optional[str] = OMIT,
-        location: typing.Optional[str] = OMIT,
-        comment: typing.Optional[str] = OMIT,
+        game_id: typing.Optional[str] = OMIT,
+        robot_version: typing.Optional[str] = OMIT,
+        player_number: typing.Optional[dt.date] = OMIT,
+        head_number: typing.Optional[str] = OMIT,
+        body_serial: typing.Optional[str] = OMIT,
+        head_serial: typing.Optional[str] = OMIT,
+        representation_list: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        sensor_log_path: typing.Optional[str] = OMIT,
+        log_path: typing.Optional[str] = OMIT,
+        num_jpg_bottom: typing.Optional[int] = OMIT,
+        num_jpg_top: typing.Optional[int] = OMIT,
+        num_bottom: typing.Optional[int] = OMIT,
+        num_top: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Event:
+    ) -> Log:
         """
         Add annotations to a task like an annotator does.
 
@@ -320,22 +341,29 @@ class LogsClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/events/",
+            f"api/logs/",
             method="POST",
             json={
-                "name": name,
-                "start_day": start_day,
-                "end_day": end_day,
-                "country": country,
-                "location": location,
-                "comment": comment,
+                "game_id": game_id,
+                "robot_version": robot_version,
+                "player_number": player_number,
+                "head_number": head_number,
+                "body_serial": body_serial,
+                "head_serial": head_serial,
+                "representation_list": representation_list,
+                "sensor_log_path": sensor_log_path,
+                "log_path": log_path,
+                "num_jpg_bottom": num_jpg_bottom,
+                "num_jpg_top": num_jpg_top,
+                "num_bottom": num_bottom,
+                "num_top": num_top,
             },
             request_options=request_options,
             omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Event, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(Log, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)

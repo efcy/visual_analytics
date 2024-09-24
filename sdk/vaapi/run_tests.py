@@ -1,5 +1,7 @@
 from vaapi.client import Vaapi
 from tests.event_tests import basic_event_tests
+from tests.logs_tests import basic_log_tests
+
 if __name__ == "__main__":
     client = Vaapi(
         base_url='http://127.0.0.1:8000/',  
@@ -9,3 +11,5 @@ if __name__ == "__main__":
     print(a)
 
     basic_event_tests(client)
+    print()
+    basic_log_tests(client)
