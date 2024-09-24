@@ -86,9 +86,6 @@ class CognitionRepresentation(models.Model):
     representation_name = models.CharField(max_length=100)
     representation_data = models.JSONField(blank=True, null=True)
 
-    class Meta:
-        unique_together = ('log_id', 'frame_number', 'representation_name')
-
     def __str__(self):
         return f"{self.log_id}-{self.frame_number}-{self.representation_name}"
 
@@ -99,9 +96,6 @@ class MotionRepresentation(models.Model):
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    class Meta:
-        unique_together = ('log_id', 'sensor_frame_number', 'representation_name')
 
     def __str__(self):
         return f"{self.log_id}-{self.sensor_frame_number}-{self.representation_name}"

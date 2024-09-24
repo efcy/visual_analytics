@@ -103,9 +103,9 @@ class ImageViewSet(viewsets.ModelViewSet):
             return Response({"error": "Data must be a list"}, status=status.HTTP_400_BAD_REQUEST)
 
         with transaction.atomic():
-            # Fetch all relevant RobotData instances
+            # Fetch all relevant Log instances
             log_ids = set(item['log'] for item in data)
-            robot_data_dict = {rd.id: rd for rd in models.RobotData.objects.filter(id__in=log_ids)}
+            robot_data_dict = {rd.id: rd for rd in models.Log.objects.filter(id__in=log_ids)}
 
             # Get existing objects
             existing_combinations = set(
@@ -192,26 +192,6 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         # Keep the original list behavior
         return super().list(request, *args, **kwargs)
-
-    #overloading the create function to allow lists and single objects as input
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        print("request.data:", data)
-        if isinstance(data, list):
-            serializer = self.get_serializer(data=data, many=True)
-        else:
-            serializer = self.get_serializer(data=data)
-        print("serializer created")
-        
-
-        serializer.is_valid(raise_exception=False)
-        print(serializer.errors)
-        print("serializer.is_valid")
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        print(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
     def destroy(self, request, *args, **kwargs):
         # Override destroy method to handle both single and bulk delete

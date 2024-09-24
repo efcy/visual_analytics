@@ -59,9 +59,29 @@ class CognitionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CognitionRepresentation
         fields = '__all__'
+    
+    def create(self, validated_data):
+        # TODO figure out why this works
+        instance, created = models.CognitionRepresentation.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            frame_number=validated_data.get('frame_number'),
+            representation_name=validated_data.get('representation_name'),
+            defaults=validated_data
+        )
+        return instance
 
 
 class MotionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MotionRepresentation
         fields = '__all__'
+
+    def create(self, validated_data):
+        # TODO figure out why this works
+        instance, created = models.MotionRepresentation.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            sensor_frame_number=validated_data.get('sensor_frame_number'),
+            representation_name=validated_data.get('representation_name'),
+            defaults=validated_data
+        )
+        return instance
