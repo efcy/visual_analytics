@@ -8,7 +8,7 @@ def basic_log_tests(client):
 
     c = client.logs.list(game_id=2)
     print()
-    print(c) 
+    print(len(c))
 
     d = client.logs.update(id=a.id, player_number=13)
     print()

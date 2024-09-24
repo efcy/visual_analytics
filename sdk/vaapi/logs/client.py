@@ -194,7 +194,11 @@ class LogClient:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def list(self, game_id: int, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[Log]:
+    def list(
+             self, 
+             *, 
+             game_id: typing.Optional[int] = None,
+             request_options: typing.Optional[RequestOptions] = None) -> typing.List[Log]:
         """
         List all logs.
 
@@ -224,9 +228,14 @@ class LogClient:
             id=1,
         )
         """
-        _response = self._client_wrapper.httpx_client.request(
-            f"api/logs/?game={jsonable_encoder(game_id)}", method="GET", request_options=request_options
-        )
+        if game_id:
+            _response = self._client_wrapper.httpx_client.request(
+                f"api/logs/?game={jsonable_encoder(game_id)}", method="GET", request_options=request_options
+            )
+        else:
+            _response = self._client_wrapper.httpx_client.request(
+                f"api/logs/", method="GET", request_options=request_options
+            )
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[Log], _response.json())  # type: ignore
