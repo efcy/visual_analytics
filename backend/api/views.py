@@ -64,17 +64,17 @@ class GameViewSet(viewsets.ModelViewSet):
         else:
             return models.Game.objects.all()
         
-class LogsViewSet(viewsets.ModelViewSet):
+class LogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.Logs.objects.all()
-    serializer_class = serializers.LogsSerializer
+    queryset = models.Log.objects.all()
+    serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
         if game_id is not None:
-            return models.Logs.objects.filter(game=game_id)
+            return models.Log.objects.filter(game_id=game_id)
         else:
-            return models.Logs.objects.all()
+            return models.Log.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
