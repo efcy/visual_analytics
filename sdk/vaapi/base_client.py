@@ -6,7 +6,9 @@ from .core.api_error import ApiError
 from .core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from .annotations.client import AnnotationsClient, AsyncAnnotationsClient
 from .events.client import EventsClient #, AsyncAnnotationsClient
+from .game.client import GameClient #, AsyncAnnotationsClient
 from .logs.client import LogClient #, AsyncAnnotationsClient
+
 
 
 class VaapiBase:
@@ -73,6 +75,8 @@ class VaapiBase:
         self.annotations = AnnotationsClient(client_wrapper=self._client_wrapper)
         self.events = EventsClient(client_wrapper=self._client_wrapper)
         self.logs = LogClient(client_wrapper=self._client_wrapper)
+        self.games = GameClient(client_wrapper=self._client_wrapper)  
+        
         #self.users = UsersClient(client_wrapper=self._client_wrapper)
         #self.actions = ActionsClient(client_wrapper=self._client_wrapper)
         #self.views = ViewsClient(client_wrapper=self._client_wrapper)

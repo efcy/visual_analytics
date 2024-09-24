@@ -60,7 +60,7 @@ class GameViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
         if event_id is not None:
-            return models.Game.objects.filter(event=event_id)
+            return models.Game.objects.filter(event_id=event_id)
         else:
             return models.Game.objects.all()
         
