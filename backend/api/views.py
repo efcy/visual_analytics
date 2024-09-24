@@ -20,42 +20,6 @@ def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
 
-class SensorLogViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.SensorLogSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = models.SensorLog.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        # Keep the original list behavior
-        return super().list(request, *args, **kwargs)
-
-    #overloading the create function to allow lists and single objects as input
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        print("request.data:", data)
-        if isinstance(data, list):
-            serializer = self.get_serializer(data=data, many=True)
-        else:
-            serializer = self.get_serializer(data=data)
-        print("serializer created")
-        
-
-        serializer.is_valid(raise_exception=False)
-        print(serializer.errors)
-        print("serializer.is_valid")
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        print(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    def destroy(self, request, *args, **kwargs):
-        # Override destroy method to handle both single and bulk delete
-        if kwargs.get('pk') == 'all':
-            deleted_count, _ = self.get_queryset().delete()
-            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
-        return super().destroy(request, *args, **kwargs)
-
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
@@ -96,21 +60,21 @@ class GameViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
         if event_id is not None:
-            return models.Game.objects.filter(event=event_id)
+            return models.Game.objects.filter(event_id=event_id)
         else:
             return models.Game.objects.all()
         
-class RobotDataViewSet(viewsets.ModelViewSet):
+class LogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.RobotData.objects.all()
-    serializer_class = serializers.RobotDataSerializer
+    queryset = models.Log.objects.all()
+    serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
         game_id = self.request.query_params.get("game")
         if game_id is not None:
-            return models.RobotData.objects.filter(game=game_id)
+            return models.Log.objects.filter(game_id=game_id)
         else:
-            return models.RobotData.objects.all()
+            return models.Log.objects.all()
 
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -201,10 +165,10 @@ class ImageCountView(APIView):
         return Response({'count': count}, status=status.HTTP_200_OK)
 
 
-class RepresentationViewSet(viewsets.ModelViewSet):
+class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = models.Image.objects.all()
-    serializer_class = serializers.RepresentationSerializer
+    queryset = models.CognitionRepresentation.objects.all()
+    serializer_class = serializers.CognitionRepresentationSerializer
 
     def list(self, request, *args, **kwargs):
         # Keep the original list behavior
@@ -214,8 +178,44 @@ class RepresentationViewSet(viewsets.ModelViewSet):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
         if log_id is not None:
-            queryset = models.Representations.objects.filter(log=log_id)
+            queryset = models.CognitionRepresentation.objects.filter(log_id=log_id)
         else:
-            queryset = models.Representations.objects.all()
+            queryset = models.CognitionRepresentation.objects.all()
 
         return queryset.order_by('frame_number')
+    
+class MotionRepresentationViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MotionRepresentationSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.MotionRepresentation.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        # Keep the original list behavior
+        return super().list(request, *args, **kwargs)
+
+    #overloading the create function to allow lists and single objects as input
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        print("request.data:", data)
+        if isinstance(data, list):
+            serializer = self.get_serializer(data=data, many=True)
+        else:
+            serializer = self.get_serializer(data=data)
+        print("serializer created")
+        
+
+        serializer.is_valid(raise_exception=False)
+        print(serializer.errors)
+        print("serializer.is_valid")
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def destroy(self, request, *args, **kwargs):
+        # Override destroy method to handle both single and bulk delete
+        if kwargs.get('pk') == 'all':
+            deleted_count, _ = self.get_queryset().delete()
+            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
+        return super().destroy(request, *args, **kwargs)

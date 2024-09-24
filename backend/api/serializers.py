@@ -14,12 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class SensorLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.SensorLog
-        fields = '__all__'
-
-
 class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Annotation
@@ -32,15 +26,15 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RobotDataSerializer(serializers.ModelSerializer):
+class LogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.RobotData
+        model = models.Log
         fields = '__all__'
 
     def create(self, validated_data):
         # TODO figure out why this works
-        instance, created = models.RobotData.objects.get_or_create(
-            game=validated_data.get('game'),
+        instance, created = models.Log.objects.get_or_create(
+            game_id=validated_data.get('game'),
             player_number=validated_data.get('player_number'),
             head_number=validated_data.get('head_number'),
             log_path=validated_data.get('log_path'),
@@ -61,7 +55,13 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RepresentationSerializer(serializers.ModelSerializer):
+class CognitionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Representations
+        model = models.CognitionRepresentation
+        fields = '__all__'
+
+
+class MotionRepresentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MotionRepresentation
         fields = '__all__'

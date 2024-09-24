@@ -5,31 +5,66 @@ from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
-class Representations(pydantic_v1.BaseModel):
+class Game(pydantic_v1.BaseModel):
     """
     Id assigned by django
     """
     id: typing.Optional[int] = None
 
     """
-    Log ID: Id of related log / robot data
+    Foreign key to the event this game belongs to.
     """
-    log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
+    event_id: typing.Optional[int] = pydantic_v1.Field(default=None)
     
     """
-    Frame Number from game.log or combined.log
+    team1
     """
-    start_day: typing.Optional[int] = None
+    team1: typing.Optional[str] = None
 
     """
-    Representation Name
+    team2
     """
-    name: typing.Optional[str] = None
+    team2: typing.Optional[str] = None
 
     """
-    JSON data of a representation
+    half
     """
-    data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
+    half: typing.Optional[str] = pydantic_v1.Field(default=None)
+    
+    """
+    is_testgame
+    """
+    is_testgame: typing.Optional[bool] = pydantic_v1.Field(default=None)
+
+    """
+    head_ref
+    """
+    head_ref: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    assistent_ref
+    """
+    assistent_ref: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    field
+    """
+    field: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    start_time
+    """
+    start_time: typing.Optional[dt.datetime] = pydantic_v1.Field(default=None)
+
+    """
+    score
+    """
+    score: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    comment
+    """
+    comment: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

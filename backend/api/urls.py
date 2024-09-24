@@ -24,8 +24,9 @@ urlpatterns = [
 router = routers.DefaultRouter()
 router.register('events',views.EventViewSet)
 router.register('games', views.GameViewSet)
-router.register('robotdata',views.RobotDataViewSet)
+router.register('logs',views.LogViewSet)
 router.register('image',views.ImageViewSet)
-router.register("sensorlogs",views.SensorLogViewSet)
+router.register("cognitionrepr",views.CognitionRepresentationViewSet)
+router.register("motionrepr",views.MotionRepresentationViewSet)
 
 urlpatterns += router.urls
