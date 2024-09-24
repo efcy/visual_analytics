@@ -33,7 +33,7 @@ if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
     client = Vaapi(
         base_url='http://127.0.0.1:8000/',  
-        api_key="84c6f4b516cc9d292f1b0eba26ea88e99812fbb9",
+        api_key=os.environ.get("VAT_API_TOKEN"),
     )
     existing_data = client.logs.list()
 
