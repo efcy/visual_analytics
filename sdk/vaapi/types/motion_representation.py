@@ -5,7 +5,7 @@ from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
-class Representations(pydantic_v1.BaseModel):
+class MotionRepresentation(pydantic_v1.BaseModel):
     """
     Id assigned by django
     """
@@ -17,19 +17,24 @@ class Representations(pydantic_v1.BaseModel):
     log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
     
     """
-    Frame Number from game.log or combined.log
+    Frame Number from sensor.log
     """
-    start_day: typing.Optional[int] = None
+    sensor_frame_number: typing.Optional[int] = None
 
     """
-    Representation Name
+    sensor_frame_time
     """
-    name: typing.Optional[str] = None
+    sensor_frame_time: typing.Optional[int] = None
 
     """
-    JSON data of a representation
+    representation_name
     """
-    data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
+    representation_name: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    representation_data
+    """
+    representation_data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

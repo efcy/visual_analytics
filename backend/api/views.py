@@ -178,7 +178,7 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
         log_id = self.request.query_params.get("log")
         print("log_id", log_id)
         if log_id is not None:
-            queryset = models.CognitionRepresentation.objects.filter(log=log_id)
+            queryset = models.CognitionRepresentation.objects.filter(log_id=log_id)
         else:
             queryset = models.CognitionRepresentation.objects.all()
 

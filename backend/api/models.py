@@ -81,21 +81,27 @@ class Annotation(models.Model):
 
 
 class CognitionRepresentation(models.Model):
-    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognition_repr')
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognition_repr')
     frame_number = models.IntegerField(blank=True, null=True)
-    name = models.CharField(max_length=100)
-    data = models.JSONField(blank=True, null=True)
+    representation_name = models.CharField(max_length=100)
+    representation_data = models.JSONField(blank=True, null=True)
 
     class Meta:
-        unique_together = ('log', 'frame_number', 'name')
+        unique_together = ('log_id', 'frame_number', 'representation_name')
 
     def __str__(self):
-        return f"{self.log}-{self.frame_number}-{self.name}"
+        return f"{self.log_id}-{self.frame_number}-{self.representation_name}"
 
 
 class MotionRepresentation(models.Model):
-    robotdata = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motion_repr')
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motion_repr')
     sensor_frame_number = models.IntegerField(blank=True, null=True)
     sensor_frame_time = models.IntegerField(blank=True, null=True)
     representation_name = models.CharField(max_length=40, blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('log_id', 'sensor_frame_number', 'representation_name')
+
+    def __str__(self):
+        return f"{self.log_id}-{self.sensor_frame_number}-{self.representation_name}"
