@@ -13,16 +13,16 @@ if __name__ == "__main__":
         #FIXME use env var here
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
-    a = client.annotations.get(id=1)
-    print(a)
+    #a = client.annotations.get(id=1)
+    #print(a)
 
-    #basic_event_tests(client)
-    #print()
+    basic_event_tests(client)
+    print()
     #basic_game_tests(client)
-    print()
+    #print()
     #basic_log_tests(client)
-    print()
+    #print()
     #basic_cognition_repr_tests(client)
 
-    print()
-    basic_motion_repr_tests(client)
+    #print()
+    #basic_motion_repr_tests(client)

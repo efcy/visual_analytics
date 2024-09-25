@@ -1,14 +1,10 @@
 from pathlib import Path
-from typing import Generator, List
 from naoth.log import Reader as LogReader
 from naoth.log import Parser
 from google.protobuf.json_format import MessageToDict
 import os
-import json
-from time import sleep
 from tqdm import tqdm
 from vaapi.client import Vaapi
-import shutil
 
 
 if __name__ == "__main__":
@@ -35,7 +31,10 @@ if __name__ == "__main__":
         
         game_log = LogReader(str(log_path), my_parser)
         try:
-            for frame in tqdm(game_log):
+            my_array = [None] * 100
+            pbar = tqdm(total=len(game_log.frames))
+            for i, frame in enumerate(game_log):
+                pbar.update(1)
                 for repr_name in frame.get_names():
                     if repr_name == "FrameInfo":
                         continue
@@ -52,14 +51,23 @@ if __name__ == "__main__":
                         continue
                     if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
                         continue
+                    
+                    if i % 100 == 0 and i != 0:                        
+                        response = client.cognition_repr.bulk_create(
+                            repr_list=my_array
+                        )
+                        print(response)
+
 
                     data = MessageToDict(frame[repr_name])
-                    a = client.cognition_repr.create(
-                        log_id=log_id, 
-                        frame_number=frame['FrameInfo'].frameNumber,
-                        representation_name=repr_name,
-                        representation_data=data
-                    )
+                    json_obj = {
+                        "log_id":log_id, 
+                        "frame_number":frame['FrameInfo'].frameNumber,
+                        "representation_name":repr_name,
+                        "representation_data":data
+                    }
+                    my_array[i % 100] = json_obj
+                    
         except Exception as e:
             print(repr_name)
             print(f"error parsing the log or inserting it: {e}")
