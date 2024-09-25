@@ -398,21 +398,26 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             existing_combinations = set(
                 models.CognitionRepresentation.objects.values_list('log_id', 'frame_number', 'representation_name')
             )
-
+            print(existing_combinations)
             # Separate new and existing events
             new_data = []
             existing_data = []
             for item in validated_data:
-                combo = (item['log_id'], item['frame_number'], item['representation_name'])
+                # item['log_id'].id is needed because item['log_id'] gives a reference to the log object
+                combo = (item['log_id'].id, item['frame_number'], item['representation_name'])
+                print(type(item['log_id']))
+                print(item['log_id'].id)
+                print(f"\tcombo: {combo}")
                 if combo not in existing_combinations:
                     new_data.append(models.CognitionRepresentation(**item))
                     existing_combinations.add(combo)  # Add to set to catch duplicates within the input
                 else:
+                    print("\tfound existing data")
                     # Fetch the existing event
                     existing_event = models.CognitionRepresentation.objects.get(
-                        event_id=item['log_id'],
-                        start_time=item['frame_number'],
-                        half=item['representation_name']
+                        log_id=item['log_id'],
+                        frame_number=item['frame_number'],
+                        representation_name=item['representation_name']
                     )
                     existing_data.append(existing_event)
 
@@ -420,10 +425,10 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             created_data = models.CognitionRepresentation.objects.bulk_create(new_data)
 
         # Combine created and existing events
-        all_data = created_data + existing_data
+        #all_data = created_data + existing_data
 
         # Serialize the results
-        result_serializer = self.get_serializer(all_data, many=True)
+        #result_serializer = self.get_serializer(all_data, many=True)
 
         return Response({
             'created': len(created_data),
@@ -480,16 +485,16 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
             new_data = []
             existing_data = []
             for item in validated_data:
-                combo = (item['log_id'], item['sensor_frame_number'], item['representation_name'])
+                combo = (item['log_id'].id, item['sensor_frame_number'], item['representation_name'])
                 if combo not in existing_combinations:
                     new_data.append(models.MotionRepresentation(**item))
                     existing_combinations.add(combo)  # Add to set to catch duplicates within the input
                 else:
                     # Fetch the existing event
                     existing_event = models.MotionRepresentation.objects.get(
-                        event_id=item['log_id'],
-                        start_time=item['sensor_frame_number'],
-                        half=item['representation_name']
+                        log_id=item['log_id'],
+                        sensor_frame_number=item['sensor_frame_number'],
+                        representation_name=item['representation_name']
                     )
                     existing_data.append(existing_event)
 

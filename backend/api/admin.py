@@ -28,11 +28,16 @@ class AnnotationAdmin(admin.ModelAdmin):
     raw_id_fields = ('image',)
     list_per_page = 50
 
+class CognitionRepresentationAdmin(admin.ModelAdmin):
+    search_fields = ['frame_number__icontains', 'representation_name__icontains']
+    list_display = ["log_id","frame_number", 'representation_name']
+    list_per_page = 1000
+
 # Register your models here.
 admin.site.register(Event)
 admin.site.register(Game)
 admin.site.register(Log, LogAdmin)
 admin.site.register(Image, ImageAdmin)
-admin.site.register(CognitionRepresentation)
+admin.site.register(CognitionRepresentation, CognitionRepresentationAdmin)
 admin.site.register(MotionRepresentation)
 admin.site.register(Annotation, AnnotationAdmin)
