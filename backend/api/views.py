@@ -428,7 +428,7 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
         return Response({
             'created': len(created_data),
             'existing': len(existing_data),
-            'events': result_serializer.data
+        #    'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
 class MotionRepresentationViewSet(viewsets.ModelViewSet):

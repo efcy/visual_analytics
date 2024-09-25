@@ -29,9 +29,10 @@ if __name__ == "__main__":
         my_parser.register("FieldPerceptTop", "FieldPercept")
         my_parser.register("BallCandidatesTop", "BallCandidates")
         
+        batch_size = 100
         game_log = LogReader(str(log_path), my_parser)
         try:
-            my_array = [None] * 100
+            my_array = [None] * batch_size
             pbar = tqdm(total=len(game_log.frames))
             for i, frame in enumerate(game_log):
                 pbar.update(1)
@@ -52,7 +53,7 @@ if __name__ == "__main__":
                     if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
                         continue
                     
-                    if i % 100 == 0 and i != 0:                        
+                    if i % batch_size == 0 and i != 0:                        
                         response = client.cognition_repr.bulk_create(
                             repr_list=my_array
                         )
@@ -66,7 +67,7 @@ if __name__ == "__main__":
                         "representation_name":repr_name,
                         "representation_data":data
                     }
-                    my_array[i % 100] = json_obj
+                    my_array[i % batch_size] = json_obj
                     
         except Exception as e:
             print(repr_name)
