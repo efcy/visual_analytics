@@ -362,6 +362,74 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             queryset = models.CognitionRepresentation.objects.all()
 
         return queryset.order_by('frame_number')
+
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.CognitionRepresentation.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            frame_number=validated_data.get('frame_number'),
+            representation_name=validated_data.get('representation_name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.CognitionRepresentation.objects.values_list('log_id', 'frame_number', 'representation_name')
+            )
+
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                combo = (item['log_id'], item['frame_number'], item['representation_name'])
+                if combo not in existing_combinations:
+                    new_data.append(models.CognitionRepresentation(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.CognitionRepresentation.objects.get(
+                        event_id=item['log_id'],
+                        start_time=item['frame_number'],
+                        half=item['representation_name']
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new events
+            created_data = models.CognitionRepresentation.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        all_data = created_data + existing_data
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
     
 class MotionRepresentationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MotionRepresentationSerializer
@@ -371,6 +439,74 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         # Keep the original list behavior
         return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.MotionRepresentation.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            sensor_frame_number=validated_data.get('sensor_frame_number'),
+            representation_name=validated_data.get('representation_name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.MotionRepresentation.objects.values_list('log_id', 'sensor_frame_number', 'representation_name')
+            )
+
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                combo = (item['log_id'], item['sensor_frame_number'], item['representation_name'])
+                if combo not in existing_combinations:
+                    new_data.append(models.MotionRepresentation(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.MotionRepresentation.objects.get(
+                        event_id=item['log_id'],
+                        start_time=item['sensor_frame_number'],
+                        half=item['representation_name']
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new events
+            created_data = models.MotionRepresentation.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        all_data = created_data + existing_data
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         # Override destroy method to handle both single and bulk delete
