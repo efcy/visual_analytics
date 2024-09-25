@@ -31,17 +31,6 @@ class LogSerializer(serializers.ModelSerializer):
         model = models.Log
         fields = '__all__'
 
-    def create(self, validated_data):
-        # TODO figure out why this works
-        instance, created = models.Log.objects.get_or_create(
-            game_id=validated_data.get('game'),
-            player_number=validated_data.get('player_number'),
-            head_number=validated_data.get('head_number'),
-            log_path=validated_data.get('log_path'),
-            defaults=validated_data
-        )
-        return instance
-
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
