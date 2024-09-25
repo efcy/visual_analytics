@@ -123,10 +123,7 @@ if __name__ == "__main__":
                     # FIXME should probably also remove the log folder /mnt/q/logs/
                     sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
                     log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
-                    # FIXME is this a hack?
-                    if not logfolder.parent.parent.name == "2024-07-20_14-15-00_BerlinUnited_vs_Runswift_half1":
-                        continue
-                    print("aaaaaaaaaaaaaaa", log_path)
+                    
                     response = client.logs.create(
                         game_id=game_id, 
                         robot_version=version,
