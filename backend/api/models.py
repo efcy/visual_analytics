@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     start_day = models.DateField(blank=True, null=True)
     end_day = models.DateField(blank=True, null=True)
     timezone = models.CharField(max_length=100, blank=True, null=True)
@@ -28,8 +28,8 @@ class Game(models.Model):
     score = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    class Meta:
-        unique_together = ('event_id', 'start_time', 'half')
+    #class Meta:
+    #    unique_together = ('event_id', 'start_time', 'half')
 
     def __str__(self):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"

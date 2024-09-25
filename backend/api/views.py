@@ -30,39 +30,148 @@ class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        id = self.request.query_params.get("id")
-        name = self.request.query_params.get("name")
-
-        if id is not None:
-            # If id is provided, return a single object
-            event = get_object_or_404(queryset, id=id)
-            serializer = self.get_serializer(event)
-            return Response(serializer.data)
-        elif name is not None:
-            queryset = queryset.filter(name__icontains=name)
-        
-        # For other cases, proceed with normal list behavior
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-    
     def get_queryset(self):
         return models.Event.objects.all()
+    
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.Event.objects.get_or_create(
+            name=validated_data.get('name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing names
+            existing_names = set(models.Event.objects.filter(
+                name__in=[item['name'] for item in validated_data]
+            ).values_list('name', flat=True))
+
+            # Separate new and existing events
+            new_events = []
+            existing_events = []
+            for item in validated_data:
+                if item['name'] not in existing_names:
+                    new_events.append(models.Event(**item))
+                    existing_names.add(item['name'])  # Add to set to catch duplicates within the input
+                else:
+                    existing_events.append(models.Event.objects.get(name=item['name']))
+
+            # Bulk create new events
+            created_events = models.Event.objects.bulk_create(new_events)
+
+        # Combine created and existing events
+        all_events = created_events + existing_events
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_events, many=True)
+
+        return Response({
+            'created': len(created_events),
+            'existing': len(existing_events),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
     permission_classes = [IsAuthenticated]
-    """this approach to get games related to events is not really good 
-        see serializers.py for an better example"""    
+   
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
         if event_id is not None:
             return models.Game.objects.filter(event_id=event_id)
         else:
             return models.Game.objects.all()
+        
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.Game.objects.get_or_create(
+            event_id=validated_data.get('event_id'),
+            start_time=validated_data.get('start_time'),
+            half=validated_data.get('half'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.Game.objects.values_list('event_id', 'start_time', 'half')
+            )
+
+            # Separate new and existing events
+            new_games = []
+            existing_games = []
+            for item in validated_data:
+                combo = (item['event_id'], item['start_time'], item['half'])
+                if combo not in existing_combinations:
+                    new_games.append(models.Game(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.Game.objects.get(
+                        event_id=item['event_id'],
+                        start_time=item['start_time'],
+                        half=item['half']
+                    )
+                    existing_games.append(existing_event)
+
+            # Bulk create new events
+            created_games = models.Game.objects.bulk_create(new_games)
+
+        # Combine created and existing events
+        all_games = created_games + existing_games
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_games, many=True)
+
+        return Response({
+            'created': len(created_games),
+            'existing': len(existing_games),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
         
 class LogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -75,6 +184,76 @@ class LogViewSet(viewsets.ModelViewSet):
             return models.Log.objects.filter(game_id=game_id)
         else:
             return models.Log.objects.all()
+        
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.Log.objects.get_or_create(
+            game_id=validated_data.get('game_id'),
+            player_number=validated_data.get('player_number'),
+            head_number=validated_data.get('head_number'),
+            log_path=validated_data.get('log_path'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing logs
+            existing_combinations = set(
+                models.Log.objects.values_list('game_id', 'player_number', 'head_number', 'log_path')
+            )
+
+            # Separate new and existing events
+            new_logs = []
+            existing_logs = []
+            for item in validated_data:
+                combo = (item['game_id'], item['player_number'], item['head_number'], item['log_path'])
+                if combo not in existing_combinations:
+                    new_logs.append(models.Log(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.Log.objects.get(
+                        game_id=item['game_id'],
+                        player_number=item['player_number'],
+                        head_number=item['head_number'],
+                        log_path=item['log_path']
+                    )
+                    existing_logs.append(existing_event)
+
+            # Bulk create new events
+            created_logs = models.Log.objects.bulk_create(new_logs)
+
+        # Combine created and existing events
+        all_logs = created_logs + existing_logs
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_logs, many=True)
+
+        return Response({
+            'created': len(created_logs),
+            'existing': len(existing_logs),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
 
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
