@@ -32,7 +32,7 @@ def copy_file_to_tmp(source_file, target_file=None):
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
     client = Vaapi(
-        base_url='http://127.0.0.1:8000/',  
+        base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
     existing_data = client.logs.list()

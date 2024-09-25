@@ -2,7 +2,7 @@
     This script should put all necessary data from one event into the database
 """
 from pathlib import Path
-from vaapi import client
+from vaapi.client import Vaapi
 import json
 import os
 import time
@@ -13,7 +13,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 baseurl = "http://127.0.0.1:8000/api/"
 #key can be created on admin site
-api_token = os.environ.get("VAT_API_TOKEN") #"ab43645dd5bc6583cf8b2b9ec4b761728843901c" #
+api_token = os.environ.get("VAT_API_TOKEN")
 event_list = ["2024-07-15_RC24"]
 
 
@@ -78,61 +78,63 @@ def calculate_images(log_path, robot_data_id):
     time.sleep(5)
 
 if __name__ == "__main__":
-  log_root_path = os.environ.get("VAT_LOG_ROOT")
-  my_client = client(baseurl,api_token)
+    log_root_path = os.environ.get("VAT_LOG_ROOT")
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )
   
-  all_events = [f for f in Path(log_root_path).iterdir() if f.is_dir()]
-  for event in sorted(all_events, reverse=True):
-      if event.name in event_list:
-        response = my_client.add_event({
-          "name": event.name,
-        })  
-        event_id = response["id"]
-        
-        for game in [f for f in event.iterdir() if f.is_dir()]:
-            if str(game.name) == "Experiments":
-                print("ignoring Experiments folder")
-                continue
-            response = handle_games(game)
-            game_id = response["id"]
+    all_events = [f for f in Path(log_root_path).iterdir() if f.is_dir()]
+    for event in sorted(all_events, reverse=True):
+        if event.name in event_list:
+            response = client.events.create(name=event.name)
  
-            gamelog_path = Path(game) / "game_logs"
-            for logfolder in [f for f in gamelog_path.iterdir() if f.is_dir()]:
-                #print(f"\t\t{logfolder}")
-                logfolder_parsed = str(logfolder.name).split("_")
-                playernumber = logfolder_parsed[0]
-                head_number = logfolder_parsed[1]
-                version = get_robot_version(head_number)
-                nao_config_file = Path(logfolder) / "nao.info"
-                with open(str(nao_config_file), 'r') as file:
-                    # Read all lines from the file
-                    lines = file.readlines()
-
-                    # Extract the first and third lines
-                    body_serial = lines[0].strip()  # Strip to remove any trailing newline characters
-                    head_serial = lines[2].strip()
-
-                representation_file = Path(logfolder) / "representation.json"
-                with open(str(representation_file), 'r') as file:
-                    # Load the content of the file into a Python dictionary
-                    data = json.load(file)
-
-                # FIXME should probably also remove the log folder /mnt/q/logs/
-                sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
-                log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
-                if not logfolder.parent.parent.name == "2024-07-20_14-15-00_BerlinUnited_vs_Runswift_half1":
+            event_id = response["id"]
+            
+            for game in [f for f in event.iterdir() if f.is_dir()]:
+                if str(game.name) == "Experiments":
+                    print("ignoring Experiments folder")
                     continue
-                print("aaaaaaaaaaaaaaa", log_path)
-                response = my_client.add_robot_data({
-                    "game": game_id,
-                    "robot_version": version,
-                    "player_number": int(playernumber),
-                    "head_number": int(head_number),
-                    "body_serial": body_serial,
-                    "head_serial": head_serial,
-                    "representations": data,
-                    "sensor_log_path": sensor_log_path,
-                    "log_path": log_path,
-                })
-                print("response", response)
-                calculate_images(logfolder, response["id"])
+                response = handle_games(game)
+                game_id = response["id"]
+    
+                gamelog_path = Path(game) / "game_logs"
+                for logfolder in [f for f in gamelog_path.iterdir() if f.is_dir()]:
+                    #print(f"\t\t{logfolder}")
+                    logfolder_parsed = str(logfolder.name).split("_")
+                    playernumber = logfolder_parsed[0]
+                    head_number = logfolder_parsed[1]
+                    version = get_robot_version(head_number)
+                    nao_config_file = Path(logfolder) / "nao.info"
+                    with open(str(nao_config_file), 'r') as file:
+                        # Read all lines from the file
+                        lines = file.readlines()
+
+                        # Extract the first and third lines
+                        body_serial = lines[0].strip()  # Strip to remove any trailing newline characters
+                        head_serial = lines[2].strip()
+
+                    representation_file = Path(logfolder) / "representation.json"
+                    with open(str(representation_file), 'r') as file:
+                        # Load the content of the file into a Python dictionary
+                        data = json.load(file)
+
+                    # FIXME should probably also remove the log folder /mnt/q/logs/
+                    sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
+                    log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
+                    if not logfolder.parent.parent.name == "2024-07-20_14-15-00_BerlinUnited_vs_Runswift_half1":
+                        continue
+                    print("aaaaaaaaaaaaaaa", log_path)
+                    response = my_client.add_robot_data({
+                        "game": game_id,
+                        "robot_version": version,
+                        "player_number": int(playernumber),
+                        "head_number": int(head_number),
+                        "body_serial": body_serial,
+                        "head_serial": head_serial,
+                        "representations": data,
+                        "sensor_log_path": sensor_log_path,
+                        "log_path": log_path,
+                    })
+                    print("response", response)
+                    calculate_images(logfolder, response["id"])
