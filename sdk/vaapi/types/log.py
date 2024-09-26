@@ -52,6 +52,17 @@ class Log(pydantic_v1.BaseModel):
     log_path
     """
     log_path: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    num_cognition_frames
+    """
+    num_cognition_frames: typing.Optional[int] = pydantic_v1.Field(default=None)
+
+    """
+    num_motion_frames
+    """
+    num_motion_frames: typing.Optional[int] = pydantic_v1.Field(default=None)
+
     """
     num_jpg_bottom
     """
