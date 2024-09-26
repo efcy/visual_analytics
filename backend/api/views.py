@@ -350,6 +350,7 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CognitionRepresentationSerializer
 
     def list(self, request, *args, **kwargs):
+        print("execute list function for CognitionRepresentationViewSet")
         # Keep the original list behavior
         return super().list(request, *args, **kwargs)
     

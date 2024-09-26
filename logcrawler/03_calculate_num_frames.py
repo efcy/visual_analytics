@@ -71,4 +71,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"\terror inputing the data {log_path}")
             print(e)
-
