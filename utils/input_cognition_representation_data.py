@@ -33,45 +33,49 @@ if __name__ == "__main__":
         counter = 0
         print("log_path: ", log_path)
         game_log = LogReader(str(log_path), my_parser)
-        try:
-            my_array = [None] * batch_size
-            for frame in game_log:
-                #print(f"\t{frame.get_names()}")
-                print(frame['FrameInfo'].frameNumber)
-                for repr_name in frame.get_names():
-                    if repr_name == "FrameInfo":
-                        continue
-                    if frame[repr_name] == None:
-                        # ScanLineEdgelPercept is empty but we write it anyway to the log
-                        continue
-                    # we will handle behavior extra in the future
-                    if repr_name == "BehaviorStateComplete":
-                        continue
-                    if repr_name == "BehaviorStateSparse":
-                        continue
-                    # we already treat images differently, no need to but binary data here in the database
-                    if repr_name == "Image" or repr_name == "ImageJPEG":
-                        continue
-                    if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
-                        continue
+        
+        my_array = [None] * batch_size
+        for frame in game_log:
+            for repr_name in frame.get_names():
+                if frame[repr_name] == None:
+                    # ScanLineEdgelPercept is empty but we write it anyway to the log
+                    continue
+                # we will handle behavior extra in the future
+                if repr_name == "BehaviorStateComplete":
+                    continue
+                if repr_name == "BehaviorStateSparse":
+                    continue
+                # we already treat images differently, no need to but binary data here in the database
+                if repr_name == "Image" or repr_name == "ImageJPEG":
+                    continue
+                if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
+                    continue
 
+                try:
                     data = MessageToDict(frame[repr_name])
-                    json_obj = {
-                        "log_id":log_id, 
-                        "frame_number":frame['FrameInfo'].frameNumber,
-                        "representation_name":repr_name,
-                        "representation_data":data
-                    }
-                    my_array[counter] = json_obj
-                    counter = counter + 1
-                    if counter == batch_size:                        
+                    if repr_name == "FrameInfo":
+                        print(frame['FrameInfo'].frameNumber)
+                except Exception as e:
+                    print(repr_name)
+                    print(f"error parsing the log {log_path}")
+                    print({e})
+                
+                json_obj = {
+                    "log_id":log_id, 
+                    "frame_number":frame['FrameInfo'].frameNumber,
+                    "representation_name":repr_name,
+                    "representation_data":data
+                }
+                my_array[counter] = json_obj
+                counter = counter + 1
+                if counter == batch_size:
+                    try:                   
                         response = client.cognition_repr.bulk_create(
                             repr_list=my_array
                         )
                         print(response)
                         counter=0
-                    
-        except Exception as e:
-            print(repr_name)
-            print(f"error parsing the log or inserting it: {e}")
+                    except Exception as e:
+                        print(f"error inputing the data {log_path}")
+        # only do the first log for now
         break
