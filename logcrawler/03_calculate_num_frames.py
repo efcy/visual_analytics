@@ -42,11 +42,12 @@ if __name__ == "__main__":
                 print({e})
                 continue
         
+        print("\tframe_counter", frame_counter)
         try:
+            
             response = client.logs.update(id=log_id, num_cognition_frames=frame_counter)
-            print(frame_number)
             print(f"\t{response}")
         except Exception as e:
-            print(f"error inputing the data {log_path}")
+            print(f"\terror inputing the data {log_path}")
         # only do the first log for now
         break
