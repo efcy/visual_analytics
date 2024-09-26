@@ -45,10 +45,13 @@ class Log(models.Model):
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     log_path = models.CharField(max_length=200, blank=True, null=True)
 
+    num_cognition_frames = models.IntegerField(blank=True, null=True)
+    num_motion_frames = models.IntegerField(blank=True, null=True)
     num_jpg_bottom = models.IntegerField(blank=True, null=True)
     num_jpg_top = models.IntegerField(blank=True, null=True)
     num_bottom = models.IntegerField(blank=True, null=True)
     num_top = models.IntegerField(blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.log_path}"
