@@ -1,9 +1,7 @@
 from pathlib import Path
 from naoth.log import Reader as LogReader
 from naoth.log import Parser
-from google.protobuf.json_format import MessageToDict
 import os
-from tqdm import tqdm
 from vaapi.client import Vaapi
 
 
@@ -37,6 +35,7 @@ if __name__ == "__main__":
             try:
                 frame_number = frame['FrameInfo'].frameNumber
                 frame_counter = frame_counter + 1
+                break
             except Exception as e:
                 print(f"FrameInfo not found in current frame")
                 print({e})
@@ -49,5 +48,6 @@ if __name__ == "__main__":
             print(f"\t{response}")
         except Exception as e:
             print(f"\terror inputing the data {log_path}")
+            print(e)
         # only do the first log for now
         break
