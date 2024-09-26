@@ -29,7 +29,7 @@ if __name__ == "__main__":
         my_parser.register("FieldPerceptTop", "FieldPercept")
         my_parser.register("BallCandidatesTop", "BallCandidates")
         
-        batch_size = 100
+        batch_size = 200
         counter = 0
         print("log_path: ", log_path)
         game_log = LogReader(str(log_path), my_parser)
@@ -37,6 +37,8 @@ if __name__ == "__main__":
         my_array = [None] * batch_size
         for frame in game_log:
             for repr_name in frame.get_names():
+                if repr_name == "FrameInfo":
+                    continue
                 if frame[repr_name] == None:
                     # ScanLineEdgelPercept is empty but we write it anyway to the log
                     continue
@@ -50,32 +52,50 @@ if __name__ == "__main__":
                     continue
                 if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
                     continue
+                
+                # try accessing framenumber directly because we can have the situation where the framenumber is missing in the
+                # last frame
+                try:
+                    frame_number = frame['FrameInfo'].frameNumber
+                except Exception as e:
+                    print(f"FrameInfo not found in current frame")
+                    print({e})
+                    continue
 
                 try:
-                    data = MessageToDict(frame[repr_name])
-                    if repr_name == "FrameInfo":
-                        print(frame['FrameInfo'].frameNumber)
+                    data = MessageToDict(frame[repr_name])                       
                 except Exception as e:
                     print(repr_name)
                     print(f"error parsing the log {log_path}")
                     print({e})
-                
+
+
                 json_obj = {
                     "log_id":log_id, 
-                    "frame_number":frame['FrameInfo'].frameNumber,
+                    "frame_number":frame_number,
                     "representation_name":repr_name,
                     "representation_data":data
                 }
                 my_array[counter] = json_obj
                 counter = counter + 1
                 if counter == batch_size:
-                    try:                   
+                    try:
                         response = client.cognition_repr.bulk_create(
                             repr_list=my_array
                         )
-                        print(response)
+                        print(frame_number)
+                        print(f"\t{response}")
                         counter=0
                     except Exception as e:
                         print(f"error inputing the data {log_path}")
+        # handle the last frames
+        # just upload whatever is in the array. There will be old data but that does not matter, it will be filtered out on insertion
+        try:
+            response = client.cognition_repr.bulk_create(
+                repr_list=my_array
+            )
+            print(response)
+        except Exception as e:
+            print(f"error inputing the data {log_path}")
         # only do the first log for now
         break
