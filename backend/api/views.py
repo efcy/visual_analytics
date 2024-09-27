@@ -444,9 +444,17 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.MotionRepresentation.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        # Keep the original list behavior
-        return super().list(request, *args, **kwargs)
+    def get_queryset(self):
+        queryset = models.MotionRepresentation.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.MotionRepresentation._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)

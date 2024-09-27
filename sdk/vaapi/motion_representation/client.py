@@ -178,7 +178,10 @@ class MotionRepresentationClient:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def list(self, log_id: int, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[MotionRepresentation]:
+    def list(
+            self,
+            request_options: typing.Optional[RequestOptions] = None,
+            **filters: typing.Any) -> typing.List[MotionRepresentation]:
         """
         List all logs.
 
@@ -208,9 +211,10 @@ class MotionRepresentationClient:
             id=1,
         )
         """
-        _response = self._client_wrapper.httpx_client.request(
-            f"api/motionrepr/?log={jsonable_encoder(log_id)}", method="GET", request_options=request_options
-        )
+        query_params = {k: v for k, v in filters.items() if v is not None}
+        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
+        url = f"api/motionrepr/?{query_string}" if query_string else "api/motionrepr/"
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[MotionRepresentation], _response.json())  # type: ignore
