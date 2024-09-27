@@ -9,8 +9,7 @@ from tests.motion_repr_test import basic_motion_repr_tests
 
 if __name__ == "__main__":
     client = Vaapi(
-        base_url='http://127.0.0.1:8000/',  
-        #FIXME use env var here
+        base_url=os.environ.get("VAT_API_URL"),  
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
     #a = client.annotations.get(id=1)
@@ -18,11 +17,10 @@ if __name__ == "__main__":
 
     basic_event_tests(client)
     print()
-    #basic_game_tests(client)
-    #print()
-    #basic_log_tests(client)
-    #print()
-    #basic_cognition_repr_tests(client)
-
-    #print()
-    #basic_motion_repr_tests(client)
+    basic_game_tests(client)
+    print()
+    basic_log_tests(client)
+    print()
+    basic_cognition_repr_tests(client)
+    print()
+    basic_motion_repr_tests(client)
