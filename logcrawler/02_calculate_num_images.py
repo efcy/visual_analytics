@@ -6,36 +6,34 @@ from pathlib import Path
 from vaapi.client import Vaapi
 import os
 import time
-from linetimer import CodeTimer
 import subprocess
 
 
 def calculate_images(log_path, log_id):
-    with CodeTimer('calculate_images'):
-        extracted_path = str(log_path).replace("game_logs", "extracted")
+    extracted_path = str(log_path).replace("game_logs", "extracted")
 
-        jpg_bottom_path = Path(extracted_path) / "log_bottom_jpg"
-        jpg_top_path = Path(extracted_path) / "log_top_jpg"
-        bottom_path = Path(extracted_path) / "log_bottom"
-        top_path = Path(extracted_path) / "log_top"
+    jpg_bottom_path = Path(extracted_path) / "log_bottom_jpg"
+    jpg_top_path = Path(extracted_path) / "log_top_jpg"
+    bottom_path = Path(extracted_path) / "log_bottom"
+    top_path = Path(extracted_path) / "log_top"
 
-        num_bottom = subprocess.run(f"find {bottom_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if bottom_path.is_dir() else 0
-        num_top = subprocess.run(f"find {top_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if top_path.is_dir() else 0
-        num_jpg_bottom = subprocess.run(f"find {jpg_bottom_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if jpg_bottom_path.is_dir() else 0
-        num_jpg_top = subprocess.run(f"find {jpg_top_path} -maxdepth 1  -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if jpg_top_path.is_dir() else 0
+    num_bottom = subprocess.run(f"find {bottom_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if bottom_path.is_dir() else 0
+    num_top = subprocess.run(f"find {top_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if top_path.is_dir() else 0
+    num_jpg_bottom = subprocess.run(f"find {jpg_bottom_path} -maxdepth 1 -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if jpg_bottom_path.is_dir() else 0
+    num_jpg_top = subprocess.run(f"find {jpg_top_path} -maxdepth 1  -type f | wc -l", shell=True, capture_output=True, text=True).stdout.strip() if jpg_top_path.is_dir() else 0
 
-        print(f"\t\tbottom: {num_bottom}")
-        print(f"\t\ttop: {num_top}")
-        print(f"\t\tbottom jpeg: {num_jpg_bottom}")
-        print(f"\t\ttop jpeg: {num_jpg_top}")
+    print(f"\t\tbottom: {num_bottom}")
+    print(f"\t\ttop: {num_top}")
+    print(f"\t\tbottom jpeg: {num_jpg_bottom}")
+    print(f"\t\ttop jpeg: {num_jpg_top}")
 
-        response = client.logs.update(
-            id=log_id, 
-            num_jpg_bottom=int(num_jpg_bottom),
-            num_jpg_top=int(num_jpg_top),
-            num_bottom=int(num_bottom),
-            num_top=int(num_top),
-        )
+    response = client.logs.update(
+        id=log_id, 
+        num_jpg_bottom=int(num_jpg_bottom),
+        num_jpg_top=int(num_jpg_top),
+        num_bottom=int(num_bottom),
+        num_top=int(num_top),
+    )
     # SSHFS can get overwhelmed if you run too many queries too fast - wait here a bit
     time.sleep(5)
 
