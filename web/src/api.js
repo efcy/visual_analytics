@@ -37,7 +37,7 @@ const refreshToken = async () => {
 // Request interceptor
 api.interceptors.request.use(
  async (config) => {
-    //TODO check for token validity and get a new token if not valid
+    //check for token validity and get a new token if not valid
     let token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       const decoded = jwtDecode(token);
