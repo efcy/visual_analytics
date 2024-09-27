@@ -353,7 +353,7 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.CognitionRepresentation.objects.all()
     serializer_class = serializers.CognitionRepresentationSerializer
-    
+
     def get_queryset(self):
         queryset = models.CognitionRepresentation.objects.all()
         query_params = self.request.query_params
