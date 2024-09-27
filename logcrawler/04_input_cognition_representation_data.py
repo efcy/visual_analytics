@@ -25,8 +25,8 @@ if __name__ == "__main__":
         # TODO update list so it allows a filter
         # argh - we dont write them and all other representations are not reliable
 
-        num_frame_info_db = client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo")
-        if num_cognition_frames == num_frame_info_db:
+        num_frame_info_db = len(client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo"))
+        if num_cognition_frames == num_frame_info_db and num_cognition_frames > 0:
             print("\tall frameinfo representations are already written to the database - continue with next log")
             continue
 
