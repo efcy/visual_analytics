@@ -3,6 +3,15 @@ The goal of of this tool is to make it possible to quickly view, annotate and an
 Access to the V7 tool for inspiration can be given on request.
 
 
+## Overview
+
+This repository contains the code for the frontend and backend to run the Tool.
+We also included the source code for the sdk and a bunch of utility scripts where some of them
+already use the sdk.
+
+
+
+
 ## SDK
 Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
 
