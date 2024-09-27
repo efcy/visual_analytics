@@ -31,7 +31,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 class CognitionRepresentationAdmin(admin.ModelAdmin):
     search_fields = ['frame_number__icontains', 'representation_name__icontains']
     list_display = ["log_id","frame_number", 'representation_name']
-    list_per_page = 1000
+    list_per_page = 5000
 
 # Register your models here.
 admin.site.register(Event)
