@@ -19,6 +19,12 @@ classifiers = [
 dynamic = ["version"]
 #[tool.setuptools_scm]
 
+dependencies = [
+    "protobuf==3.20.3",
+    "numpy >= 1.23.5, < 2.0.0",
+    "httpx",
+    "pydantic",
+]
+
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
 version = {attr = "vaapi.__version__"}

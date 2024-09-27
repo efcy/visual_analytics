@@ -2,4 +2,4 @@
 you can perform with the API of the visual analytics tool by Berlin United for the Robocup SPL"""
 
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
