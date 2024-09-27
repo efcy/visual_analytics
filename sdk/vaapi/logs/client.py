@@ -235,7 +235,6 @@ class LogClient:
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        print(query_params)
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/logs/?{query_string}" if query_string else "api/logs/"
         #if game_id:
@@ -246,9 +245,7 @@ class LogClient:
         #    _response = self._client_wrapper.httpx_client.request(
         #        f"api/logs/", method="GET", request_options=request_options
         #    )
-        _response = self._client_wrapper.httpx_client.request(
-        url, method="GET", request_options=request_options
-    )
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[Log], _response.json())  # type: ignore
