@@ -20,6 +20,16 @@ if __name__ == "__main__":
 
     for data in sorted(existing_data, key=myfunc):
         log_id = data.id
+        num_cognition_frames = data.num_cognition_frames
+        # TODO query the cognition representation first and check how many frameinfo representations are there
+        # TODO update list so it allows a filter
+        # argh - we dont write them and all other representations are not reliable
+
+        num_frame_info_db = client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo")
+        if num_cognition_frames == num_frame_info_db:
+            print("\tall frameinfo representations are already written to the database - continue with next log")
+            continue
+
         log_path = Path(log_root_path) / data.log_path
 
         my_parser = Parser()
@@ -37,8 +47,6 @@ if __name__ == "__main__":
         my_array = [None] * batch_size
         for frame in game_log:
             for repr_name in frame.get_names():
-                if repr_name == "FrameInfo":
-                    continue
                 if frame[repr_name] == None:
                     # ScanLineEdgelPercept is empty but we write it anyway to the log
                     continue
@@ -58,9 +66,9 @@ if __name__ == "__main__":
                 try:
                     frame_number = frame['FrameInfo'].frameNumber
                 except Exception as e:
-                    print(f"FrameInfo not found in current frame")
+                    print(f"FrameInfo not found in current frame - will not parse any other representation from this frame")
                     print({e})
-                    continue
+                    break
 
                 try:
                     data = MessageToDict(frame[repr_name])                       
@@ -68,7 +76,6 @@ if __name__ == "__main__":
                     print(repr_name)
                     print(f"error parsing the log {log_path}")
                     print({e})
-
 
                 json_obj = {
                     "log_id":log_id, 

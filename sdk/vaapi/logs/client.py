@@ -201,8 +201,10 @@ class LogClient:
     def list(
              self, 
              *, 
-             game_id: typing.Optional[int] = None,
-             request_options: typing.Optional[RequestOptions] = None) -> typing.List[Log]:
+             #game_id: typing.Optional[int] = None,
+             request_options: typing.Optional[RequestOptions] = None,
+             **filters: typing.Any) -> typing.List[Log]:
+        # TODO: maybe we should not allow filtering for arbitrary fields - makes validation hard and also filtering for json fields is not useful/possible
         """
         List all logs.
 
@@ -232,14 +234,18 @@ class LogClient:
             id=1,
         )
         """
-        if game_id:
-            _response = self._client_wrapper.httpx_client.request(
-                f"api/logs/?game={jsonable_encoder(game_id)}", method="GET", request_options=request_options
-            )
-        else:
-            _response = self._client_wrapper.httpx_client.request(
-                f"api/logs/", method="GET", request_options=request_options
-            )
+        query_params = {k: v for k, v in filters.items() if v is not None}
+        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
+        url = f"api/logs/?{query_string}" if query_string else "api/logs/"
+        #if game_id:
+        #    _response = self._client_wrapper.httpx_client.request(
+        #        f"api/logs/?game={jsonable_encoder(game_id)}", method="GET", request_options=request_options
+        #    )
+        #else:
+        #    _response = self._client_wrapper.httpx_client.request(
+        #        f"api/logs/", method="GET", request_options=request_options
+        #    )
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[Log], _response.json())  # type: ignore
