@@ -18,15 +18,18 @@ class Event(pydantic_v1.BaseModel):
     
     """
     First Setup Day
-    FIXME change type
     """
     start_day: typing.Optional[dt.date] = None
 
     """
     Last Game Day
-    FIXME change type
     """
     end_day: typing.Optional[dt.date] = None
+
+    """
+    Timezone of Country the event took place
+    """
+    timezone: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     """
     Country the event took place
