@@ -53,8 +53,8 @@ if __name__ == "__main__":
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
         print(log_path)
-        total_images = data.num_jpg_bottom + data.num_jpg_top + data.num_bottom + data.num_top
+        total_images = int(data.num_jpg_bottom or 0) + int(data.num_jpg_top or 0) + int(data.num_bottom or 0) + int(data.num_top or 0)
         if total_images == 0:
             calculate_images(log_path.parent, log_id)
         else:
-            print("\tNumber of images are already put in the database - we assume that is correct")
+            print("\tNumber of images are already put in the database - we assume that it is correct")
