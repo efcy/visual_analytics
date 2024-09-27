@@ -52,7 +52,6 @@ class Log(models.Model):
     num_bottom = models.IntegerField(blank=True, null=True)
     num_top = models.IntegerField(blank=True, null=True)
 
-
     def __str__(self):
         return f"{self.log_path}"
 

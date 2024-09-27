@@ -179,11 +179,16 @@ class LogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
-        game_id = self.request.query_params.get("game")
-        if game_id is not None:
-            return models.Log.objects.filter(game_id=game_id)
-        else:
-            return models.Log.objects.all()
+        queryset = models.Log.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.Log._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+
+        return queryset.filter(filters)
         
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
