@@ -21,6 +21,12 @@ if __name__ == "__main__":
         log_path = Path(log_root_path) / data.log_path
         sensor_log_path = Path(log_root_path) / data.sensor_log_path
 
+        print("log_path: ", log_path)
+
+        if data.num_cognition_frames and data.num_cognition_frames > 0 and data.num_motion_frames and data.num_motion_frames > 0:
+            print("\twe already calculated number of frames for this log")
+            continue
+
         my_parser = Parser()
         my_parser.register("ImageJPEG"   , "Image")
         my_parser.register("ImageJPEGTop", "Image")
@@ -29,9 +35,7 @@ if __name__ == "__main__":
         my_parser.register("BallCandidatesTop", "BallCandidates")
 
         frame_counter = 0
-        print("log_path: ", log_path)
         game_log = LogReader(str(log_path), my_parser)
-        
         for frame in tqdm(game_log):
             try:
                 frame_number = frame['FrameInfo'].frameNumber
@@ -53,7 +57,6 @@ if __name__ == "__main__":
         print()
         print("parse the sensor log")
         frame_counter = 0
-        print("log_path: ", log_path)
         game_log = LogReader(str(sensor_log_path), my_parser)
 
         for frame in tqdm(game_log):
