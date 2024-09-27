@@ -16,12 +16,7 @@ class CustomUserManager(BaseUserManager):
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-        t = Token.objects.create(user=user)
-        print(t)
-        a = t.generate_key()
-        t.delete()
-        t = Token.objects.create(user=user)
-        print(t)
+        Token.objects.create(user=user)
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
-
+import { jwtDecode } from "jwt-decode";
 const apiUrl = "http://127.0.0.1:8000/";
 
 const api = axios.create({
@@ -36,10 +36,18 @@ const refreshToken = async () => {
 
 // Request interceptor
 api.interceptors.request.use(
-  (config) => {
-    //TODO check for token validity and get a new token if not valid
-    const token = localStorage.getItem(ACCESS_TOKEN);
+ async (config) => {
+    //check for token validity and get a new token if not valid
+    let token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
+      const decoded = jwtDecode(token);
+      const tokenExpiration = decoded.exp;
+      const now = Date.now() / 1000;
+
+      if (tokenExpiration < now) {
+          console.log("get new refresh token")
+          token = await refreshToken();
+      }
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
