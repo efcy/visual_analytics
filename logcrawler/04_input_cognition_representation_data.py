@@ -25,8 +25,12 @@ if __name__ == "__main__":
         # TODO update list so it allows a filter
         # argh - we dont write them and all other representations are not reliable
 
+        if not num_cognition_frames or num_cognition_frames == 0:
+            print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
+            continue
+
         num_frame_info_db = len(client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo"))
-        if num_cognition_frames == num_frame_info_db and num_cognition_frames > 0:
+        if num_cognition_frames == num_frame_info_db:
             print("\tall frameinfo representations are already written to the database - continue with next log")
             continue
 
