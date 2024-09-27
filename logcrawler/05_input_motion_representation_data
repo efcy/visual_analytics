@@ -16,31 +16,27 @@ if __name__ == "__main__":
     existing_data = client.logs.list()
 
     def myfunc(data):
-        return data.log_path
+        return data.sensor_log_path
 
     for data in sorted(existing_data, key=myfunc):
         log_id = data.id
-        num_cognition_frames = data.num_cognition_frames
+        num_motion_frames = data.num_motion_frames
         
         # check if number of frames were calculated already
-        if not num_cognition_frames or num_cognition_frames == 0:
-            print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
+        if not num_motion_frames or num_motion_frames == 0:
+            print("\tWARNING: first calculate the number of motion frames and put it in the db")
             continue
 
-        # query the cognition representation first and check how many frameinfo representations are there
-        num_frame_info_db = len(client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo"))
-        if num_cognition_frames == num_frame_info_db:
+        # query the motion representation first and check how many frameinfo representations are there
+        num_frame_info_db = len(client.motion_repr.list(log_id=log_id, representation_name="FrameInfo"))
+        if num_motion_frames == num_frame_info_db:
             print("\tall frameinfo representations are already written to the database - continue with next log")
             continue
 
-        log_path = Path(log_root_path) / data.log_path
+        log_path = Path(log_root_path) / data.sensor_log_path
 
         my_parser = Parser()
-        my_parser.register("ImageJPEG"   , "Image")
-        my_parser.register("ImageJPEGTop", "Image")
-        my_parser.register("GoalPerceptTop", "GoalPercept")
-        my_parser.register("FieldPerceptTop", "FieldPercept")
-        my_parser.register("BallCandidatesTop", "BallCandidates")
+
         
         batch_size = 200
         counter = 0
@@ -53,21 +49,11 @@ if __name__ == "__main__":
                 if frame[repr_name] == None:
                     # ScanLineEdgelPercept is empty but we write it anyway to the log
                     continue
-                # we will handle behavior extra in the future
-                if repr_name == "BehaviorStateComplete":
-                    continue
-                if repr_name == "BehaviorStateSparse":
-                    continue
-                # we already treat images differently, no need to but binary data here in the database
-                if repr_name == "Image" or repr_name == "ImageJPEG":
-                    continue
-                if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
-                    continue
                 
                 # try accessing framenumber directly because we can have the situation where the framenumber is missing in the
                 # last frame
                 try:
-                    frame_number = frame['FrameInfo'].frameNumber
+                    sensor_frame_number = frame['FrameInfo'].frameNumber
                 except Exception as e:
                     print(f"FrameInfo not found in current frame - will not parse any other representation from this frame")
                     print({e})
@@ -82,7 +68,7 @@ if __name__ == "__main__":
 
                 json_obj = {
                     "log_id":log_id, 
-                    "frame_number":frame_number,
+                    "sensor_frame_number":sensor_frame_number,
                     "representation_name":repr_name,
                     "representation_data":data
                 }
@@ -90,10 +76,10 @@ if __name__ == "__main__":
                 counter = counter + 1
                 if counter == batch_size:
                     try:
-                        response = client.cognition_repr.bulk_create(
+                        response = client.motion_repr.bulk_create(
                             repr_list=my_array
                         )
-                        print(frame_number)
+                        print(sensor_frame_number)
                         print(f"\t{response}")
                         counter=0
                     except Exception as e:
@@ -101,7 +87,7 @@ if __name__ == "__main__":
         # handle the last frames
         # just upload whatever is in the array. There will be old data but that does not matter, it will be filtered out on insertion
         try:
-            response = client.cognition_repr.bulk_create(
+            response = client.motion_repr.bulk_create(
                 repr_list=my_array
             )
             print(response)
