@@ -183,6 +183,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"error inputing the data {log_path}")
             print(e)
-        quit()
-
-
