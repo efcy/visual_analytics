@@ -101,7 +101,7 @@ if __name__ == "__main__":
             continue
 
         # Hack for demo - remove later
-        if int(data.game_id) != 23 and int(data.game_id) != 24 and int(data.id) != 7:
+        if int(data.game_id) != 17 and int(data.game_id) != 12:
             continue
         
         # check if we need to insert this log
