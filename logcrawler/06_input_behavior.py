@@ -105,10 +105,10 @@ if __name__ == "__main__":
             continue
         
         # check if we need to insert this log
-        a = is_behavior_done(data)
-        print("is_behavior_done: ", a)
-        quit()
-
+        if is_behavior_done(data):
+            print("behavior already inserted, will continue with the next log")
+            continue
+        
         my_parser = Parser()
         game_log = LogReader(str(log_path), my_parser)
         parse_sparse_option_list = list()
