@@ -27,7 +27,6 @@ def fill_option_map(log_id):
             )
         option_map.update({option.xabsl_internal_option_id: state_dict})
 
-
 def get_option_id(internal_options_id):
     try:
         return option_map[internal_options_id]['id']
@@ -113,10 +112,6 @@ if __name__ == "__main__":
         print(updated_log_path)
         if not data.num_cognition_frames or int(data.num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
-            continue
-
-        # Hack for demo - remove later
-        if int(data.game_id) != 17 and int(data.game_id) != 12:
             continue
         
         # check if we need to insert this log
