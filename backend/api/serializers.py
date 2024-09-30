@@ -54,3 +54,20 @@ class MotionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MotionRepresentation
         fields = '__all__'
+
+
+class BehaviorOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BehaviorOption
+        fields = '__all__'
+
+
+class BehaviorOptionsStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BehaviorOptionState
+        fields = '__all__'
+
+class BehaviorFrameOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BehaviorFrameOption
+        fields = '__all__'

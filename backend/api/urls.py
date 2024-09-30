@@ -19,6 +19,7 @@ urlpatterns = [
     path('annotations/', include((_api_annotations_urlpatterns, app_name), namespace='api-annotations')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('test/', views.BehaviorframeOptionsView.as_view(), name='test'),
 ]
 
 router = routers.DefaultRouter()
@@ -28,5 +29,9 @@ router.register('logs',views.LogViewSet)
 router.register('image',views.ImageViewSet)
 router.register("cognitionrepr",views.CognitionRepresentationViewSet)
 router.register("motionrepr",views.MotionRepresentationViewSet)
+router.register("behavior-option",views.BehaviorOptionViewSet)
+router.register("behavior-option-state",views.BehaviorOptionStateViewSet)
+router.register("behavior-frame-option",views.BehaviorFrameOptionViewSet)
+
 
 urlpatterns += router.urls

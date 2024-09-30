@@ -10,6 +10,9 @@ from .game.client import GameClient #, AsyncAnnotationsClient
 from .logs.client import LogClient #, AsyncAnnotationsClient
 from .cognition_representation.client import CognitionRepresentationClient #, AsyncAnnotationsClient
 from .motion_representation.client import MotionRepresentationClient #, AsyncAnnotationsClient
+from .behavior_options.client import BehaviorOptionClient #, AsyncAnnotationsClient
+from .behavior_options_state.client import BehaviorOptionStateClient #, AsyncAnnotationsClient
+from .behavior_frame_option.client import BehaviorFrameOptionClient #, AsyncAnnotationsClient
 
 
 class VaapiBase:
@@ -79,6 +82,9 @@ class VaapiBase:
         self.logs = LogClient(client_wrapper=self._client_wrapper)
         self.cognition_repr = CognitionRepresentationClient(client_wrapper=self._client_wrapper)
         self.motion_repr = MotionRepresentationClient(client_wrapper=self._client_wrapper)
+        self.behavior_option = BehaviorOptionClient(client_wrapper=self._client_wrapper)
+        self.behavior_option_state = BehaviorOptionStateClient(client_wrapper=self._client_wrapper)
+        self.behavior_frame_option = BehaviorFrameOptionClient(client_wrapper=self._client_wrapper)
         
         
         #self.users = UsersClient(client_wrapper=self._client_wrapper)
