@@ -2,9 +2,8 @@ from pathlib import Path
 from typing import Generator, List
 import os
 from time import sleep
-from tqdm import tqdm
 
-from vaapi import client
+from vaapi.client import Vaapi
 baseurl = "https://api.berlin-united.com/api/" #"http://127.0.0.1:8000/api/"
 #key can be created on admin site
 api_token = "ab43645dd5bc6583cf8b2b9ec4b761728843901c" #os.environ.get("VAT_API_TOKEN")
@@ -31,10 +30,8 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     print(individual_extracted_folder)
     if not Path(individual_extracted_folder).is_dir():
         return
-    if check_insertion(robot_data_id, camera, type):
+    if check_insertion(log_id, camera, type):
         return
-
-    
 
     for batch in path_generator(individual_extracted_folder):
         image_ar = [None] * len(batch)
@@ -44,38 +41,36 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
             url_path = str(file).removeprefix(log_root_path).strip("/")
             
             image_ar[idx] = {
-                "log": robot_data_id,
+                "log": log_id,
                 "camera": camera,
                 "type": type,
                 "frame_number": framenumber,
                 "image_url": url_path,
             }
-
-        response = my_client.add_image(image_ar)
+        try:
+            response = client.image.bulk_create(
+                data_list=image_ar
+            )
+            print(response)
+        except Exception as e:
+            print(f"error inputing the data {log_path}")
 
         sleep(0.5)
     #sleep(5)
 
 def check_insertion(robot_data_id, camera, type):
-    # TODO get the number of images in db via api => write an endpoint for this
-    params = {
-        "log": robot_data_id,
-        "camera": camera,
-        "type": type,
-    }
-    response = my_client.image_count(params)
-    db_count = int(response["count"])
-    
+    response = client.image.get_image_count(log=robot_data_id, camera=camera, type=type)
+    db_count = response["count"]
 
-    response2 = my_client.get_robot_data(robot_data_id)
+    response2 = client.logs.get(robot_data_id)
     if camera == "BOTTOM" and type == "RAW":
-        target_count = int(response2["num_bottom"])
+        target_count = response2.num_bottom
     elif camera == "TOP" and type == "RAW":
-        target_count = int(response2["num_top"])
+        target_count = response2.num_top
     elif camera == "BOTTOM" and type == "JPEG":
-        target_count = int(response2["num_jpg_bottom"])
+        target_count = response2.num_jpg_bottom
     elif camera == "TOP" and type == "JPEG":
-        target_count = int(response2["num_jpg_top"])
+        target_count = response2.num_jpg_top
     else:
         ValueError()
 
@@ -89,16 +84,19 @@ def check_insertion(robot_data_id, camera, type):
 if __name__ == "__main__":
     print(os.getpid())
     log_root_path = os.environ.get("VAT_LOG_ROOT")
-    my_client = client(baseurl,api_token)
-    existing_data = my_client.list_robot_data()
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )
+
+    existing_data = client.logs.list()
 
     def myfunc(data):
-        return data["log_path"]
+        return data.log_path
 
     for data in sorted(existing_data, key=myfunc):
-        robot_data_id = data["id"]
-        log_path = Path(log_root_path) / data["log_path"]
-
+        log_id = data.id
+        log_path = Path(log_root_path) / data.log_path
 
         # TODO could we just switch game_logs with extracted in the paths?
         robot_foldername = log_path.parent.name

@@ -103,7 +103,7 @@ if __name__ == "__main__":
     existing_data = client.logs.list()
 
     def myfunc(data):
-        return data.sensor_log_path
+        return data.log_path
 
     for data in sorted(existing_data, key=myfunc):
         log_id = data.id

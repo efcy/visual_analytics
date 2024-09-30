@@ -70,8 +70,8 @@ class Image(models.Model):
     frame_number = models.IntegerField(blank=True, null=True)
     image_url = models.CharField(max_length=200, blank=True, null=True)
 
-    class Meta:
-        unique_together = ('log', 'camera', 'type', 'frame_number')
+    #class Meta:
+    #    unique_together = ('log', 'camera', 'type', 'frame_number')
 
     def __str__(self):
         return f"{self.log}-{self.camera}-{self.type}-{self.frame_number}"
