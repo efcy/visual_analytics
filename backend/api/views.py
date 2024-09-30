@@ -266,21 +266,92 @@ class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
 
-    def list(self, request, *args, **kwargs):
-        # Keep the original list behavior
-        return super().list(request, *args, **kwargs)
-
     def get_queryset(self):
-        log_id = self.request.query_params.get("log")
-        camera = self.request.query_params.get('camera')
-        print("log_id", log_id)
-        if log_id is not None and camera is not None:
-            queryset = models.Image.objects.filter(log=log_id, camera=camera)
-        else:
-            queryset = models.Image.objects.all()
+        queryset = models.Image.objects.all()
+        query_params = self.request.query_params
 
-        return queryset.order_by('frame_number')
+        filters = Q()
+        for field in models.Image._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters).order_by('frame_number')
     
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+        
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.Image.objects.get_or_create(
+            log=validated_data.get('log'),
+            camera=validated_data.get('camera'),
+            type=validated_data.get('type'),
+            frame_number=validated_data.get('frame_number'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)    
+    
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.Image.objects.values_list('log', 'camera', 'type', 'frame_number')
+            )
+            print(existing_combinations)
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                # item['log_id'].id is needed because item['log_id'] gives a reference to the log object
+                combo = (item['log'].id, item['camera'], item['type'], item['frame_number'])
+
+                if combo not in existing_combinations:
+                    new_data.append(models.Image(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    print("\tfound existing data")
+                    # Fetch the existing event
+                    existing_event = models.Image.objects.get(
+                        log=item['log'],
+                        camera=item['camera'],
+                        type=item['type'],
+                        frame_number=item['frame_number']
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new images
+            created_data = models.Image.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        #all_data = created_data + existing_data
+
+        # Serialize the results
+        #result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+        #    'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
+
+    """
     def create(self, request, *args, **kwargs):
         data = request.data  # This should be a list of dictionaries
         #print(data)
@@ -330,6 +401,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(all_objs, many=True)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    """
 
 class ImageCountView(APIView):
     # TODO to I still need this?
@@ -791,30 +863,3 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
-"""
-class BehaviorframeOptionsView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        qs = models.BehaviorFrameOption.objects.extra(
-            select={
-                'option_name': 'api_behavioroption.option_name',
-                'state_name': 'api_behavioroptionstate.name',
-                'state_target': 'api_behavioroptionstate.target',
-            },
-            tables=['api_behavioroption', 'api_behavioroptionstate'],
-            where=[
-                'api_behaviorframeoption.log_id_id = api_behavioroption.log_id_id',
-                'api_behaviorframeoption.options_id = api_behavioroption.internal_id',
-
-                'api_behaviorframeoption.log_id_id = api_behavioroptionstate.log_id_id',
-                'api_behaviorframeoption.options_id = api_behavioroptionstate.options_id',
-                'api_behaviorframeoption.active_state = api_behavioroptionstate.internal_id',
-            ]
-        ).values(
-            'log_id', 'frame', 'time', 'parent', 'id',
-            'option_name', 'time_of_execution', 'active_state',
-            'state_name', 'state_target', 'state_time'
-        )
-        return Response(qs, status=status.HTTP_200_OK)
-"""
