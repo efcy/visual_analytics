@@ -6,6 +6,7 @@ djangorestframework-api-key==3.*
 djangorestframework-simplejwt
 PyJWT
 pytz
+tzdata==2024.2
 sqlparse
 psycopg2-binary
 python-dotenv
