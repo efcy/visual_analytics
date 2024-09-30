@@ -17,7 +17,7 @@ TODO: mention github pipelines - updaten docker images / sdk
 
 
 ## SDK
-Our SDK will be published to pypi: https://pypi.org/project/BU-VAT/
+Our SDK will be published to pypi: https://pypi.org/project/vaapi/
 
 ## Development Setup
 Guide on how to setup the development enviroment: [dev setup](docs/dev-setup.md)
