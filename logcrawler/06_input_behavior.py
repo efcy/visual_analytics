@@ -6,9 +6,15 @@ from vaapi.client import Vaapi
 
 def fill_option_map(log_id):
     # TODO I could build this why parsing the BehaviorComplete representation - saving a call to the database
-    response = client.behavior_option.list(
-        log_id=log_id
-    )
+    try:
+        response = client.behavior_option.list(
+            log_id=log_id
+        )
+    except Exception as e:
+        print(response)
+        print(e)
+        print("Could not fetch the list of options for this log")
+        quit()
     for option in response:
         state_response = client.behavior_option_state.list(
             log_id=log_id,
@@ -23,7 +29,15 @@ def fill_option_map(log_id):
 
 
 def get_option_id(internal_options_id):
-    return option_map[internal_options_id]['id']
+    try:
+        return option_map[internal_options_id]['id']
+    except Exception as e:
+        print(option_map)
+        print()
+        print(f"internal_options_id: {internal_options_id}")
+        print()
+        print(e)
+        quit()
 
 def get_state_id(internal_options_id, internal_state_id):
     try:
@@ -94,8 +108,9 @@ if __name__ == "__main__":
     for data in sorted(existing_data, key=myfunc):
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
-        print("log_path: ", log_path)
-
+        # HACK sometimes BehaviorStateComplete is not in combined.log but in game.log - hack usage of game.log file here
+        updated_log_path = log_path.parent / "game.log"
+        print(updated_log_path)
         if not data.num_cognition_frames or int(data.num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
             continue
@@ -110,7 +125,7 @@ if __name__ == "__main__":
             continue
         
         my_parser = Parser()
-        game_log = LogReader(str(log_path), my_parser)
+        game_log = LogReader(str(updated_log_path), my_parser)
         parse_sparse_option_list = list()
         option_map = dict()
 
@@ -121,11 +136,13 @@ if __name__ == "__main__":
             else:
                 print(f"frame {idx} does not have frame info representation")
                 break
+
             # TODO build something to check how many frames are already inserted
             # maybe have an endpoint that checks number of unique frames in BehaviorFrameOption model
             # That means I need to make sure to have num cognition frames calculated before
             if "BehaviorStateComplete" in frame:
                 #continue
+                print("\tParsing BehaviorStateComplete")
                 full_behavior = frame["BehaviorStateComplete"]
 
                 for i, option in enumerate(full_behavior.options):
@@ -138,7 +155,7 @@ if __name__ == "__main__":
                         )
                         #print(f"\t{option_response}")
                     except Exception as e:
-                        print(f"error inputing the data {log_path}")
+                        print(f"error inputing option from BehaviorStateComplete {log_path}")
                         print(e)
                         quit()
 
@@ -159,6 +176,7 @@ if __name__ == "__main__":
                 fill_option_map(log_id)
             
             if "BehaviorStateSparse" in frame:
+                # TODO build a check that makes sure behaviorcomplete was parsed already
                 sparse_behavior = frame["BehaviorStateSparse"]
                 for root in sparse_behavior.activeRootActions:
                     if root.type != 0: # Option
