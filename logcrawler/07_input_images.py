@@ -30,8 +30,8 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     print(individual_extracted_folder)
     if not Path(individual_extracted_folder).is_dir():
         return
-    #if check_insertion(log_id, camera, type):
-    #    return
+    if check_insertion(log_id, camera, type):
+        return
 
     for batch in path_generator(individual_extracted_folder):
         image_ar = [None] * len(batch)
