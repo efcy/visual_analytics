@@ -1,0 +1,2074 @@
+name: "arms_control"
+states {
+  name: "arms_normal"
+  target: false
+}
+states {
+  name: "arms_back"
+  target: false
+}
+states {
+  name: "arms_back_by_collision"
+  target: false
+}
+states {
+  name: "arms_synchronised_with_walk"
+  target: false
+}
+states {
+  name: "arms_take_down"
+  target: false
+}
+
+name: "attention_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "attention_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "pay_attention"
+  target: false
+}
+
+name: "avoid_region_go_own_goal"
+parameters {
+  id: 0
+  type: Decimal
+  name: "avoid_region_go_own_goal.x"
+  decimalValue: 0.0
+}
+parameters {
+  id: 1
+  type: Decimal
+  name: "avoid_region_go_own_goal.y"
+  decimalValue: 0.0
+}
+parameters {
+  id: 2
+  type: Decimal
+  name: "avoid_region_go_own_goal.distance"
+  decimalValue: 0.0
+}
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "move_away"
+  target: false
+}
+states {
+  name: "move_away_x"
+  target: false
+}
+states {
+  name: "move_away_x_const_y"
+  target: false
+}
+states {
+  name: "move_away_y"
+  target: false
+}
+states {
+  name: "move_away_y_const_x"
+  target: false
+}
+states {
+  name: "move_away_xy"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "basic_play"
+states {
+  name: "play"
+  target: false
+}
+
+name: "battery"
+states {
+  name: "ok"
+  target: false
+}
+states {
+  name: "low_warn"
+  target: false
+}
+states {
+  name: "fast_blink"
+  target: false
+}
+states {
+  name: "slow_blink"
+  target: false
+}
+
+name: "bumper_collision_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "bumper_collision_stop"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "forward"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+states {
+  name: "avoid_left"
+  target: false
+}
+states {
+  name: "avoid_right"
+  target: false
+}
+states {
+  name: "backward"
+  target: false
+}
+
+name: "decide_game_state"
+states {
+  name: "_initial"
+  target: false
+}
+states {
+  name: "standby"
+  target: false
+}
+states {
+  name: "ready"
+  target: false
+}
+states {
+  name: "set"
+  target: false
+}
+states {
+  name: "playing"
+  target: false
+}
+states {
+  name: "penalized"
+  target: false
+}
+states {
+  name: "unstiff"
+  target: false
+}
+states {
+  name: "finished"
+  target: false
+}
+
+name: "dribble"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "play"
+  target: false
+}
+states {
+  name: "short_freeze"
+  target: false
+}
+states {
+  name: "search_ball"
+  target: false
+}
+
+name: "dribble_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "fall_down_and_stand_up"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "falling_front"
+  target: false
+}
+states {
+  name: "falling_front_wait"
+  target: false
+}
+states {
+  name: "falling_back"
+  target: false
+}
+states {
+  name: "falling_back_wait"
+  target: false
+}
+states {
+  name: "falling"
+  target: false
+}
+states {
+  name: "wait_before_stand_up"
+  target: false
+}
+states {
+  name: "stand_up"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+states {
+  name: "wait_for_completed_stand"
+  target: false
+}
+
+name: "follow_ball_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "follow_ball_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "play"
+  target: false
+}
+states {
+  name: "search_ball"
+  target: false
+}
+
+name: "free_kick_opp"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "goalie_position_free_kick"
+  target: false
+}
+states {
+  name: "goalie_position_free_kick_known"
+  target: false
+}
+states {
+  name: "goalie_position_free_kick_teamball"
+  target: false
+}
+states {
+  name: "goalie_position_free_kick_default"
+  target: false
+}
+states {
+  name: "player_move_away_from_ball"
+  target: false
+}
+states {
+  name: "player_move_away_from_teamball"
+  target: false
+}
+states {
+  name: "player_move_away_from_foul_position"
+  target: false
+}
+states {
+  name: "player_turn_to_ball"
+  target: false
+}
+states {
+  name: "player_search_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: false
+}
+
+name: "free_kick_opp_corner"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "player_move_away_from_ball"
+  target: false
+}
+states {
+  name: "player_move_away_from_teamball"
+  target: false
+}
+states {
+  name: "player_move_away_from_corner_position"
+  target: false
+}
+states {
+  name: "player_turn_to_ball"
+  target: false
+}
+states {
+  name: "player_search_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: false
+}
+
+name: "free_kick_opp_goal"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "move_to_side"
+  target: false
+}
+states {
+  name: "position_for_free_kick"
+  target: false
+}
+states {
+  name: "position_for_free_kick_ball_known"
+  target: false
+}
+states {
+  name: "move_away_from_ball"
+  target: false
+}
+states {
+  name: "move_away_from_teamball"
+  target: false
+}
+states {
+  name: "defend_free_kick"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: false
+}
+states {
+  name: "turn_to_opponent_goal"
+  target: false
+}
+states {
+  name: "idle"
+  target: true
+}
+
+name: "free_kick_opp_in"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "player_move_away_from_ball"
+  target: false
+}
+states {
+  name: "player_move_away_from_teamball"
+  target: false
+}
+states {
+  name: "player_turn_to_ball"
+  target: false
+}
+states {
+  name: "player_search_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: false
+}
+
+name: "free_kick_own"
+states {
+  name: "search_ball"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: false
+}
+states {
+  name: "wait_and_watch"
+  target: false
+}
+states {
+  name: "position_for_free_kick"
+  target: false
+}
+states {
+  name: "move_closer_to_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "free_kick_own_corner"
+states {
+  name: "search_ball"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: false
+}
+states {
+  name: "wait_and_watch"
+  target: false
+}
+states {
+  name: "position_for_free_kick"
+  target: false
+}
+states {
+  name: "move_closer_to_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "free_kick_own_goal"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "goalie_position_for_free_kick"
+  target: false
+}
+states {
+  name: "goalie_look_at_left_corner"
+  target: false
+}
+states {
+  name: "goalie_turn_to_left_corner"
+  target: false
+}
+states {
+  name: "goalie_look_at_right_corner"
+  target: false
+}
+states {
+  name: "goalie_turn_to_right_corner"
+  target: false
+}
+states {
+  name: "goalie_search_for_ball"
+  target: false
+}
+states {
+  name: "player_turn_to_ball"
+  target: false
+}
+states {
+  name: "player_search_for_ball"
+  target: false
+}
+states {
+  name: "player_look_at_left_corner"
+  target: false
+}
+states {
+  name: "player_turn_to_left_corner"
+  target: false
+}
+states {
+  name: "player_look_at_right_corner"
+  target: false
+}
+states {
+  name: "player_turn_to_right_corner"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "free_kick_own_in"
+states {
+  name: "search_ball"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: false
+}
+states {
+  name: "wait_and_watch"
+  target: false
+}
+states {
+  name: "position_for_free_kick"
+  target: false
+}
+states {
+  name: "move_closer_to_ball"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "free_kick_simple"
+parameters {
+  id: 0
+  type: Boolean
+  name: "free_kick_simple.own"
+  boolValue: false
+}
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "opp_free_kick_search_ball_left"
+  target: false
+}
+states {
+  name: "opp_free_kick_search_ball_right"
+  target: false
+}
+states {
+  name: "opp_free_kick_turn_to_ball"
+  target: false
+}
+states {
+  name: "opp_free_kick_move_away"
+  target: false
+}
+states {
+  name: "opp_free_kick_watch_ball"
+  target: false
+}
+states {
+  name: "own_free_kick"
+  target: false
+}
+
+name: "go_to_and_keep_passive_position"
+parameters {
+  id: 0
+  type: Decimal
+  name: "go_to_and_keep_passive_position.x"
+  decimalValue: 0.0
+}
+parameters {
+  id: 1
+  type: Decimal
+  name: "go_to_and_keep_passive_position.y"
+  decimalValue: 0.0
+}
+parameters {
+  id: 2
+  type: Decimal
+  name: "go_to_and_keep_passive_position.rot"
+  decimalValue: 0.0
+}
+states {
+  name: "go"
+  target: false
+}
+states {
+  name: "go_with_search_for_ball"
+  target: false
+}
+states {
+  name: "pay_attention_to_ball"
+  target: false
+}
+states {
+  name: "behave_passive"
+  target: false
+}
+
+name: "go_to_ball_with_USOA"
+parameters {
+  id: 0
+  type: Decimal
+  name: "go_to_ball_with_USOA.distance"
+  decimalValue: 0.0
+}
+states {
+  name: "go"
+  target: true
+}
+states {
+  name: "avoid_left"
+  target: false
+}
+states {
+  name: "avoid_right"
+  target: false
+}
+states {
+  name: "approach_carefully"
+  target: true
+}
+
+name: "go_to_ball_with_USOA_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "go_to_ball_with_USOA_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "go"
+  target: false
+}
+states {
+  name: "done"
+  target: false
+}
+
+name: "go_to_point"
+parameters {
+  id: 0
+  type: Decimal
+  name: "go_to_point.x"
+  decimalValue: 0.0
+}
+parameters {
+  id: 1
+  type: Decimal
+  name: "go_to_point.y"
+  decimalValue: 0.0
+}
+parameters {
+  id: 2
+  type: Decimal
+  name: "go_to_point.rot"
+  decimalValue: 0.0
+}
+states {
+  name: "far_away"
+  target: false
+}
+states {
+  name: "turn"
+  target: false
+}
+states {
+  name: "stop"
+  target: true
+}
+
+name: "go_to_point_with_USOA"
+parameters {
+  id: 0
+  type: Decimal
+  name: "go_to_point_with_USOA.x"
+  decimalValue: 0.0
+}
+parameters {
+  id: 1
+  type: Decimal
+  name: "go_to_point_with_USOA.y"
+  decimalValue: 0.0
+}
+parameters {
+  id: 2
+  type: Decimal
+  name: "go_to_point_with_USOA.rot"
+  decimalValue: 0.0
+}
+states {
+  name: "go"
+  target: false
+}
+states {
+  name: "avoid_left"
+  target: false
+}
+states {
+  name: "avoid_right"
+  target: false
+}
+states {
+  name: "approach_carefully"
+  target: false
+}
+states {
+  name: "finish"
+  target: true
+}
+
+name: "go_to_point_with_USOA_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "go_to_point_with_USOA_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "step0"
+  target: false
+}
+states {
+  name: "step1"
+  target: false
+}
+states {
+  name: "step2"
+  target: false
+}
+states {
+  name: "step3"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "head_control"
+states {
+  name: "none"
+  target: false
+}
+states {
+  name: "look_straight_ahead"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+states {
+  name: "search_for_ball"
+  target: false
+}
+states {
+  name: "search_for_ball_goalie"
+  target: false
+}
+states {
+  name: "search_for_ball_and_look_around"
+  target: false
+}
+states {
+  name: "look_around"
+  target: false
+}
+states {
+  name: "look_at_ball_percept"
+  target: false
+}
+states {
+  name: "look_at_team_ball"
+  target: false
+}
+states {
+  name: "look_at_preview_angle"
+  target: false
+}
+
+name: "intercept_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "look_around"
+states {
+  name: "get_starting_direction"
+  target: false
+}
+states {
+  name: "look_left"
+  target: false
+}
+states {
+  name: "look_right"
+  target: false
+}
+
+name: "look_at_ball_percept"
+states {
+  name: "doit"
+  target: false
+}
+
+name: "look_at_preview_angle"
+states {
+  name: "look_at_plannend_rotation_angle"
+  target: false
+}
+states {
+  name: "look_at_ball_percept"
+  target: false
+}
+
+name: "look_at_team_ball"
+states {
+  name: "doit"
+  target: false
+}
+
+name: "motion_init_stand_watch"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "init"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "obstacle_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "obstacle_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "play"
+  target: false
+}
+states {
+  name: "avoid_left"
+  target: false
+}
+states {
+  name: "avoid_right"
+  target: false
+}
+
+name: "only_ball_looking_agent"
+states {
+  name: "search"
+  target: false
+}
+
+name: "passive_ball_not_seen"
+states {
+  name: "look_around"
+  target: false
+}
+states {
+  name: "look_at_team_ball"
+  target: false
+}
+states {
+  name: "turn_to_left"
+  target: false
+}
+states {
+  name: "turn_to_right"
+  target: false
+}
+states {
+  name: "state_change_right"
+  target: false
+}
+states {
+  name: "state_change_left"
+  target: false
+}
+states {
+  name: "look_around_left"
+  target: false
+}
+states {
+  name: "look_around_right"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: true
+}
+
+name: "passive_ball_not_seen_responsive"
+states {
+  name: "look_around"
+  target: false
+}
+states {
+  name: "look_at_team_ball"
+  target: false
+}
+states {
+  name: "turn_around"
+  target: false
+}
+states {
+  name: "turn_to_ball"
+  target: true
+}
+
+name: "passive_ball_seen"
+states {
+  name: "look_at_ball"
+  target: true
+}
+states {
+  name: "turn_to_ball"
+  target: true
+}
+states {
+  name: "look_around"
+  target: false
+}
+
+name: "passive_behavior"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "ball_seen"
+  target: false
+}
+states {
+  name: "ball_not_seen"
+  target: false
+}
+
+name: "passive_behavior_test_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "passive_look_at_team_ball"
+states {
+  name: "look_around"
+  target: false
+}
+states {
+  name: "look_at_team_ball"
+  target: false
+}
+states {
+  name: "turn_to_team_ball"
+  target: false
+}
+states {
+  name: "finished"
+  target: true
+}
+
+name: "path2018_initial_striker"
+states {
+  name: "kickoff"
+  target: false
+}
+states {
+  name: "do_kick_off_kick"
+  target: false
+}
+states {
+  name: "done"
+  target: true
+}
+
+name: "path_move_around_ball_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "path_move_around_ball_test"
+states {
+  name: "wait_for_ball_free"
+  target: false
+}
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "goto_ball"
+  target: false
+}
+states {
+  name: "turn"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "path_striker2018"
+states {
+  name: "wait_for_ball_free"
+  target: false
+}
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "goto_ball"
+  target: false
+}
+states {
+  name: "turn"
+  target: false
+}
+states {
+  name: "forwardkick"
+  target: false
+}
+states {
+  name: "sidekick_right"
+  target: false
+}
+states {
+  name: "sidekick_left"
+  target: false
+}
+states {
+  name: "short_freeze"
+  target: false
+}
+
+name: "path_turn_to_attack_direction"
+states {
+  name: "turn"
+  target: false
+}
+states {
+  name: "turn_stable"
+  target: false
+}
+
+name: "pathplanner2018_forwardkick"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "pathplanner_go"
+  target: false
+}
+states {
+  name: "short_freeze"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "pathplanner2018_forwardkick_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "pathplanner2018_sidekick"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "pathplanner_go"
+  target: false
+}
+states {
+  name: "short_freeze"
+  target: false
+}
+
+name: "pathplanner2018_sidekick_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "pathplanner2018_sidestep"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "sidestep_left"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+states {
+  name: "sidestep_right"
+  target: false
+}
+states {
+  name: "finish"
+  target: false
+}
+
+name: "pathplanner2018_sidestep_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "pathplanner2018_striker_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "penalty_agent"
+states {
+  name: "play_penalty"
+  target: false
+}
+
+name: "penalty_decide_state_and_role"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search_state"
+  target: false
+}
+states {
+  name: "play_kicker"
+  target: false
+}
+states {
+  name: "play_goalie"
+  target: false
+}
+
+name: "penalty_goalie"
+states {
+  name: "intial_stand"
+  target: false
+}
+states {
+  name: "block_middle"
+  target: false
+}
+states {
+  name: "stand_up"
+  target: false
+}
+
+name: "penalty_kicker"
+states {
+  name: "look_for_ball"
+  target: false
+}
+states {
+  name: "move_closer"
+  target: false
+}
+states {
+  name: "approach_ball"
+  target: false
+}
+states {
+  name: "go_right"
+  target: false
+}
+states {
+  name: "go_left"
+  target: false
+}
+states {
+  name: "look_for_ball_tmp"
+  target: false
+}
+states {
+  name: "do_kick"
+  target: false
+}
+states {
+  name: "finished"
+  target: true
+}
+
+name: "role_default"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "decide_subrole_or_passive"
+  target: false
+}
+states {
+  name: "wait_for_ball_free"
+  target: false
+}
+states {
+  name: "subrole_transition"
+  target: false
+}
+states {
+  name: "striker_subrole"
+  target: false
+}
+states {
+  name: "subrole_transition_striker_none_ball"
+  target: false
+}
+states {
+  name: "subrole_transition_striker_none_search"
+  target: false
+}
+
+name: "role_goalie"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "go_to_strategy_point"
+  target: false
+}
+states {
+  name: "go_to_strategy_point_search_for_ball"
+  target: false
+}
+states {
+  name: "return_to_field"
+  target: false
+}
+states {
+  name: "stand_and_look_at_ball"
+  target: false
+}
+states {
+  name: "clear_ball"
+  target: false
+}
+
+name: "role_unknown"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "decide_subrole_or_passive"
+  target: false
+}
+states {
+  name: "striker_subrole"
+  target: false
+}
+
+name: "roles_decide_role"
+states {
+  name: "unknown_role"
+  target: false
+}
+states {
+  name: "goalie_role"
+  target: false
+}
+states {
+  name: "defender_left"
+  target: false
+}
+states {
+  name: "defender_center"
+  target: false
+}
+states {
+  name: "defender_right"
+  target: false
+}
+states {
+  name: "midfielder_left"
+  target: false
+}
+states {
+  name: "midfielder_center"
+  target: false
+}
+states {
+  name: "midfielder_right"
+  target: false
+}
+states {
+  name: "forward_left"
+  target: false
+}
+states {
+  name: "forward_center"
+  target: false
+}
+states {
+  name: "forward_right"
+  target: false
+}
+
+name: "roles_go_to_passive_position"
+states {
+  name: "go_to_passive_position"
+  target: false
+}
+
+name: "roles_go_to_ready_position"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "own_kickoff"
+  target: false
+}
+states {
+  name: "opp_kickoff"
+  target: false
+}
+
+name: "roles_play_soccer"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "calibrate_inertial"
+  target: false
+}
+states {
+  name: "localize"
+  target: false
+}
+states {
+  name: "ready"
+  target: false
+}
+states {
+  name: "set"
+  target: false
+}
+states {
+  name: "play"
+  target: false
+}
+states {
+  name: "free_kick_simple"
+  target: false
+}
+states {
+  name: "free_kick_own_goal"
+  target: false
+}
+states {
+  name: "free_kick_opp_goal"
+  target: false
+}
+states {
+  name: "free_kick_own"
+  target: false
+}
+states {
+  name: "free_kick_opp"
+  target: false
+}
+states {
+  name: "free_kick_own_in"
+  target: false
+}
+states {
+  name: "free_kick_opp_in"
+  target: false
+}
+
+name: "roles_spl_play_soccer"
+states {
+  name: "start"
+  target: false
+}
+
+name: "search_ball"
+states {
+  name: "decide"
+  target: false
+}
+states {
+  name: "search_ball_rot_left"
+  target: false
+}
+states {
+  name: "search_ball_rot_right"
+  target: false
+}
+states {
+  name: "search_ball_simple_left"
+  target: false
+}
+states {
+  name: "search_ball_simple_right"
+  target: false
+}
+states {
+  name: "finish"
+  target: true
+}
+
+name: "search_ball_back_rot"
+parameters {
+  id: 0
+  type: Decimal
+  name: "search_ball_back_rot.distance"
+  decimalValue: 0.0
+}
+parameters {
+  id: 1
+  type: Decimal
+  name: "search_ball_back_rot.max_rotation"
+  decimalValue: 0.0
+}
+parameters {
+  id: 0
+  type: Enum
+  name: "search_ball_back_rot.search_direction"
+  enumValue: -1
+  enumTypeId: 11
+}
+states {
+  name: "init"
+  target: false
+}
+states {
+  name: "walk_back_straight"
+  target: false
+}
+states {
+  name: "walk_back_turn_left_first"
+  target: false
+}
+states {
+  name: "walk_back_turn_right_first"
+  target: false
+}
+states {
+  name: "stop_left"
+  target: false
+}
+states {
+  name: "stop_right"
+  target: false
+}
+states {
+  name: "walk_back_turn_right"
+  target: false
+}
+states {
+  name: "walk_back_turn_left"
+  target: false
+}
+states {
+  name: "finish"
+  target: true
+}
+
+name: "search_ball_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+
+name: "search_ball_turning"
+parameters {
+  id: 0
+  type: Enum
+  name: "search_ball_turning.search_direction"
+  enumValue: -1
+  enumTypeId: 11
+}
+states {
+  name: "start_turning"
+  target: false
+}
+states {
+  name: "turning_left"
+  target: false
+}
+states {
+  name: "turning_right"
+  target: false
+}
+states {
+  name: "finish"
+  target: true
+}
+
+name: "search_for_ball"
+parameters {
+  id: 0
+  type: Decimal
+  name: "search_for_ball.look_at_ball_when_distance"
+  decimalValue: 0.0
+}
+parameters {
+  id: 0
+  type: Boolean
+  name: "search_for_ball.force_ball_model_check"
+  boolValue: false
+}
+parameters {
+  id: 1
+  type: Boolean
+  name: "search_for_ball.look_around"
+  boolValue: false
+}
+parameters {
+  id: 2
+  type: Boolean
+  name: "search_for_ball.use_teamball"
+  boolValue: false
+}
+states {
+  name: "start_search"
+  target: false
+}
+states {
+  name: "try_to_look_at_the_old_ball"
+  target: false
+}
+states {
+  name: "search_for_ball_right"
+  target: false
+}
+states {
+  name: "search_for_ball_left"
+  target: false
+}
+states {
+  name: "search_for_ball_right_high"
+  target: false
+}
+states {
+  name: "search_for_ball_left_high"
+  target: false
+}
+states {
+  name: "look_at_ball_percept"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+states {
+  name: "look_left"
+  target: false
+}
+states {
+  name: "look_right"
+  target: false
+}
+states {
+  name: "look_at_teamball"
+  target: false
+}
+
+name: "search_for_ball2"
+parameters {
+  id: 0
+  type: Decimal
+  name: "search_for_ball2.look_at_ball_when_distance"
+  decimalValue: 0.0
+}
+parameters {
+  id: 0
+  type: Boolean
+  name: "search_for_ball2.force_ball_model_check"
+  boolValue: false
+}
+parameters {
+  id: 1
+  type: Boolean
+  name: "search_for_ball2.look_around"
+  boolValue: false
+}
+parameters {
+  id: 2
+  type: Boolean
+  name: "search_for_ball2.use_teamball"
+  boolValue: false
+}
+states {
+  name: "start_search"
+  target: false
+}
+states {
+  name: "try_to_look_at_the_old_ball"
+  target: false
+}
+states {
+  name: "search_for_ball_right_low"
+  target: false
+}
+states {
+  name: "search_for_ball_left_low"
+  target: false
+}
+states {
+  name: "search_for_ball_right_high"
+  target: false
+}
+states {
+  name: "search_for_ball_left_high"
+  target: false
+}
+states {
+  name: "look_at_ball_percept"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+states {
+  name: "look_left"
+  target: false
+}
+states {
+  name: "look_right"
+  target: false
+}
+states {
+  name: "look_at_teamball"
+  target: false
+}
+
+name: "search_for_ball3"
+parameters {
+  id: 0
+  type: Decimal
+  name: "search_for_ball3.look_at_ball_when_distance"
+  decimalValue: 0.0
+}
+parameters {
+  id: 0
+  type: Boolean
+  name: "search_for_ball3.force_ball_model_check"
+  boolValue: false
+}
+parameters {
+  id: 1
+  type: Boolean
+  name: "search_for_ball3.look_around"
+  boolValue: false
+}
+parameters {
+  id: 2
+  type: Boolean
+  name: "search_for_ball3.use_teamball"
+  boolValue: false
+}
+states {
+  name: "start_search"
+  target: false
+}
+states {
+  name: "try_to_look_at_the_old_ball"
+  target: false
+}
+states {
+  name: "search_for_ball_right_low"
+  target: false
+}
+states {
+  name: "search_for_ball_left_low"
+  target: false
+}
+states {
+  name: "look_at_ball_percept"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+states {
+  name: "look_left"
+  target: false
+}
+states {
+  name: "look_right"
+  target: false
+}
+states {
+  name: "look_at_teamball"
+  target: false
+}
+
+name: "search_for_ball_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "search_for_ball_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "search"
+  target: false
+}
+states {
+  name: "look_at_ball"
+  target: false
+}
+
+name: "search_test_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "show_calibration"
+states {
+  name: "show_off"
+  target: false
+}
+states {
+  name: "show_red"
+  target: false
+}
+
+name: "soccer_agent"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "normal_soccer"
+  target: false
+}
+states {
+  name: "penalty_shootout"
+  target: false
+}
+
+name: "spl_remote_agent"
+states {
+  name: "play_soccer"
+  target: false
+}
+
+name: "spl_remote_decide_gamestate"
+states {
+  name: "no_signal"
+  target: false
+}
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "calibrate_inertial"
+  target: false
+}
+states {
+  name: "ready"
+  target: false
+}
+states {
+  name: "set"
+  target: false
+}
+states {
+  name: "play"
+  target: false
+}
+states {
+  name: "initial_striker"
+  target: false
+}
+
+name: "spl_remote_play"
+states {
+  name: "direct_control"
+  target: false
+}
+states {
+  name: "lock_control"
+  target: false
+}
+
+name: "spl_remote_play_direct_control"
+states {
+  name: "stand"
+  target: false
+}
+states {
+  name: "walk"
+  target: false
+}
+states {
+  name: "sidekick_to_left"
+  target: false
+}
+states {
+  name: "sidekick_to_right"
+  target: false
+}
+states {
+  name: "kick_forward_left_foot"
+  target: false
+}
+states {
+  name: "kick_forward_right_foot"
+  target: false
+}
+
+name: "spl_remote_play_lock_control"
+states {
+  name: "stand"
+  target: false
+}
+
+name: "spl_remote_secondary_actions"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "blink"
+  target: false
+}
+states {
+  name: "say_victory"
+  target: false
+}
+states {
+  name: "say_play"
+  target: false
+}
+
+name: "stand_up"
+states {
+  name: "init"
+  target: false
+}
+states {
+  name: "lying_side"
+  target: false
+}
+states {
+  name: "standup_back"
+  target: false
+}
+states {
+  name: "standup_front"
+  target: false
+}
+states {
+  name: "wait_for_standup"
+  target: false
+}
+states {
+  name: "finished"
+  target: true
+}
+
+name: "striker_change_test"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "striker"
+  target: false
+}
+states {
+  name: "defender"
+  target: false
+}
+
+name: "striker_change_test_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "test_intercept_sideways"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+states {
+  name: "intercept"
+  target: false
+}
+
+name: "test_walk_forth_and_back"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "go_back"
+  target: false
+}
+states {
+  name: "go_forth"
+  target: false
+}
+
+name: "test_walk_forth_and_back_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "test_walk_stop_and_go_backwards"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "go_back"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "test_walk_stop_and_go_backwards_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "treat_lifted"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "lifted"
+  target: false
+}
+
+name: "turn_look_at_preview_angle"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "turning_left"
+  target: false
+}
+states {
+  name: "turning_right"
+  target: false
+}
+states {
+  name: "finish"
+  target: true
+}
+
+name: "turn_look_at_preview_angle_agent"
+states {
+  name: "test"
+  target: false
+}
+
+name: "walk_forward"
+states {
+  name: "idle"
+  target: false
+}
+states {
+  name: "forward"
+  target: false
+}
+states {
+  name: "stand"
+  target: false
+}
+
+name: "walk_forward_agent"
+states {
+  name: "test"
+  target: false
+}
+

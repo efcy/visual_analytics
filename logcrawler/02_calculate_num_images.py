@@ -53,6 +53,11 @@ if __name__ == "__main__":
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
         print(log_path)
+
+        # Hack for demo - remove later
+        if int(data.game_id) != 23 and int(data.game_id) != 24:
+            continue
+
         total_images = int(data.num_jpg_bottom or 0) + int(data.num_jpg_top or 0) + int(data.num_bottom or 0) + int(data.num_top or 0)
         if total_images == 0:
             calculate_images(log_path.parent, log_id)

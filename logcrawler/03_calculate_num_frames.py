@@ -23,54 +23,64 @@ if __name__ == "__main__":
 
         print("log_path: ", log_path)
 
-        if data.num_cognition_frames and data.num_cognition_frames > 0 and data.num_motion_frames and data.num_motion_frames > 0:
-            print("\twe already calculated number of frames for this log")
+        # Hack for demo - remove later
+        if int(data.game_id) != 23 and int(data.game_id) != 24:
             continue
 
-        my_parser = Parser()
-        my_parser.register("ImageJPEG"   , "Image")
-        my_parser.register("ImageJPEGTop", "Image")
-        my_parser.register("GoalPerceptTop", "GoalPercept")
-        my_parser.register("FieldPerceptTop", "FieldPercept")
-        my_parser.register("BallCandidatesTop", "BallCandidates")
+        if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
+            print("\twe already calculated number of frames for this log")
+            continue
+        else:
+            my_parser = Parser()
+            my_parser.register("ImageJPEG"   , "Image")
+            my_parser.register("ImageJPEGTop", "Image")
+            my_parser.register("GoalPerceptTop", "GoalPercept")
+            my_parser.register("FieldPerceptTop", "FieldPercept")
+            my_parser.register("BallCandidatesTop", "BallCandidates")
 
-        frame_counter = 0
-        game_log = LogReader(str(log_path), my_parser)
-        for frame in tqdm(game_log):
+            frame_counter = 0
+            game_log = LogReader(str(log_path), my_parser)
+            for frame in tqdm(game_log):
+                try:
+                    frame_number = frame['FrameInfo'].frameNumber
+                    frame_counter = frame_counter + 1
+                except Exception as e:
+                    print(f"FrameInfo not found in current frame - {e}")
+                    continue
+
+            print("\tframe_counter", frame_counter)
             try:
-                frame_number = frame['FrameInfo'].frameNumber
-                frame_counter = frame_counter + 1
+                response = client.logs.update(id=log_id, num_cognition_frames=frame_counter)
+                print(f"\t{response}")
             except Exception as e:
-                print(f"FrameInfo not found in current frame - {e}")
-                continue
-
-        print("\tframe_counter", frame_counter)
-        try:
-
-            response = client.logs.update(id=log_id, num_cognition_frames=frame_counter)
-            print(f"\t{response}")
-        except Exception as e:
-            print(f"\terror inputing the data {log_path}")
-            print(e)
+                print(f"\terror inputing the data {log_path}")
+                print(e)
+        # Hack for demo
+        continue
 
         # parse the sensor log
-        print()
-        print("parse the sensor log")
-        frame_counter = 0
-        game_log = LogReader(str(sensor_log_path), my_parser)
+        if data.num_motion_frames and int(data.num_motion_frames) > 0:
+            print("\twe already calculated number of motion frames for this log")
+            continue
+        else:
+            print()
+            print("parse the sensor log")
+            frame_counter = 0
+            game_log = LogReader(str(sensor_log_path), my_parser)
 
-        for frame in tqdm(game_log):
+            for frame in tqdm(game_log):
+                try:
+                    frame_number = frame['FrameInfo'].frameNumber
+                    frame_counter = frame_counter + 1
+                except Exception as e:
+                    print(f"FrameInfo not found in current frame - {e}")
+                    continue
+
+            print("\tframe_counter", frame_counter)
             try:
-                frame_number = frame['FrameInfo'].frameNumber
-                frame_counter = frame_counter + 1
+                response = client.logs.update(id=log_id, num_motion_frames=frame_counter)
+                print(f"\t{response}")
             except Exception as e:
-                print(f"FrameInfo not found in current frame - {e}")
-                continue
-
-        print("\tframe_counter", frame_counter)
-        try:
-            response = client.logs.update(id=log_id, num_motion_frames=frame_counter)
-            print(f"\t{response}")
-        except Exception as e:
-            print(f"\terror inputing the data {log_path}")
-            print(e)
+                print(f"\terror inputing the data {log_path}")
+                print(e)
+            break

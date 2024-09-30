@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework.authtoken',
     'user',
+    'dbbackup',  # django-dbbackup
     #'django.contrib.gis',
 ]
 #registers middleware components
@@ -111,6 +112,11 @@ DATABASES = {
         'PORT': os.getenv('VAT_POSTGRES_PORT'),
         }   
 }
+
+# Database Backup
+# https://django-dbbackup.readthedocs.io/en/master/installation.html
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.getenv('VAT_BACKUP_FOLDER')}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

@@ -2,6 +2,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics,viewsets
 from . import serializers
+from django.db.models import F
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from . import models
@@ -12,7 +13,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
-
+from django.views.generic import ListView
 User = get_user_model()
 
 @require_GET
@@ -331,6 +332,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ImageCountView(APIView):
+    # TODO to I still need this?
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get('log')
@@ -530,3 +532,289 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
             deleted_count, _ = self.get_queryset().delete()
             return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
         return super().destroy(request, *args, **kwargs)
+
+
+class BehaviorOptionViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BehaviorOptionSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.BehaviorOption.objects.all()
+
+    def get_queryset(self):
+        queryset = models.BehaviorOption.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.BehaviorOption._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+    
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.BehaviorOption.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            xabsl_internal_option_id=validated_data.get('xabsl_internal_option_id'),
+            option_name=validated_data.get('option_name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.BehaviorOption.objects.values_list('log_id', 'option_name', 'xabsl_internal_option_id')
+            )
+
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                combo = (item['log_id'].id, item['option_name'], item['xabsl_internal_option_id'])
+                if combo not in existing_combinations:
+                    new_data.append(models.BehaviorOption(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.BehaviorOption.objects.get(
+                        log_id=item['log_id'],
+                        option_name=item['option_name'],
+                        xabsl_internal_option_id=item['xabsl_internal_option_id'],
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new events
+            created_data = models.BehaviorOption.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        all_data = created_data + existing_data
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
+
+class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BehaviorOptionsStateSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.BehaviorOptionState.objects.all()
+
+    def get_queryset(self):
+        queryset = models.BehaviorOptionState.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.BehaviorOptionState._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+    
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.BehaviorOptionState.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            option_id=validated_data.get('option_id'),
+            xabsl_internal_state_id=validated_data.get('xabsl_internal_state_id'),
+            name=validated_data.get('name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.BehaviorOptionState.objects.values_list('log_id', 'option_id','xabsl_internal_state_id', 'name')
+            )
+
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                combo = (item['log_id'].id, item['option_id'], item['xabsl_internal_state_id'], item['name'])
+                if combo not in existing_combinations:
+                    new_data.append(models.BehaviorOptionState(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.BehaviorOptionState.objects.get(
+                        log_id=item['log_id'],
+                        option_id=item['option_id'],
+                        xabsl_internal_state_id=item['xabsl_internal_state_id'],
+                        name=item['name'],
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new events
+            created_data = models.BehaviorOptionState.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        all_data = created_data + existing_data
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
+ 
+class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BehaviorFrameOptionSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.BehaviorFrameOption.objects.all()
+
+    def get_queryset(self):
+        queryset = models.BehaviorFrameOption.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.BehaviorFrameOption._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+    
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.BehaviorFrameOption.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            options_id=validated_data.get('options_id'),
+            frame=validated_data.get('frame'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            # Get all existing games
+            existing_combinations = set(
+                models.BehaviorFrameOption.objects.values_list('log_id', 'options_id', 'frame')
+            )
+
+            # Separate new and existing events
+            new_data = []
+            existing_data = []
+            for item in validated_data:
+                combo = (item['log_id'].id, item['options_id'], item['frame'])
+                if combo not in existing_combinations:
+                    new_data.append(models.BehaviorFrameOption(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+                else:
+                    # Fetch the existing event
+                    existing_event = models.BehaviorFrameOption.objects.get(
+                        log_id=item['log_id'],
+                        options_id=item['options_id'],
+                        frame=item['frame'],
+                    )
+                    existing_data.append(existing_event)
+
+            # Bulk create new events
+            created_data = models.BehaviorFrameOption.objects.bulk_create(new_data)
+
+        # Combine created and existing events
+        all_data = created_data + existing_data
+
+        # Serialize the results
+        result_serializer = self.get_serializer(all_data, many=True)
+
+        return Response({
+            'created': len(created_data),
+            'existing': len(existing_data),
+            'events': result_serializer.data
+        }, status=status.HTTP_200_OK)
+    
+"""
+class BehaviorframeOptionsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        qs = models.BehaviorFrameOption.objects.extra(
+            select={
+                'option_name': 'api_behavioroption.option_name',
+                'state_name': 'api_behavioroptionstate.name',
+                'state_target': 'api_behavioroptionstate.target',
+            },
+            tables=['api_behavioroption', 'api_behavioroptionstate'],
+            where=[
+                'api_behaviorframeoption.log_id_id = api_behavioroption.log_id_id',
+                'api_behaviorframeoption.options_id = api_behavioroption.internal_id',
+
+                'api_behaviorframeoption.log_id_id = api_behavioroptionstate.log_id_id',
+                'api_behaviorframeoption.options_id = api_behavioroptionstate.options_id',
+                'api_behaviorframeoption.active_state = api_behavioroptionstate.internal_id',
+            ]
+        ).values(
+            'log_id', 'frame', 'time', 'parent', 'id',
+            'option_name', 'time_of_execution', 'active_state',
+            'state_name', 'state_target', 'state_time'
+        )
+        return Response(qs, status=status.HTTP_200_OK)
+"""

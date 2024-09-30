@@ -23,7 +23,7 @@ if __name__ == "__main__":
         num_cognition_frames = data.num_cognition_frames
         
         # check if number of frames were calculated already
-        if not num_cognition_frames or num_cognition_frames == 0:
+        if not num_cognition_frames or int(num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
             continue
 
