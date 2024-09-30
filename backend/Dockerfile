@@ -3,11 +3,18 @@ FROM ubuntu:22.04
 # show the stdout and stderr streams right in the command line instead of getting buffered.
 ENV PYTHONUNBUFFERED=1
 
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(. /etc/os-release && echo $UBUNTU_CODENAME)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    curl \
+    gpg \
+    wget \
+    ca-certificates \
+    lsb-release \
+    gnupg2 
+
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 RUN apt-get update && apt-get -y --no-install-recommends install \
-    wget \
     git \
     python3 \
     python3-pip \
