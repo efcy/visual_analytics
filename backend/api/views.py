@@ -434,9 +434,9 @@ class BehaviorCountView(APIView):
         queryset = queryset.filter(log_id=log_id)
 
         # Get the count
-        count = queryset.count()
+        unique_frame_count = queryset.values('frame').distinct().count()
 
-        return Response({'count': count}, status=status.HTTP_200_OK)
+        return Response({'count': unique_frame_count}, status=status.HTTP_200_OK)
 
 class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
