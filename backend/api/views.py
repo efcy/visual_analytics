@@ -881,7 +881,7 @@ class BehaviorFrameOptionAPIView(APIView):
                 'options_id',         # Joins BehaviorOption
                 'active_state',       # Joins BehaviorOptionState
                 'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
-            ).filter(log_id=log_id, options_id__option_name=option_name, active_state__name=state_name)  # Filter by log_id
+            ).filter(log_id=log_id, options_id__option_name=option_name, active_state__name=state_name)
 
             # Serialize the data
             serializer = serializers.BehaviorFrameOptionCustomSerializer(behavior_frame_options, many=True)

@@ -83,6 +83,7 @@ def parse_sparse_option(log_id, frame, time, parent, node):
 
 def is_behavior_done(data):
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
+        # TODO provide a better endpoint for this similar to what we do for images
         response = client.behavior_frame_option.list(log_id=data.id)
 
         my_list = [None] * len(response)
