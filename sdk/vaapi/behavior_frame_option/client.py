@@ -294,3 +294,61 @@ class BehaviorFrameOptionClient:
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
+    
+
+    def filter(
+            self,
+            log_id: typing.Optional[int] = OMIT,
+            option_name: typing.Optional[int] = OMIT,
+            state_name: typing.Optional[int] = OMIT,
+            request_options: typing.Optional[RequestOptions] = None,
+        ) -> typing.List[int]:
+        """
+        Returns frame numbers where the given option and states are active for one log
+
+        Parameters
+        ----------
+        log_id : int
+            ID of the log
+
+        option_name : str
+            Name of the option e.g. decide_game_state
+
+        state_name : str
+            Name of state inside a given option e.g. for option decide_game_state it could be set
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        typing.List[int]
+            Frame Number
+
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = LabelStudio(
+            api_key="YOUR_API_KEY",
+        )
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        client.behavior_frame_option.filter(
+            id=7,
+            option_name=arms_control,
+            state_name=arms_synchronised_with_walk
+        )
+        """
+        url = f"api/behavior/filter/?log_id={jsonable_encoder(log_id)}&option_name={jsonable_encoder(option_name)}&state_name={jsonable_encoder(state_name)}"
+
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        try:
+            if 200 <= _response.status_code < 300:
+                return pydantic_v1.parse_obj_as(typing.List[int], _response.json())  # type: ignore
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, body=_response.text)
+        raise ApiError(status_code=_response.status_code, body=_response_json)

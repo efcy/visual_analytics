@@ -19,7 +19,7 @@ urlpatterns = [
     path('annotations/', include((_api_annotations_urlpatterns, app_name), namespace='api-annotations')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('test/', views.BehaviorFrameOptionAPIView.as_view(), name='test'),
+    path('behavior/filter/', views.BehaviorFrameOptionAPIView.as_view(), name='test'),
 ]
 
 router = routers.DefaultRouter()
