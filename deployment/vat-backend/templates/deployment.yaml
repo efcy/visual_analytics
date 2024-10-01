@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: vat-backend 
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: vat-backend
