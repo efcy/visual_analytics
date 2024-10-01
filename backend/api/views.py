@@ -13,7 +13,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
-from django.views.generic import ListView
+
 User = get_user_model()
 
 @require_GET
@@ -863,3 +863,30 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
+
+class BehaviorFrameOptionAPIView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, *args, **kwargs):
+        # Get the log_id from the query parameters
+        log_id = request.query_params.get('log_id')
+        option_name = request.query_params.get('option_name')
+        state_name = request.query_params.get('state_name')
+
+        if not log_id or not option_name or not state_name:
+            return Response({"error": "not all required parameter were provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Filter the BehaviorFrameOption records by the log_id
+            behavior_frame_options =  models.BehaviorFrameOption.objects.select_related(
+                'options_id',         # Joins BehaviorOption
+                'active_state',       # Joins BehaviorOptionState
+                'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
+            ).filter(log_id=log_id, options_id__option_name=option_name, active_state__name=state_name)  # Filter by log_id
+
+            # Serialize the data
+            serializer = serializers.BehaviorFrameOptionCustomSerializer(behavior_frame_options, many=True)
+
+            # Return the serialized data
+            return Response(serializer.data)
+        except ValueError:
+            return Response({"error": "Invalid log_id."}, status=status.HTTP_400_BAD_REQUEST)

@@ -69,6 +69,9 @@ class Image(models.Model):
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     frame_number = models.IntegerField(blank=True, null=True)
     image_url = models.CharField(max_length=200, blank=True, null=True)
+    blurredness_value = models.IntegerField(blank=True, null=True)
+    brightness_value = models.IntegerField(blank=True, null=True)
+    resolution =  models.CharField(max_length=20, blank=True, null=True)
 
     #class Meta:
     #    unique_together = ('log', 'camera', 'type', 'frame_number')
