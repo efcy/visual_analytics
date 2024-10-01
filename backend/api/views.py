@@ -274,6 +274,11 @@ class ImageViewSet(viewsets.ModelViewSet):
         queryset = models.Image.objects.all()
         query_params = self.request.query_params
 
+        # check if we have a special frame filter set for this log/camera combination
+        print(type(query_params))
+
+
+        # This is a generic filter on the queryset, the supplied filter must be a field in the Image model
         filters = Q()
         for field in models.Image._meta.fields:
             param_value = query_params.get(field.name)
@@ -408,7 +413,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
 
 class ImageCountView(APIView):
-    # TODO to I still need this?
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get('log')
