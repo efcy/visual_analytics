@@ -4,6 +4,7 @@ from naoth.log import Parser
 import os
 from tqdm import tqdm
 from vaapi.client import Vaapi
+import traceback 
 
 def fill_option_map(log_id):
     # TODO I could build this why parsing the BehaviorComplete representation - saving a call to the database
@@ -134,9 +135,12 @@ if __name__ == "__main__":
             # That means I need to make sure to have num cognition frames calculated before
             if "BehaviorStateComplete" in frame:
                 #continue
-                #rint("\tParsing BehaviorStateComplete")
-                full_behavior = frame["BehaviorStateComplete"]
-
+                try:
+                    full_behavior = frame["BehaviorStateComplete"]
+                except Exception as e:
+                    traceback.print_exc() 
+                    print("can't parse the Behavior will continue with the next log")
+                    break
                 for i, option in enumerate(full_behavior.options):
                     #print(option.name)
                     try:
