@@ -43,7 +43,7 @@ if __name__ == "__main__":
     )
 
     response = client.behavior_frame_option.filter(
-        log_id=7,
+        log_id=82,
         option_name="path_striker2024",
         state_name="forwardkick",
     )
