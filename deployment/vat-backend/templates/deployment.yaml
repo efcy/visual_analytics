@@ -56,5 +56,14 @@ spec:
           value: "postgres-postgresql.postgres.svc.cluster.local"
         - name: VAT_POSTGRES_PORT
           value: "5432"
+        - name: VAT_BACKUP_FOLDER
+          value: "/backup"
+        volumeMounts:
+        - mountPath: /backup
+          name: backupmount
       imagePullSecrets:
       - name: github-access
+      volumes:
+      - name: backupmount
+        hostPath:
+          path: /opt/backup # path to a folder on the actual node
