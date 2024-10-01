@@ -86,7 +86,6 @@ def is_behavior_done(data):
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
         # TODO provide a better endpoint for this similar to what we do for images
         response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
-
         return response["count"] == int(data.num_cognition_frames)
     else:
         return False
