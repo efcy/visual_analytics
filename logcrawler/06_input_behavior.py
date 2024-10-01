@@ -2,6 +2,7 @@ from pathlib import Path
 from naoth.log import Reader as LogReader
 from naoth.log import Parser
 import os
+from tqdm import tqdm
 from vaapi.client import Vaapi
 
 def fill_option_map(log_id):
@@ -84,13 +85,9 @@ def parse_sparse_option(log_id, frame, time, parent, node):
 def is_behavior_done(data):
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
         # TODO provide a better endpoint for this similar to what we do for images
-        response = client.behavior_frame_option.list(log_id=data.id)
+        response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
 
-        my_list = [None] * len(response)
-        for idx, behavior_data in enumerate(response):
-            my_list[idx] = behavior_data.frame
-
-        return len(set(my_list)) == int(data.num_cognition_frames)
+        return response["count"] == int(data.num_cognition_frames)
     else:
         return False
 
@@ -106,6 +103,7 @@ if __name__ == "__main__":
         return data.log_path
 
     for data in sorted(existing_data, key=myfunc):
+        #clear_console()  # Clear the screen at the start of each outer loop
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
         # HACK sometimes BehaviorStateComplete is not in combined.log but in game.log - hack usage of game.log file here
@@ -117,7 +115,7 @@ if __name__ == "__main__":
         
         # check if we need to insert this log
         if is_behavior_done(data):
-            print("behavior already inserted, will continue with the next log")
+            print("\tbehavior already inserted, will continue with the next log")
             continue
         
         my_parser = Parser()
@@ -125,8 +123,7 @@ if __name__ == "__main__":
         parse_sparse_option_list = list()
         option_map = dict()
 
-        for idx, frame in enumerate(game_log):
-            print(idx)
+        for idx, frame in enumerate(tqdm(game_log, desc=f"Parsing frame", leave=True)):
             if 'FrameInfo' in frame:
                 fi = frame['FrameInfo']
             else:
@@ -138,7 +135,7 @@ if __name__ == "__main__":
             # That means I need to make sure to have num cognition frames calculated before
             if "BehaviorStateComplete" in frame:
                 #continue
-                print("\tParsing BehaviorStateComplete")
+                #rint("\tParsing BehaviorStateComplete")
                 full_behavior = frame["BehaviorStateComplete"]
 
                 for i, option in enumerate(full_behavior.options):
