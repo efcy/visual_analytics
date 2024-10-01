@@ -49,7 +49,6 @@ if __name__ == "__main__":
     )
 
     grouped_numbers = group_consecutive_integers(response)
-    print(len(grouped_numbers))
+    print(f"Number of times the robot tried to kick: {len(grouped_numbers)}")
     for group in grouped_numbers:
-        print()
         print(f"Spend {len(group)} frames doing the forwardkick")
