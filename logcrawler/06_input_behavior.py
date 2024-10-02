@@ -84,9 +84,13 @@ def parse_sparse_option(log_id, frame, time, parent, node):
             print(sub)
 
 def is_behavior_done(data):
+    print("\tcheck inserted behavior frames")
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
         # TODO provide a better endpoint for this similar to what we do for images
+        print(f"\tcognition frames are {data.num_cognition_frames}")
+        
         response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
+        print(f"\tbehavior frames are {response["count"]}")
         return response["count"] == int(data.num_cognition_frames)
     else:
         return False
@@ -127,11 +131,11 @@ if __name__ == "__main__":
             if 'FrameInfo' in frame:
                 fi = frame['FrameInfo']
             else:
-                print(f"frame {idx} does not have frame info representation")
+                print(f"frame {idx} does not have frame info representation so we dont go further")
+                print("it could be that there is one more behavior frame in the next frame but this is one is not finished.")
                 break
 
             if "BehaviorStateComplete" in frame:
-                #continue
                 try:
                     full_behavior = frame["BehaviorStateComplete"]
                 except Exception as e:
@@ -139,7 +143,6 @@ if __name__ == "__main__":
                     print("can't parse the Behavior will continue with the next log")
                     break
                 for i, option in enumerate(full_behavior.options):
-                    #print(option.name)
                     try:
                         option_response = client.behavior_option.create(
                             log_id=log_id,
