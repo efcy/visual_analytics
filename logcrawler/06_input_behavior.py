@@ -130,9 +130,6 @@ if __name__ == "__main__":
                 print(f"frame {idx} does not have frame info representation")
                 break
 
-            # TODO build something to check how many frames are already inserted
-            # maybe have an endpoint that checks number of unique frames in BehaviorFrameOption model
-            # That means I need to make sure to have num cognition frames calculated before
             if "BehaviorStateComplete" in frame:
                 #continue
                 try:
@@ -155,20 +152,24 @@ if __name__ == "__main__":
                         print(e)
                         quit()
 
+                    state_list = list()
                     for j, state in enumerate(option.states):
-                        #print(f"\t{state.name}")
-                        try:
-                            response = client.behavior_option_state.create(
-                                log_id=log_id,
-                                option_id=option_response.id,
-                                xabsl_internal_state_id=j,
-                                name=state.name,
-                                target=state.target,
-                                )
-                            #print(f"\t{response}")
-                        except Exception as e:
-                            print(f"error inputing the data {log_path}")
-                            print(e)
+                        state_dict = {
+                            "log_id":log_id,
+                            "option_id":option_response.id,
+                            "xabsl_internal_state_id":j,
+                            "name":state.name,
+                            "target":state.target,
+                        }
+                        state_list.append(state_dict)
+
+                    try:
+                        response = client.behavior_option_state.bulk_create(
+                            repr_list=state_list
+                        )
+                    except Exception as e:
+                        print(f"error inputing the data {log_path}")
+                        print(e)
                 fill_option_map(log_id)
             
             if "BehaviorStateSparse" in frame:
