@@ -843,25 +843,27 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             # Get all existing games
             existing_combinations = set(
-                models.BehaviorFrameOption.objects.values_list('log_id', 'options_id', 'frame')
+                models.BehaviorFrameOption.objects.values_list('log_id', 'options_id', 'frame', 'active_state')
             )
+
+            # 
 
             # Separate new and existing events
             new_data = []
-            existing_data = []
+            #existing_data = []
             for item in validated_data:
-                combo = (item['log_id'].id, item['options_id'], item['frame'])
+                combo = (item['log_id'].id, item['options_id'], item['frame'], item['active_state'])
                 if combo not in existing_combinations:
                     new_data.append(models.BehaviorFrameOption(**item))
                     existing_combinations.add(combo)  # Add to set to catch duplicates within the input
-                else:
-                    # Fetch the existing event
-                    existing_event = models.BehaviorFrameOption.objects.get(
-                        log_id=item['log_id'],
-                        options_id=item['options_id'],
-                        frame=item['frame'],
-                    )
-                    existing_data.append(existing_event)
+                #else:
+                #    # Fetch the existing event
+                #    existing_event = models.BehaviorFrameOption.objects.get(
+                #        log_id=item['log_id'],
+                #        options_id=item['options_id'],
+                #        frame=item['frame'],
+                #    )
+                #    existing_data.append(existing_event)
 
             # Bulk create new events
             created_data = models.BehaviorFrameOption.objects.bulk_create(new_data)
@@ -874,7 +876,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
 
         return Response({
             'created': len(created_data),
-            'existing': len(existing_data),
+            #'existing': len(existing_data),
             #'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
