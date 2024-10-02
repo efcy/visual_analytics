@@ -102,7 +102,7 @@ if __name__ == "__main__":
     def myfunc(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=myfunc):
+    for data in sorted(existing_data, key=myfunc, reverse=True):
         #clear_console()  # Clear the screen at the start of each outer loop
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
@@ -180,7 +180,7 @@ if __name__ == "__main__":
                         print("Root node must be an option!")
                     else:
                         parse_sparse_option(log_id=log_id, frame=fi.frameNumber, time=fi.time, parent=-1, node=root)
-            if idx % 100 == 0:
+            if idx % 200 == 0:
                 try:
                     response = client.behavior_frame_option.bulk_create(
                         data_list=parse_sparse_option_list
