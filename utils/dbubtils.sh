@@ -47,9 +47,9 @@ elif [ "$mode" == "create" ]; then
     #fails if user is already created
     sudo -u postgres psql -c "CREATE USER $VAT_POSTGRES_USER WITH PASSWORD '${VAT_POSTGRES_PASS}';"
     # set permissions
-    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
-    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
-    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "ALTER DATABASE vat OWNER TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
 
 
