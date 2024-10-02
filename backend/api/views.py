@@ -867,15 +867,15 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             created_data = models.BehaviorFrameOption.objects.bulk_create(new_data)
 
         # Combine created and existing events
-        all_data = created_data + existing_data
+        #all_data = created_data + existing_data
 
         # Serialize the results
-        result_serializer = self.get_serializer(all_data, many=True)
+        #result_serializer = self.get_serializer(all_data, many=True)
 
         return Response({
             'created': len(created_data),
             'existing': len(existing_data),
-            'events': result_serializer.data
+            #'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
 
