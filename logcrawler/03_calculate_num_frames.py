@@ -23,10 +23,6 @@ if __name__ == "__main__":
 
         print("log_path: ", log_path)
 
-        # Hack for demo - remove later
-        if int(data.game_id) != 23 and int(data.game_id) != 24:
-            continue
-
         if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
             print("\twe already calculated number of frames for this log")
             continue
