@@ -46,6 +46,8 @@ class Log(models.Model):
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     log_path = models.CharField(max_length=200, blank=True, null=True)
 
+    # TODO build a log_insert_status model which can hold those information, we would also need that
+    # for all other representations that we might want to add to the database
     num_cognition_frames = models.IntegerField(blank=True, null=True)
     num_motion_frames = models.IntegerField(blank=True, null=True)
     num_jpg_bottom = models.IntegerField(blank=True, null=True)
