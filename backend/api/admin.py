@@ -84,9 +84,17 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     get_active_state.short_description = 'Active State'
 
 
+class GameAdmin(admin.ModelAdmin):
+    list_display = ('event_id', 'get_id', 'team1', 'team2', 'half', 'is_testgame')
+
+    def get_id(self, obj):
+        return obj.id
+
+    get_id.short_description = 'Game ID'
+    
 # Register your models here.
 admin.site.register(Event)
-admin.site.register(Game)
+admin.site.register(Game, GameAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(CognitionRepresentation, CognitionRepresentationAdmin)
