@@ -34,7 +34,7 @@ if __name__ == "__main__":
             my_parser = Parser()
             my_parser.register("FieldPerceptTop", "FieldPercept")
             frame_counter = 0
-            game_log = LogReader(str(updated_log_path), my_parser)
+            game_log = LogReader(str(log_path), my_parser)
             for frame in tqdm(game_log):
                 try:
                     # actually we need to check for all cognition representations here that we care about otherwise we get in trouble when 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 response = client.logs.update(id=log_id, num_cognition_frames=frame_counter)
                 print(f"\t{response}")
             except Exception as e:
-                print(f"\terror inputing the data {updated_log_path}")
+                print(f"\terror inputing the data {log_path}")
                 print(e)
 
         # parse the sensor log
