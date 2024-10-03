@@ -752,45 +752,33 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
     def bulk_create(self, serializer):
+        """
+            asssumes all data send is from the same log
+        """
         validated_data = serializer.validated_data
 
         with transaction.atomic():
-            # Get all existing games
+            batch_log_id = validated_data[0]['log_id'].id
+            # Get all existing combinations given the log id
             existing_combinations = set(
-                models.BehaviorOptionState.objects.values_list('log_id', 'option_id','xabsl_internal_state_id', 'name')
+                models.BehaviorOptionState.objects
+                .filter(log_id=batch_log_id)
+                .values_list('option_id','xabsl_internal_state_id', 'name')
             )
 
-            # Separate new and existing events
+            # filter out duplicates
             new_data = []
-            existing_data = []
             for item in validated_data:
-                combo = (item['log_id'].id, item['option_id'], item['xabsl_internal_state_id'], item['name'])
+                combo = (item['option_id'], item['xabsl_internal_state_id'], item['name'])
                 if combo not in existing_combinations:
                     new_data.append(models.BehaviorOptionState(**item))
                     existing_combinations.add(combo)  # Add to set to catch duplicates within the input
-                else:
-                    # Fetch the existing event
-                    existing_event = models.BehaviorOptionState.objects.get(
-                        log_id=item['log_id'],
-                        option_id=item['option_id'],
-                        xabsl_internal_state_id=item['xabsl_internal_state_id'],
-                        name=item['name'],
-                    )
-                    existing_data.append(existing_event)
 
             # Bulk create new events
             created_data = models.BehaviorOptionState.objects.bulk_create(new_data)
 
-        # Combine created and existing events
-        all_data = created_data + existing_data
-
-        # Serialize the results
-        result_serializer = self.get_serializer(all_data, many=True)
-
         return Response({
             'created': len(created_data),
-            'existing': len(existing_data),
-            'events': result_serializer.data
         }, status=status.HTTP_200_OK)
  
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
@@ -838,26 +826,22 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
     def bulk_create(self, serializer):
+        """
+            asssumes all data send is from the same log
+        """
         validated_data = serializer.validated_data
 
         with transaction.atomic():
             batch_log_id = validated_data[0]['log_id'].id
-            print(batch_log_id)
-            # Get all existing games
-            #existing_combinations = set(
-            #    models.BehaviorFrameOption.objects.values_list('log_id', 'options_id', 'frame', 'active_state')
-            #)
+            
             existing_combinations = set(
                 models.BehaviorFrameOption.objects
                 .filter(log_id=batch_log_id)
                 .values_list('options_id', 'frame', 'active_state')
             )
 
-            # 
-
-            # Separate new and existing events
+            # filter out duplicates
             new_data = []
-            #existing_data = []
             for item in validated_data:
                 combo = (item['options_id'], item['frame'], item['active_state'])
                 if combo not in existing_combinations:
@@ -869,8 +853,6 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
 
         return Response({
             'created': len(created_data),
-            #'existing': len(existing_data),
-            #'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
 
