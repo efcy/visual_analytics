@@ -57,7 +57,7 @@ class VaapiBase:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        api_key: typing.Optional[str] = os.getenv("LABEL_STUDIO_API_KEY"),
+        api_key: typing.Optional[str] = os.getenv("VAT_API_TOKEN"),
         timeout: typing.Optional[float] = None,
         follow_redirects: typing.Optional[bool] = True,
         httpx_client: typing.Optional[httpx.Client] = None
@@ -146,7 +146,7 @@ class AsyncVaapiBase:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        api_key: typing.Optional[str] = os.getenv("LABEL_STUDIO_API_KEY"),
+        api_key: typing.Optional[str] = os.getenv("VAT_API_TOKEN"),
         timeout: typing.Optional[float] = None,
         follow_redirects: typing.Optional[bool] = True,
         httpx_client: typing.Optional[httpx.AsyncClient] = None
