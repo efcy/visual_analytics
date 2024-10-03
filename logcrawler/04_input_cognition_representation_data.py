@@ -15,10 +15,10 @@ if __name__ == "__main__":
     )
     existing_data = client.logs.list()
 
-    def myfunc(data):
+    def sort_key_fn(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=myfunc):
+    for data in sorted(existing_data, key=sort_key_fn):
         log_id = data.id
         num_cognition_frames = data.num_cognition_frames
         

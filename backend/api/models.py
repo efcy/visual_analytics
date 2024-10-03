@@ -43,8 +43,9 @@ class Log(models.Model):
     body_serial = models.CharField(max_length=20, blank=True, null=True)
     head_serial = models.CharField(max_length=20, blank=True, null=True)
     representation_list = models.JSONField(blank=True, null=True)
-    sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     log_path = models.CharField(max_length=200, blank=True, null=True)
+    combined_log_path = models.CharField(max_length=200, blank=True, null=True)
+    sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
 
     # TODO build a log_insert_status model which can hold those information, we would also need that
     # for all other representations that we might want to add to the database
@@ -57,6 +58,7 @@ class Log(models.Model):
 
     def __str__(self):
         return f"{self.log_path}"
+
 
 class Image(models.Model):
     class Camera(models.TextChoices):

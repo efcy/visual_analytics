@@ -12,8 +12,7 @@ event_list = ["2024-07-15_RC24"]
 
 def handle_games(game):
     # for now we allow only on folder called Experiments to also exist inside the Event folder -> TODO have discussion about additional folders
-    
-    #print(f"\t{game}")
+
     # parse additional information from game folder
     game_parsed = str(game.name).split("_")
     timestamp = game_parsed[0] + "_" + game_parsed[1]
@@ -85,8 +84,9 @@ if __name__ == "__main__":
                         # Load the content of the file into a Python dictionary
                         data = json.load(file)
 
+                    log_path = str(Path(logfolder) / "game.log").removeprefix(log_root_path).strip("/")
+                    combined_log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
                     sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
-                    log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
 
                     response = client.logs.create(
                         game_id=game_id, 
@@ -96,7 +96,9 @@ if __name__ == "__main__":
                         body_serial=body_serial,
                         head_serial=head_serial,
                         representation_list=data,
-                        sensor_log_path=sensor_log_path,
                         log_path=log_path,
+                        combined_log_path=combined_log_path,
+                        sensor_log_path=sensor_log_path,
+
                     )
                     print("response", response)

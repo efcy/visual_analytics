@@ -86,7 +86,6 @@ def parse_sparse_option(log_id, frame, time, parent, node):
 def is_behavior_done(data):
     print("\tcheck inserted behavior frames")
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
-        # TODO provide a better endpoint for this similar to what we do for images
         print(f"\tcognition frames are {data.num_cognition_frames}")
         
         response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
@@ -103,16 +102,14 @@ if __name__ == "__main__":
     )
     existing_data = client.logs.list()
 
-    def myfunc(data):
+    def sort_key_fn(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=myfunc, reverse=True):
-        #clear_console()  # Clear the screen at the start of each outer loop
+    for data in sorted(existing_data, key=sort_key_fn, reverse=True):
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
-        # HACK sometimes BehaviorStateComplete is not in combined.log but in game.log - hack usage of game.log file here
-        updated_log_path = log_path.parent / "game.log"
-        print(updated_log_path)
+
+        print(log_path)
         if not data.num_cognition_frames or int(data.num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
             continue
@@ -193,6 +190,7 @@ if __name__ == "__main__":
                     print(e)
                     quit()
                 parse_sparse_option_list.clear()
+        # FIXME if we abort in BehaviorStateComplete we should not do this here
         try:
             response = client.behavior_frame_option.bulk_create(
                 data_list=parse_sparse_option_list

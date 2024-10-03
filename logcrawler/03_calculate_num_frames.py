@@ -18,14 +18,13 @@ if __name__ == "__main__":
     )
     existing_data = client.logs.list()
 
-    def myfunc(data):
+    def sort_key_fn(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=myfunc):
+    for data in sorted(existing_data, key=sort_key_fn):
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
         sensor_log_path = Path(log_root_path) / data.sensor_log_path
-        updated_log_path = log_path.parent / "game.log"
 
         print("log_path: ", log_path)
 
@@ -52,7 +51,8 @@ if __name__ == "__main__":
                     FieldPerceptTop = frame['FieldPerceptTop']
 
                 except Exception as e:
-                    print(f"FrameInfo not found in current frame - {e}")
+                    # FIXME message is confusing
+                    print(f"One of the representations is not present in frame {frame_counter + 1} - {e}")
                     continue
 
                 frame_counter = frame_counter + 1
