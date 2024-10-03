@@ -89,7 +89,7 @@ def is_behavior_done(data):
         print(f"\tcognition frames are {data.num_cognition_frames}")
         
         response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
-        print(f"\tbehavior frames are {response["count"]}")
+        print(f"\tbehavior frames are {response['count']}")
         return response["count"] == int(data.num_cognition_frames)
     else:
         return False
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             continue
         
         my_parser = Parser()
-        game_log = LogReader(str(updated_log_path), my_parser)
+        game_log = LogReader(str(log_path), my_parser)
         parse_sparse_option_list = list()
         option_map = dict()
 
