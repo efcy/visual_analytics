@@ -99,6 +99,5 @@ if __name__ == "__main__":
                         log_path=log_path,
                         combined_log_path=combined_log_path,
                         sensor_log_path=sensor_log_path,
-
                     )
                     print("response", response)
