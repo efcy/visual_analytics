@@ -22,8 +22,32 @@ class ImageAdmin(admin.ModelAdmin):
     search_fields = ['log__log_path','image_url__icontains']
     list_display = ["log","frame_number"]
 
+
+class GameAdmin(admin.ModelAdmin):
+    list_display = ('event_id', 'get_id', 'team1', 'team2', 'half', 'is_testgame')
+
+    def get_id(self, obj):
+        return obj.id
+
+    get_id.short_description = 'Game ID'
+
+
 class LogAdmin(admin.ModelAdmin):
-    search_fields = ['log_path__icontains']
+    search_fields = ['game_id__team1__icontains', 'game_id__team2__icontains', "head_number","player_number"]
+    list_display = ["get_game_id", "get_team1", "get_team2", "player_number", "head_number"]
+
+    def get_game_id(self, obj):
+        return obj.game_id.id
+
+    def get_team1(self, obj):
+        return obj.game_id.team1
+    
+    def get_team2(self, obj):
+        return obj.game_id.team2
+    
+    get_game_id.short_description = 'Game ID'
+    get_team1.short_description = 'Team 1'
+    get_team2.short_description = 'Team 2'
 
 class AnnotationAdmin(admin.ModelAdmin):
     raw_id_fields = ('image',)
@@ -84,13 +108,7 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     get_active_state.short_description = 'Active State'
 
 
-class GameAdmin(admin.ModelAdmin):
-    list_display = ('event_id', 'get_id', 'team1', 'team2', 'half', 'is_testgame')
 
-    def get_id(self, obj):
-        return obj.id
-
-    get_id.short_description = 'Game ID'
     
 # Register your models here.
 admin.site.register(Event)
