@@ -272,12 +272,17 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = models.Image.objects.all()
-        query_params = self.request.query_params
+        # we use copy here so that the QueryDict object query_params become mutable
+        query_params = self.request.query_params.copy()
 
-        # check if we have a special frame filter set for this log/camera combination
-        print(type(query_params))
+        # check if the frontend wants to use a frame filter
+        if "use_filter" in query_params:
+            # TODO check if we have a list of frames set here -> implement a model for this
+            bla = True
+            # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
+            query_params.pop('use_filter')
 
-
+        frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
         # This is a generic filter on the queryset, the supplied filter must be a field in the Image model
         filters = Q()
         for field in models.Image._meta.fields:
@@ -285,7 +290,11 @@ class ImageViewSet(viewsets.ModelViewSet):
             if param_value:
                 filters &= Q(**{field.name: param_value})
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        return queryset.filter(filters).order_by('frame_number')
+        qs = queryset.filter(filters).order_by('frame_number')
+        if bla:
+            qs = qs.filter(frame_number__in=frame_numbers)
+        #return queryset.filter(filters).filter(frame_number__in=frame_numbers).order_by('frame_number')
+        return qs.order_by('frame_number')
     
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -293,7 +302,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(data=request.data, many=is_many)
         serializer.is_valid(raise_exception=True)
-        
+
         if is_many:
             return self.bulk_create(serializer)
         else:
@@ -324,7 +333,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         
     def single_create(self, serializer):
         validated_data = serializer.validated_data
-        
+
         instance, created = models.Image.objects.get_or_create(
             log=validated_data.get('log'),
             camera=validated_data.get('camera'),
@@ -332,7 +341,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             frame_number=validated_data.get('frame_number'),
             defaults=validated_data
         )
-        
+
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         
         serializer = self.get_serializer(instance)
@@ -664,6 +673,7 @@ class BehaviorOptionViewSet(viewsets.ModelViewSet):
             'events': result_serializer.data
         }, status=status.HTTP_200_OK)
 
+
 class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionsStateSerializer
     permission_classes = [IsAuthenticated]
@@ -760,7 +770,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
         is_many = isinstance(request.data, list)
-        
+
         serializer = self.get_serializer(data=request.data, many=is_many)
         serializer.is_valid(raise_exception=True)
         
@@ -778,7 +788,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             frame=validated_data.get('frame'),
             defaults=validated_data
         )
-        
+
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         
         serializer = self.get_serializer(instance)
