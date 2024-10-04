@@ -122,7 +122,7 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
 
 class XabslSymbolAdmin(admin.ModelAdmin):
     list_display = ('get_log_id', 'frame', 'symbol_type','symbol_name', 'symbol_value')
-
+    search_fields = ['log_id__id', 'symbol_name' ]
     def get_log_id(self, obj):
         return obj.log_id.id
 
