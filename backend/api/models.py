@@ -158,7 +158,7 @@ class XabslSymbol(models.Model):
     frame = models.IntegerField(blank=True, null=True)
     symbol_type = models.CharField(max_length=20, blank=True, null=True)
     symbol_name = models.CharField(max_length=100, blank=True, null=True)
-    symbol_value = models.CharField(max_length=100, blank=True, null=True)
+    symbol_value = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         indexes = [
