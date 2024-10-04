@@ -19,7 +19,7 @@ def is_behavior_done(data):
         return False
 
 if __name__ == "__main__":
-    log_root_path = "/mnt/c/RoboCup/rc24/" #os.environ.get("VAT_LOG_ROOT")
+    log_root_path = os.environ.get("VAT_LOG_ROOT")
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
