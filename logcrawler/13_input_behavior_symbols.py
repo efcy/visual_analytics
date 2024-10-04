@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 from vaapi.client import Vaapi
 import traceback
+import copy
 
 
 def is_behavior_done(data):
@@ -20,6 +21,7 @@ def is_behavior_done(data):
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
+    #log_root_path = "/mnt/c/RoboCup/rc24"
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -91,9 +93,12 @@ if __name__ == "__main__":
                 for i, item in enumerate(full_behavior.outputSymbolList.decimal):
                     output_decimal_lookup.update({i: {"name":item.name, "value":item.value}})
 
+                #print(full_behavior.outputSymbolList.boolean)
                 for i, item in enumerate(full_behavior.outputSymbolList.boolean):
                     output_boolean_lookup.update({i: {"name":item.name, "value":item.value}})
-
+                #print()
+                #print()
+                #print(output_boolean_lookup)
                 # create a lookup table for current decimal input symbols
                 for i, item in enumerate(full_behavior.inputSymbolList.decimal):
                     input_decimal_lookup.update({i: {"name":item.name, "value":item.value}})
@@ -111,17 +116,56 @@ if __name__ == "__main__":
                     output_decimal_lookup[item.id]["value"]= item.value
                 
                 # update the boolean output symbols
+                output_boolean_lookup_temp = copy.deepcopy(output_boolean_lookup)
                 for i, item in enumerate(sparse_behavior.outputSymbolList.boolean):
-                    output_boolean_lookup[item.id]["value"]= item.value
+                    output_boolean_lookup_temp[item.id]["value"]= item.value
+                if fi.frameNumber == 6068:
+                    print(fi.frameNumber)
+                    print(output_boolean_lookup_temp)
+                    print()
+                if fi.frameNumber == 6069:
+                    print(fi.frameNumber)
+                    print(output_boolean_lookup_temp)
+                    print()
+                """
+                if fi.frameNumber == 5781:
+                    print(sparse_behavior.outputSymbolList.boolean)
+                    print()
+                    print(output_boolean_lookup_temp)
+                if fi.frameNumber == 5782:
+                    print(sparse_behavior.outputSymbolList.boolean)
+                    print()
+                    print(output_boolean_lookup_temp)
+
+                if fi.frameNumber == 5783:
+                    print(sparse_behavior.outputSymbolList.boolean)
+                    print()
+                    print(output_boolean_lookup_temp)
+                    quit()
+                """
 
                 # update the decimal input symbols
                 for i, item in enumerate(sparse_behavior.inputSymbolList.decimal):
                     input_decimal_lookup[item.id]["value"]= item.value
 
                 # update the boolean input symbols
+                input_boolean_lookup_temp = copy.deepcopy(input_boolean_lookup)
                 for i, item in enumerate(sparse_behavior.inputSymbolList.boolean):
-                    input_boolean_lookup[item.id]["value"]= item.value
-
+                    input_boolean_lookup_temp[item.id]["value"]= item.value
+                
+                """
+                for k, v in output_boolean_lookup.items():
+                    if v["name"] == "arm.react_to_collision":
+                        if found_first:
+                            print(fi.frameNumber, found_first)
+                        if v["value"] == last_value:
+                            pass
+                        else:
+                            print(fi.frameNumber)
+                            print(v)
+                            last_value = v["value"]
+                            found_first = True
+                """
                 for k, v in output_decimal_lookup.items():
                     #output_decimal.update({v["name"]:v["value"]})
                     json_obj = {
@@ -133,7 +177,7 @@ if __name__ == "__main__":
                     }
                     combined_symbols.append(json_obj)
 
-                for k, v in output_boolean_lookup.items():
+                for k, v in output_boolean_lookup_temp.items():
                     json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
@@ -153,7 +197,7 @@ if __name__ == "__main__":
                     }
                     combined_symbols.append(json_obj)
 
-                for k, v in input_boolean_lookup.items():
+                for k, v in input_boolean_lookup_temp.items():
                     json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
@@ -163,7 +207,6 @@ if __name__ == "__main__":
                     }
                     combined_symbols.append(json_obj)
 
-                
                 
             if idx % 15 == 0:
                 try:
