@@ -6,6 +6,16 @@ import os
 from tqdm import tqdm
 from vaapi.client import Vaapi
 
+def is_input_done(representation_list):
+    # query the cognition representation first and check how many frameinfo representations are there
+    new_list = list()
+    for repr in representation_list:
+        num_repr_frames= len(client.cognition_repr.list(log_id=log_id, representation_name=repr))
+
+        if num_cognition_frames != num_repr_frames:
+            new_list.append(repr)
+    return new_list
+        
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
@@ -18,23 +28,25 @@ if __name__ == "__main__":
     def sort_key_fn(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=sort_key_fn):
+    for data in sorted(existing_data, key=sort_key_fn, reverse=True):
         log_id = data.id
-        num_cognition_frames = data.num_cognition_frames
         
+        log_path = Path(log_root_path) / data.log_path
+        print("log_path: ", log_path)
+
         # check if number of frames were calculated already
+        num_cognition_frames = data.num_cognition_frames
         if not num_cognition_frames or int(num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
             continue
 
-        # query the cognition representation first and check how many frameinfo representations are there
-        num_frame_info_db = len(client.cognition_repr.list(log_id=log_id, representation_name="FrameInfo"))
-        if num_cognition_frames == num_frame_info_db:
-            print("\tall frameinfo representations are already written to the database - continue with next log")
+        representation_list = ["BallModel"]
+        # check if we need to insert this log
+        representation_list = is_input_done(representation_list)
+        if len(representation_list) == 0:
+            print("\tall required representations are already inserted, will continue with the next log")
             continue
-
-        log_path = Path(log_root_path) / data.log_path
-
+        
         my_parser = Parser()
         my_parser.register("ImageJPEG"   , "Image")
         my_parser.register("ImageJPEGTop", "Image")
@@ -44,24 +56,13 @@ if __name__ == "__main__":
         
         batch_size = 200
         counter = 0
-        print("log_path: ", log_path)
-        game_log = LogReader(str(log_path), my_parser)
         
+        game_log = LogReader(str(log_path), my_parser)
+
         my_array = [None] * batch_size
-        for frame in game_log:
+        for idx, frame in enumerate(tqdm(game_log, desc=f"Parsing frame", leave=True)):
             for repr_name in frame.get_names():
-                if frame[repr_name] == None:
-                    # ScanLineEdgelPercept is empty but we write it anyway to the log
-                    continue
-                # we will handle behavior extra in the future
-                if repr_name == "BehaviorStateComplete":
-                    continue
-                if repr_name == "BehaviorStateSparse":
-                    continue
-                # we already treat images differently, no need to but binary data here in the database
-                if repr_name == "Image" or repr_name == "ImageJPEG":
-                    continue
-                if repr_name == "ImageTop" or repr_name == "ImageJPEGTop":
+                if not repr_name in representation_list:
                     continue
                 
                 # try accessing framenumber directly because we can have the situation where the framenumber is missing in the
@@ -93,8 +94,6 @@ if __name__ == "__main__":
                         response = client.cognition_repr.bulk_create(
                             repr_list=my_array
                         )
-                        print(frame_number)
-                        print(f"\t{response}")
                         counter=0
                     except Exception as e:
                         print(f"error inputing the data {log_path}")
@@ -107,5 +106,4 @@ if __name__ == "__main__":
             print(response)
         except Exception as e:
             print(f"error inputing the data {log_path}")
-        # only do the first log for now
         break
