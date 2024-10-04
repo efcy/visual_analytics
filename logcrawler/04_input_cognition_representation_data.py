@@ -71,11 +71,10 @@ if __name__ == "__main__":
                     frame_number = frame['FrameInfo'].frameNumber
                 except Exception as e:
                     print(f"FrameInfo not found in current frame - will not parse any other representation from this frame")
-                    print({e})
                     break
 
                 try:
-                    data = MessageToDict(frame[repr_name])                       
+                    data = MessageToDict(frame[repr_name])
                 except Exception as e:
                     print(repr_name)
                     print(f"error parsing the log {log_path}")
@@ -106,4 +105,3 @@ if __name__ == "__main__":
             print(response)
         except Exception as e:
             print(f"error inputing the data {log_path}")
-        break
