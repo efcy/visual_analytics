@@ -1,6 +1,4 @@
 from .base_client import VaapiBase, AsyncVaapiBase
-#from .tasks.client_ext import TasksClientExt, AsyncTasksClientExt
-#from .projects.client_ext import ProjectsClientExt, AsyncProjectsClientExt
 
 
 class Vaapi(VaapiBase):
@@ -10,9 +8,6 @@ class Vaapi(VaapiBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #self.tasks = TasksClientExt(client_wrapper=self._client_wrapper)
-        #self.projects = ProjectsClientExt(client_wrapper=self._client_wrapper)
-
 
 class AsyncVaapi(AsyncVaapiBase):
     """"""
@@ -20,6 +15,3 @@ class AsyncVaapi(AsyncVaapiBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        #self.tasks = AsyncTasksClientExt(client_wrapper=self._client_wrapper)
-        #self.projects = AsyncProjectsClientExt(client_wrapper=self._client_wrapper)
