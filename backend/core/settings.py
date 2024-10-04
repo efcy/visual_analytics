@@ -38,6 +38,10 @@ REST_FRAMEWORK = {
     ],
     #generates API documentation based on the OpenAPI 3.0 standard.
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_RENDERER_CLASSES": (
+        "drf_orjson_renderer.renderers.ORJSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
 }
 
 SIMPLE_JWT = {
