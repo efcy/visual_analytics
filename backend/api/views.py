@@ -13,6 +13,10 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
+import time
+from django.db import connection
+from psycopg2.extras import execute_values
+import json
 
 User = get_user_model()
 
@@ -877,12 +881,11 @@ class XabslSymbolAPIView(APIView):
         #serializer.is_valid(raise_exception=True)
         
         if is_many:
-            return self.bulk_create(request.data)
+            return self.bulk_insert_with_no_duplicates(request.data)
         else:
             return self.single_create(request.data)
 
-    def single_create(self, serializer):
-        validated_data = serializer.validated_data
+    def single_create(self, validated_data):
         
         instance, created = models.XabslSymbol.objects.get_or_create(
             log_id=validated_data.get('log_id'),
@@ -893,37 +896,69 @@ class XabslSymbolAPIView(APIView):
         
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status_code)
+        #serializer = self.get_serializer(instance)
+        return Response(status=status_code)
 
-    def bulk_create(self, data):
-        """
-            asssumes all data send is from the same log
-        """
-        #validated_data = serializer.validated_data
-        batch_log_id = data[0]['log_id']
+    def bulk_insert_with_no_duplicates(self, data):
+        starttime = time.time()
 
-        with transaction.atomic():  
-            existing_combinations = set(
-                models.XabslSymbol.objects
-                .filter(log_id=batch_log_id)
-                .values_list('frame', 'symbol_type', 'symbol_name')
-            )
-            log_instance = models.Log.objects.get(id=batch_log_id)
-            # filter out duplicates
-            new_data = []
-            for item in data:
-                combo = (item['frame'], item['symbol_type'], item['symbol_name'])
-                if combo not in existing_combinations:
-                    item['log_id'] = log_instance
-                    new_data.append(models.XabslSymbol(**item))
-                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+        rows_tuples = [(row['log_id'], row['frame'], row['symbol_type'], row['symbol_name'], row['symbol_value']) for row in data]
 
-            # Bulk create new events
-            created_data = models.XabslSymbol.objects.bulk_create(new_data)
-
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO api_xabslsymbol (log_id_id, frame, symbol_type, symbol_name, symbol_value)
+            VALUES %s
+            ON CONFLICT (log_id_id, frame, symbol_type, symbol_name) DO NOTHING;
+            """ 
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples, page_size=1000)
+        print( time.time() - starttime)
         return Response({
-            'created': len(created_data),
+        }, status=status.HTTP_200_OK)
+
+class XabslSymbol2APIView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        #serializer = self.get_serializer(data=request.data, many=is_many)
+        #serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_insert_with_no_duplicates(request.data)
+        else:
+            return self.single_create(request.data)
+
+    def single_create(self, validated_data):
+        
+        instance, created = models.XabslSymbol.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            frame=validated_data.get('frame'),
+            symbol_name=validated_data.get('symbol_name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        #serializer = self.get_serializer(instance)
+        return Response(status=status_code)
+
+    
+    
+    def bulk_insert_with_no_duplicates(self, data):
+        starttime = time.time()
+        rows_tuples = [(row['log_id'], row['frame'], json.dumps(row['output_decimal'])) for row in data]
+
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO api_xabslsymbol2 (log_id_id, frame, output_decimal)
+            VALUES %s
+            ON CONFLICT (log_id_id, frame) DO NOTHING;
+            """ 
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples)
+        print( time.time() - starttime)
+        return Response({
         }, status=status.HTTP_200_OK)
 
 class XabslSymbolViewSet(viewsets.ModelViewSet):

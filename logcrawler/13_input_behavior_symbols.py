@@ -12,7 +12,7 @@ def is_behavior_done(data):
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
         print(f"\tcognition frames are {data.num_cognition_frames}")
         
-        symbol_count = len(client.xabsl_symbol.list(log_id=log_id, symbol_name="battery.isCharging"))
+        symbol_count = len(client.xabsl_symbol.list(log_id=log_id, symbol_name="game.time_in_play"))
         print(f"\tbehavior symbols are {symbol_count}")
         return symbol_count == int(data.num_cognition_frames)
     else:
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
 
-        print(log_path)
+        print(log_path, " - ", log_id)
         if not data.num_cognition_frames or int(data.num_cognition_frames) == 0:
             print("\tWARNING: first calculate the number of cognitions frames and put it in the db")
             continue
@@ -122,24 +122,22 @@ if __name__ == "__main__":
                 for i, item in enumerate(sparse_behavior.inputSymbolList.boolean):
                     input_boolean_lookup[item.id]["value"]= item.value
 
-                output_decimal = dict()
-                
                 for k, v in output_decimal_lookup.items():
-                    output_decimal.update({v["name"]:v["value"]})
-                    
-                json_obj = {
+                    #output_decimal.update({v["name"]:v["value"]})
+                    json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
-                        "output_decimal": output_decimal,
-                }
-                combined_symbols.append(json_obj)
+                        "symbol_type": "output_decimal",
+                        "symbol_name":v["name"],
+                        "symbol_value":str(v["value"]),
+                    }
+                    combined_symbols.append(json_obj)
 
-                """
                 for k, v in output_boolean_lookup.items():
                     json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
-                        "symbol_type": "output",
+                        "symbol_type": "output_boolean",
                         "symbol_name":v["name"],
                         "symbol_value":str(v["value"]),
                     }
@@ -149,7 +147,7 @@ if __name__ == "__main__":
                     json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
-                        "symbol_type": "input",
+                        "symbol_type": "input_decimal",
                         "symbol_name":v["name"],
                         "symbol_value":v["value"],
                     }
@@ -159,15 +157,15 @@ if __name__ == "__main__":
                     json_obj = {
                         "log_id":log_id,
                         "frame":fi.frameNumber,
-                        "symbol_type": "input",
+                        "symbol_type": "input_boolean",
                         "symbol_name":v["name"],
                         "symbol_value":str(v["value"]),
                     }
                     combined_symbols.append(json_obj)
-                """
+
                 
                 
-            if idx % 25 == 0:
+            if idx % 15 == 0:
                 try:
                     response = client.xabsl_symbol.bulk_create(
                         data_list = combined_symbols
@@ -185,9 +183,6 @@ if __name__ == "__main__":
                 response = client.xabsl_symbol.bulk_create(
                     data_list=combined_symbols
                     )
-                #print(f"\t{response}")
             except Exception as e:
                 print(f"error inputing the xabsl symbols {log_path}")
                 print(e)
-            break
-        break
