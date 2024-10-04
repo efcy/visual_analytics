@@ -57,7 +57,6 @@ def parse_sparse_option(log_id, frame, time, parent, node):
     internal_state_id = node.option.activeState
     global_options_id = get_option_id(internal_options_id)
     global_state_id = get_state_id(internal_options_id,internal_state_id)
-
     json_obj = {
         "log_id":log_id,
         "options_id":global_options_id,
@@ -69,8 +68,6 @@ def parse_sparse_option(log_id, frame, time, parent, node):
         "state_time":node.option.stateTime,
     }
     parse_sparse_option_list.append(json_obj)
-
-    # TODO add inserting of params here
 
     # iterating through sub-options
     for sub in node.option.activeSubActions:
@@ -115,14 +112,19 @@ if __name__ == "__main__":
             continue
         
         # check if we need to insert this log
-        if is_behavior_done(data):
-            print("\tbehavior already inserted, will continue with the next log")
-            continue
+        #if is_behavior_done(data):
+        #    print("\tbehavior already inserted, will continue with the next log")
+        #    continue
         
         my_parser = Parser()
         game_log = LogReader(str(log_path), my_parser)
         parse_sparse_option_list = list()
         option_map = dict()
+        
+        output_decimal_lookup = dict()  # will be updated on each frame
+        output_boolean_lookup = dict()  # will be updated on each frame
+        input_decimal_lookup = dict()  # will be updated on each frame
+        input_boolean_lookup = dict()  # will be updated on each frame
 
         for idx, frame in enumerate(tqdm(game_log, desc=f"Parsing frame", leave=True)):
             if 'FrameInfo' in frame:
@@ -139,6 +141,38 @@ if __name__ == "__main__":
                     traceback.print_exc() 
                     print("can't parse the Behavior will continue with the next log")
                     break
+                # TODO: idea here is to build a enumeration lookup table that we use when inserting data
+                enumeration_lookup_list = list()
+                for i, enum in enumerate(full_behavior.enumerations):
+                    elem = [a.name for a in enum.elements]
+                    enum_dict = {enum.name: elem}
+                    #print()
+                    #print(enum)
+                    #print()
+                    #print(enum_dict)
+                    #print()
+                    #print(type(elem))
+                    #print(elem)
+
+                    #for item in enum.elements:
+                    #    self.sql_queue.put(("INSERT INTO behavior_enumerations VALUES (?,?,?,?,?)", [log_num, i, enum.name, item.value, item.name]))
+                    break
+                
+                # create a lookup table for current decimal output symbols
+                for i, item in enumerate(full_behavior.outputSymbolList.decimal):
+                    output_decimal_lookup.update({i: {"name":item.name, "value":item.value}})
+
+                for i, item in enumerate(full_behavior.outputSymbolList.boolean):
+                    output_boolean_lookup.update({i: {"name":item.name, "value":item.value}})
+
+                # create a lookup table for current decimal input symbols
+                for i, item in enumerate(full_behavior.inputSymbolList.decimal):
+                    input_decimal_lookup.update({i: {"name":item.name, "value":item.value}})
+
+                # create a lookup table for current boolean input symbols
+                for i, item in enumerate(full_behavior.inputSymbolList.boolean):
+                    input_boolean_lookup.update({i: {"name":item.name, "value":item.value}})
+
                 for i, option in enumerate(full_behavior.options):
                     try:
                         option_response = client.behavior_option.create(
@@ -175,6 +209,74 @@ if __name__ == "__main__":
             if "BehaviorStateSparse" in frame:
                 # TODO build a check that makes sure behaviorcomplete was parsed already
                 sparse_behavior = frame["BehaviorStateSparse"]
+                
+                # update the decimal output symbols
+                for i, item in enumerate(sparse_behavior.outputSymbolList.decimal):
+                    output_decimal_lookup[item.id]["value"]= item.value
+                
+                # update the boolean output symbols
+                for i, item in enumerate(sparse_behavior.outputSymbolList.boolean):
+                    output_boolean_lookup[item.id]["value"]= item.value
+
+                # update the decimal input symbols
+                for i, item in enumerate(sparse_behavior.inputSymbolList.decimal):
+                    input_decimal_lookup[item.id]["value"]= item.value
+
+                # update the boolean input symbols
+                for i, item in enumerate(sparse_behavior.inputSymbolList.boolean):
+                    input_boolean_lookup[item.id]["value"]= item.value
+
+                
+                combined_symbols = list()
+                for k, v in output_decimal_lookup.items():
+                    json_obj = {
+                        "log_id":log_id,
+                        "frame":fi.frameNumber,
+                        "symbol_type": "output",
+                        "symbol_name":v["name"],
+                        "symbol_value":v["value"],
+                    }
+                    combined_symbols.append(json_obj)
+
+                for k, v in output_boolean_lookup.items():
+                    json_obj = {
+                        "log_id":log_id,
+                        "frame":fi.frameNumber,
+                        "symbol_type": "output",
+                        "symbol_name":v["name"],
+                        "symbol_value":str(v["value"]),
+                    }
+                    combined_symbols.append(json_obj)
+
+                for k, v in input_decimal_lookup.items():
+                    json_obj = {
+                        "log_id":log_id,
+                        "frame":fi.frameNumber,
+                        "symbol_type": "input",
+                        "symbol_name":v["name"],
+                        "symbol_value":v["value"],
+                    }
+                    combined_symbols.append(json_obj)
+
+                for k, v in input_boolean_lookup.items():
+                    json_obj = {
+                        "log_id":log_id,
+                        "frame":fi.frameNumber,
+                        "symbol_type": "input",
+                        "symbol_name":v["name"],
+                        "symbol_value":str(v["value"]),
+                    }
+                    combined_symbols.append(json_obj)
+
+                try:
+                    response = client.xabsl_symbol.bulk_create(
+                        data_list=combined_symbols
+                    )
+                except Exception as e:
+                    print(f"error inputing the xabsl data {log_path}")
+                    print(e)
+                    quit()
+
                 for root in sparse_behavior.activeRootActions:
                     if root.type != 0: # Option
                         print("Root node must be an option!")
@@ -199,3 +301,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"error inputing the data {log_path}")
             print(e)
+        break

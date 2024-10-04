@@ -867,3 +867,77 @@ class BehaviorFrameOptionAPIView(APIView):
             return Response(serializer.data)
         except ValueError:
             return Response({"error": "Invalid log_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+class XabslSymbolViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.XabslSymbolSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.XabslSymbol.objects.all()
+
+    def get_queryset(self):
+        queryset = models.XabslSymbol.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.XabslSymbol._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+    
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            return self.single_create(serializer)
+
+    def single_create(self, serializer):
+        validated_data = serializer.validated_data
+        
+        instance, created = models.XabslSymbol.objects.get_or_create(
+            log_id=validated_data.get('log_id'),
+            frame=validated_data.get('frame'),
+            symbol_name=validated_data.get('symbol_name'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        """
+            asssumes all data send is from the same log
+        """
+        validated_data = serializer.validated_data
+
+        with transaction.atomic():
+            batch_log_id = validated_data[0]['log_id'].id
+            
+            existing_combinations = set(
+                models.XabslSymbol.objects
+                .filter(log_id=batch_log_id)
+                .values_list('frame', 'symbol_type', 'symbol_name')
+            )
+
+            # filter out duplicates
+            new_data = []
+            for item in validated_data:
+                combo = (item['frame'], item['symbol_type'], item['symbol_name'])
+                if combo not in existing_combinations:
+                    new_data.append(models.XabslSymbol(**item))
+                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
+
+            # Bulk create new events
+            created_data = models.XabslSymbol.objects.bulk_create(new_data)
+
+        return Response({
+            'created': len(created_data),
+        }, status=status.HTTP_200_OK)

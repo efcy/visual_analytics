@@ -33,6 +33,6 @@ router.register("motionrepr",views.MotionRepresentationViewSet)
 router.register("behavior-option",views.BehaviorOptionViewSet)
 router.register("behavior-option-state",views.BehaviorOptionStateViewSet)
 router.register("behavior-frame-option",views.BehaviorFrameOptionViewSet)
-
+router.register("xabsl-symbol",views.XabslSymbolViewSet)
 
 urlpatterns += router.urls
