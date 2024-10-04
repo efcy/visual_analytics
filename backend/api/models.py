@@ -158,4 +158,21 @@ class XabslSymbol(models.Model):
     frame = models.IntegerField(blank=True, null=True)
     symbol_type = models.CharField(max_length=20, blank=True, null=True)
     symbol_name = models.CharField(max_length=100, blank=True, null=True)
-    symbol_value = models.CharField(max_length=40, blank=True, null=True)
+    symbol_value = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame']),
+        ]
+        unique_together = ('log_id', 'frame', 'symbol_type', 'symbol_name')
+
+class XabslSymbol2(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='xabsl_symbols2')
+    frame = models.IntegerField(blank=True, null=True)
+    output_decimal = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame']),
+        ]
+        unique_together = ('log_id', 'frame')
