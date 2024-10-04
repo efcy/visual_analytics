@@ -483,49 +483,33 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
     def bulk_create(self, serializer):
+        """
+            asssumes all data send is from the same log
+        """
         validated_data = serializer.validated_data
 
         with transaction.atomic():
-            # Get all existing games
+            batch_log_id = validated_data[0]['log_id'].id
+            # Get all existing representations for this log
             existing_combinations = set(
-                models.CognitionRepresentation.objects.values_list('log_id', 'frame_number', 'representation_name')
+                models.CognitionRepresentation.objects
+                .filter(log_id=batch_log_id)
+                .values_list('frame_number', 'representation_name')
             )
-            print(existing_combinations)
             # Separate new and existing events
             new_data = []
-            existing_data = []
             for item in validated_data:
                 # item['log_id'].id is needed because item['log_id'] gives a reference to the log object
-                combo = (item['log_id'].id, item['frame_number'], item['representation_name'])
-                print(type(item['log_id']))
-                print(item['log_id'].id)
-                print(f"\tcombo: {combo}")
+                combo = (item['frame_number'], item['representation_name'])
                 if combo not in existing_combinations:
                     new_data.append(models.CognitionRepresentation(**item))
                     existing_combinations.add(combo)  # Add to set to catch duplicates within the input
-                else:
-                    print("\tfound existing data")
-                    # Fetch the existing event
-                    existing_event = models.CognitionRepresentation.objects.get(
-                        log_id=item['log_id'],
-                        frame_number=item['frame_number'],
-                        representation_name=item['representation_name']
-                    )
-                    existing_data.append(existing_event)
 
             # Bulk create new events
             created_data = models.CognitionRepresentation.objects.bulk_create(new_data)
 
-        # Combine created and existing events
-        #all_data = created_data + existing_data
-
-        # Serialize the results
-        #result_serializer = self.get_serializer(all_data, many=True)
-
         return Response({
             'created': len(created_data),
-            'existing': len(existing_data),
-        #    'events': result_serializer.data
         }, status=status.HTTP_200_OK)
     
 class MotionRepresentationViewSet(viewsets.ModelViewSet):
@@ -780,7 +764,8 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
         return Response({
             'created': len(created_data),
         }, status=status.HTTP_200_OK)
- 
+
+
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorFrameOptionSerializer
     permission_classes = [IsAuthenticated]
