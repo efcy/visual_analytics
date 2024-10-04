@@ -4,94 +4,17 @@ from naoth.log import Parser
 import os
 from tqdm import tqdm
 from vaapi.client import Vaapi
-import time
 import traceback
-import gzip
-import json
 
-
-def fill_option_map(log_id):
-    # TODO I could build this why parsing the BehaviorComplete representation - saving a call to the database
-    try:
-        response = client.behavior_option.list(
-            log_id=log_id
-        )
-    except Exception as e:
-        print(response)
-        print(e)
-        print("Could not fetch the list of options for this log")
-        quit()
-    for option in response:
-        state_response = client.behavior_option_state.list(
-            log_id=log_id,
-            option_id=option.id,
-        )
-        state_dict = dict()
-        for state in state_response:
-            state_dict.update(
-                {"id":option.id, state.xabsl_internal_state_id:state.id}
-            )
-        option_map.update({option.xabsl_internal_option_id: state_dict})
-
-def get_option_id(internal_options_id):
-    try:
-        return option_map[internal_options_id]['id']
-    except Exception as e:
-        print(option_map)
-        print()
-        print(f"internal_options_id: {internal_options_id}")
-        print()
-        print(e)
-        quit()
-
-def get_state_id(internal_options_id, internal_state_id):
-    try:
-        state_id = option_map[internal_options_id][internal_state_id]
-    except Exception as e:
-        print(option_map)
-        print()
-        print(f"internal_options_id: {internal_options_id} - internal_state_id: {internal_state_id}")
-        print()
-        print(e)
-        quit()
-    return state_id
-
-def parse_sparse_option(log_id, frame, time, parent, node):
-    internal_options_id = node.option.id
-    internal_state_id = node.option.activeState
-    global_options_id = get_option_id(internal_options_id)
-    global_state_id = get_state_id(internal_options_id,internal_state_id)
-    json_obj = {
-        "log_id":log_id,
-        "options_id":global_options_id,
-        "active_state":global_state_id,
-        "parent":parent, # FIXME we could make it a reference to options if we would have the root option in the db
-        "frame":frame,
-        "time":time,
-        "time_of_execution":node.option.timeOfExecution,
-        "state_time":node.option.stateTime,
-    }
-    parse_sparse_option_list.append(json_obj)
-
-    # iterating through sub-options
-    for sub in node.option.activeSubActions:
-        if sub.type == 0: # Option
-            parse_sparse_option(log_id=log_id, frame=frame, time=time, parent=node.option.id, node=sub)
-        elif sub.type == 2: # SymbolAssignement
-            # NOTE: i don't see any benefit in saving the SymbolAssignement; the resulting value is already in the 'outputsymbols'
-            pass
-        else:
-            # NOTE: at the moment i didn't saw any other type ?!
-            print(sub)
 
 def is_behavior_done(data):
     print("\tcheck inserted behavior frames")
     if data.num_cognition_frames and int(data.num_cognition_frames) > 0:
         print(f"\tcognition frames are {data.num_cognition_frames}")
         
-        response = client.behavior_frame_option.get_behavior_count(log_id=data.id)
-        print(f"\tbehavior frames are {response['count']}")
-        return response["count"] == int(data.num_cognition_frames)
+        symbol_count = len(client.xabsl_symbol.list(log_id=log_id, symbol_name="battery.isCharging"))
+        print(f"\tbehavior symbols are {symbol_count}")
+        return symbol_count == int(data.num_cognition_frames)
     else:
         return False
 
@@ -119,11 +42,10 @@ if __name__ == "__main__":
         if is_behavior_done(data):
             print("\tbehavior already inserted, will continue with the next log")
             continue
-        
+
         my_parser = Parser()
         game_log = LogReader(str(log_path), my_parser)
         combined_symbols = list()
-        option_map = dict()
         
         output_decimal_lookup = dict()  # will be updated on each frame
         output_boolean_lookup = dict()  # will be updated on each frame

@@ -88,4 +88,3 @@ class XabslSymbolSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.XabslSymbol
         fields = '__all__'
-

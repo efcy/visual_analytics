@@ -21,6 +21,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('behavior/filter/', views.BehaviorFrameOptionAPIView.as_view(), name='behavior-filter'),
     path('behavior/count/', views.BehaviorCountView.as_view(), name='behavior-count'),
+    path('behavior/symbol/', views.XabslSymbolAPIView.as_view(), name='behavior-symbol'),
 ]
 
 router = routers.DefaultRouter()

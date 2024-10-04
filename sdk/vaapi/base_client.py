@@ -14,7 +14,7 @@ from .behavior_options.client import BehaviorOptionClient #, AsyncAnnotationsCli
 from .behavior_options_state.client import BehaviorOptionStateClient #, AsyncAnnotationsClient
 from .behavior_frame_option.client import BehaviorFrameOptionClient #, AsyncAnnotationsClient
 from .image.client import ImageClient #, AsyncAnnotationsClient
-from .xabsl_symbol.client import XabslSymbolClient #, AsyncAnnotationsClient
+from .xabsl_symbol.client import XabslSymbolClient, AsyncXabslSymbolClient
 
 class VaapiBase:
     """
@@ -167,6 +167,7 @@ class AsyncVaapiBase:
             else httpx.AsyncClient(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
+        self.xabsl_symbol = AsyncXabslSymbolClient(client_wrapper=self._client_wrapper)
         #self.annotations = AsyncAnnotationsClient(client_wrapper=self._client_wrapper)
         #self.users = AsyncUsersClient(client_wrapper=self._client_wrapper)
         #self.actions = AsyncActionsClient(client_wrapper=self._client_wrapper)
