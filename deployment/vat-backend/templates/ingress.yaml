@@ -5,6 +5,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: vat-backend
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "700m"
 spec:
   ingressClassName: nginx
   rules:
