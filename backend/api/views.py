@@ -958,4 +958,23 @@ class XabslSymbolViewSet(viewsets.ModelViewSet):
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         return queryset.filter(filters)
     
-    
+class CognitonInputAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        #is_many = isinstance(request.data, list)
+        starttime = time.time()
+
+        rows_tuples = [(row['log_id'], row['frame_number'], row['representation_name'], row['representation_data']) for row in request.data]
+
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO api_cognitionrepresentation (log_id_id, frame_number, representation_name, representation_data)
+            VALUES %s
+            ON CONFLICT (log_id_id, frame_number, representation_name) DO NOTHING;
+            """ 
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples, page_size=1000)
+        print( time.time() - starttime)
+        return Response({
+        }, status=status.HTTP_200_OK)
+
