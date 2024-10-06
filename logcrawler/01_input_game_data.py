@@ -14,11 +14,16 @@ def handle_games(game):
     # for now we allow only on folder called Experiments to also exist inside the Event folder -> TODO have discussion about additional folders
 
     # parse additional information from game folder
-    game_parsed = str(game.name).split("_")
-    timestamp = game_parsed[0] + "_" + game_parsed[1]
-    team1 = game_parsed[2]
-    team2 = game_parsed[4]
-    halftime = game_parsed[5]
+    try:
+        game_parsed = str(game.name).split("_")
+        timestamp = game_parsed[0] + "_" + game_parsed[1]
+        team1 = game_parsed[2]
+        team2 = game_parsed[4]
+        halftime = game_parsed[5]
+    except Exception as e:
+        print(e)
+        print(game_parsed)
+
 
     date_object = datetime.strptime(timestamp, "%Y-%m-%d_%H-%M-%S")
     response = client.games.create(
@@ -45,6 +50,7 @@ def get_robot_version(head_number):
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
+    log_root_path = "/mnt/c/RoboCup/rc24"
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -60,12 +66,13 @@ if __name__ == "__main__":
                 if str(game.name) == "Experiments":
                     print("ignoring Experiments folder")
                     continue
+                print(f"{game}")
                 response = handle_games(game)
                 game_id = response.id
 
                 gamelog_path = Path(game) / "game_logs"
                 for logfolder in [f for f in gamelog_path.iterdir() if f.is_dir()]:
-                    #print(f"\t\t{logfolder}")
+                    print(f"\t{logfolder}")
                     logfolder_parsed = str(logfolder.name).split("_")
                     playernumber = logfolder_parsed[0]
                     head_number = logfolder_parsed[1]
@@ -100,4 +107,4 @@ if __name__ == "__main__":
                         combined_log_path=combined_log_path,
                         sensor_log_path=sensor_log_path,
                     )
-                    print("response", response)
+                    #print("response", response)

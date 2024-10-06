@@ -343,11 +343,6 @@ class ImageViewSet(viewsets.ModelViewSet):
             # Bulk create new images
             created_data = models.Image.objects.bulk_create(new_data)
 
-        # Combine created and existing events
-        #all_data = created_data + existing_data
-
-        # Serialize the results
-        #result_serializer = self.get_serializer(all_data, many=True)
 
         return Response({
             'created': len(created_data),
@@ -355,57 +350,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         #    'events': result_serializer.data
         }, status=status.HTTP_200_OK)
 
-    """
-    def create(self, request, *args, **kwargs):
-        data = request.data  # This should be a list of dictionaries
-        #print(data)
-        if not isinstance(data, list):
-            return Response({"error": "Data must be a list"}, status=status.HTTP_400_BAD_REQUEST)
-
-        with transaction.atomic():
-            # Fetch all relevant Log instances
-            log_ids = set(item['log'] for item in data)
-            robot_data_dict = {rd.id: rd for rd in models.Log.objects.filter(id__in=log_ids)}
-
-            # Get existing objects
-            existing_combinations = set(
-                models.Image.objects.filter(
-                    Q(log__in=log_ids) &
-                    Q(camera__in=[item['camera'] for item in data]) &
-                    Q(type__in=[item['type'] for item in data]) &
-                    Q(frame_number__in=[item['frame_number'] for item in data])
-                ).values_list('log', 'camera', 'type', 'frame_number')
-            )
-
-
-            # Prepare new objects, excluding existing combinations
-            new_objs = []
-            for item in data:
-                log_instance = robot_data_dict.get(item['log'])
-                if log_instance and (item['log'], item['camera'], item['type'], item['frame_number']) not in existing_combinations:
-                    new_item = item.copy()
-                    # Replace the log ID with the actual RobotData instance
-                    new_item['log'] = log_instance
-                    # Create a new Image instance with all provided fields
-                    new_obj = models.Image(**new_item)
-                    new_objs.append(new_obj)
-
-            # Bulk create new objects, ignoring conflicts
-            models.Image.objects.bulk_create(new_objs, ignore_conflicts=True)
-
-            # Fetch all objects (both existing and newly created)
-            all_objs = models.Image.objects.filter(
-                Q(log__in=[item['log'] for item in data]) &
-                Q(camera__in=[item['camera'] for item in data]) &
-                Q(type__in=[item['type'] for item in data]) &
-                Q(frame_number__in=[item['frame_number'] for item in data])
-            )
-
-            # Serialize the results
-            serializer = self.serializer_class(all_objs, many=True)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-    """
 
 class ImageCountView(APIView):
     # TODO to I still need this?
@@ -978,4 +922,38 @@ class XabslSymbolViewSet(viewsets.ModelViewSet):
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         return queryset.filter(filters)
     
+class LogStatusViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.LogStatusSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.LogStatus.objects.all()
+
+    def get_queryset(self):
+        return models.LogStatus.objects.all()
     
+    def get_queryset(self):
+        queryset = models.LogStatus.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.LogStatus._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        validated_data = serializer.validated_data
+        
+        instance, created = models.LogStatus.objects.update_or_create(
+            log_id=validated_data.get('log_id'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
