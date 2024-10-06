@@ -60,6 +60,32 @@ class Log(models.Model):
         return f"{self.log_path}"
 
 
+class LogStatus(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='log_status')
+    # holds the number of frames that should be in the db for each representation
+    BallModel = models.IntegerField(blank=True, null=True)
+    CameraMatrix = models.IntegerField(blank=True, null=True)
+    CameraMatrixTop = models.IntegerField(blank=True, null=True)
+    FieldPercept = models.IntegerField(blank=True, null=True)
+    FieldPerceptTop = models.IntegerField(blank=True, null=True)
+    GoalPercept = models.IntegerField(blank=True, null=True)
+    GoalPerceptTop = models.IntegerField(blank=True, null=True)
+    RansacLinePercept = models.IntegerField(blank=True, null=True)
+    RansacCirclePercept2018 = models.IntegerField(blank=True, null=True)
+    ShortLinePercept = models.IntegerField(blank=True, null=True)
+    ScanLineEdgelPercept = models.IntegerField(blank=True, null=True)
+    ScanLineEdgelPerceptTop = models.IntegerField(blank=True, null=True)
+    
+    OdometryData = models.IntegerField(blank=True, null=True)
+
+    num_cognition_frames = models.IntegerField(blank=True, null=True)
+    num_motion_frames = models.IntegerField(blank=True, null=True)
+    num_jpg_bottom = models.IntegerField(blank=True, null=True)
+    num_jpg_top = models.IntegerField(blank=True, null=True)
+    num_bottom = models.IntegerField(blank=True, null=True)
+    num_top = models.IntegerField(blank=True, null=True)
+
+
 class Image(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
