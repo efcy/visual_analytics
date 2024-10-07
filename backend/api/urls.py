@@ -23,6 +23,7 @@ urlpatterns = [
     path('behavior/count/', views.BehaviorCountView.as_view(), name='behavior-count'),
     path('behavior/symbol/', views.XabslSymbolAPIView.as_view(), name='behavior-symbol'),
     path('behavior/symbol2/', views.XabslSymbol2APIView.as_view(), name='behavior-symbol2'),
+    path('cog/input/', views.XabslSymbolAPIView.as_view(), name='behavior-symbol'),
 ]
 
 router = routers.DefaultRouter()
@@ -36,5 +37,6 @@ router.register("behavior-option",views.BehaviorOptionViewSet)
 router.register("behavior-option-state",views.BehaviorOptionStateViewSet)
 router.register("behavior-frame-option",views.BehaviorFrameOptionViewSet)
 router.register("xabsl-symbol",views.XabslSymbolViewSet)
+router.register("log-status",views.LogStatusViewSet)
 
 urlpatterns += router.urls

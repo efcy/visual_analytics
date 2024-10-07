@@ -15,6 +15,8 @@ from .behavior_options_state.client import BehaviorOptionStateClient #, AsyncAnn
 from .behavior_frame_option.client import BehaviorFrameOptionClient #, AsyncAnnotationsClient
 from .image.client import ImageClient #, AsyncAnnotationsClient
 from .xabsl_symbol.client import XabslSymbolClient, AsyncXabslSymbolClient
+from .log_status.client import LogStatusClient
+
 
 class VaapiBase:
     """
@@ -88,6 +90,7 @@ class VaapiBase:
         self.behavior_frame_option = BehaviorFrameOptionClient(client_wrapper=self._client_wrapper)
         self.image = ImageClient(client_wrapper=self._client_wrapper)
         self.xabsl_symbol = XabslSymbolClient(client_wrapper=self._client_wrapper)
+        self.log_status = LogStatusClient(client_wrapper=self._client_wrapper)
         
         
         #self.users = UsersClient(client_wrapper=self._client_wrapper)

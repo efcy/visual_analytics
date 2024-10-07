@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import Event, Game, Log, Image, MotionRepresentation, CognitionRepresentation, Annotation, \
-BehaviorOption, BehaviorOptionState, BehaviorFrameOption, XabslSymbol, XabslSymbol2
+BehaviorOption, BehaviorOptionState, BehaviorFrameOption, XabslSymbol, XabslSymbol2, LogStatus
 
 class AnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -139,3 +139,4 @@ admin.site.register(BehaviorFrameOption, BehaviorFrameOptionAdmin)
 admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(XabslSymbol, XabslSymbolAdmin)
 admin.site.register(XabslSymbol2)
+admin.site.register(LogStatus)

@@ -88,3 +88,8 @@ class XabslSymbolSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.XabslSymbol
         fields = '__all__'
+
+class LogStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.LogStatus
+        fields = '__all__'
