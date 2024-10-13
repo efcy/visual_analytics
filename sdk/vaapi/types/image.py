@@ -36,6 +36,10 @@ class Image(pydantic_v1.BaseModel):
     """
     image_url: typing.Optional[str] = pydantic_v1.Field(default=None)
 
+    """
+    blurredness_value
+    """
+    blurredness_value: typing.Optional[int] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}
