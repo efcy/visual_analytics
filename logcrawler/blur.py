@@ -1,10 +1,7 @@
 from vaapi.client import Vaapi
-import requests,cv2
-
-
-
-
-
+import requests
+import cv2
+import os
 
 
 def variance_of_laplacian(image):
@@ -14,35 +11,32 @@ def variance_of_laplacian(image):
 
 if __name__ == "__main__":
     client = Vaapi(
-        base_url="http://127.0.0.1:8000/",  
-        api_key="7c137988bd5316d6d22ebcbd1048bb5e07b56040",
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
     )
 
-
-    #event = client.events.list()
-
-    logs = client.logs.list(event_id=1)
+    logs = client.logs.list()
 
     first_log = logs[0].id
+    # TODO build a filter that excludes images that have already a value
+    # TODO do it for all logs
+    images = client.image.list(log=162)
 
-    images = client.image.list(event_id=1,log=first_log)
-
-
+    # TODO use tqdm here to have a progressbar
     for img in images:
-        url = "https://logs.berlin-united.com/" +img.image_url
-
-
-        #print(img.blurredness_value)
+        url = "https://logs.berlin-united.com/" + img.image_url
 
         dwn = requests.get(url)
 
+        # TODO figure out how to do it without saving to file here
         with open("temp.jpg","wb") as f:
             f.write(dwn.content)
 
         image = cv2.imread("temp.jpg")
         gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         fm = variance_of_laplacian(gray)
-        if fm < 100:
-            print(f"the image {url} is blurry ({int(fm)})")
+
+        #if fm < 100:
+        #    print(f"the image {url} is blurry ({int(fm)})")
 
         client.image.update(id=img.id,blurredness_value=int(fm))

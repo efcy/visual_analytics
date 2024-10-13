@@ -4,9 +4,7 @@ import os
 from time import sleep
 
 from vaapi.client import Vaapi
-baseurl = "https://api.berlin-united.com/api/" #"http://127.0.0.1:8000/api/"
-#key can be created on admin site
-api_token = "ab43645dd5bc6583cf8b2b9ec4b761728843901c" #os.environ.get("VAT_API_TOKEN")
+
 
 def scandir_yield_files(directory):
     """Generator that yields file paths in a directory."""
@@ -83,7 +81,6 @@ def check_insertion(robot_data_id, camera, type):
 
 
 if __name__ == "__main__":
-    print(os.getpid())
     log_root_path = os.environ.get("VAT_LOG_ROOT")
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),

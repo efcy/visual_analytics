@@ -81,6 +81,8 @@ class ImageClient:
         frame_number: typing.Optional[int] = OMIT,
         image_url: typing.Optional[str] = OMIT,
         blurredness_value: typing.Optional[int] = OMIT,
+        brightness_value: typing.Optional[int] = OMIT,
+        resolution: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Image:
         """
@@ -167,7 +169,9 @@ class ImageClient:
                 "type": type,
                 "frame_number": frame_number,
                 "image_url": image_url,
-                "blurredness_value":blurredness_value
+                "blurredness_value":blurredness_value,
+                "brightness_value": brightness_value,
+                "resolution": resolution,
             },
             request_options=request_options,
             omit=OMIT,
