@@ -1,4 +1,4 @@
-Django>=5.0.9
+Django==5.1.2
 asgiref
 django-cors-headers
 djangorestframework
