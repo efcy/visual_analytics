@@ -35,6 +35,8 @@ if __name__ == "__main__":
         image = cv2.imread("temp.jpg")
         gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         fm = variance_of_laplacian(gray)
+        # TODO calculate brightness here as well
+        # TODO get the resolution and put that in the database as well
 
         #if fm < 100:
         #    print(f"the image {url} is blurry ({int(fm)})")

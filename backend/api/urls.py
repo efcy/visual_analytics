@@ -20,10 +20,9 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('behavior/filter/', views.BehaviorFrameOptionAPIView.as_view(), name='behavior-filter'),
-    path('behavior/count/', views.BehaviorCountView.as_view(), name='behavior-count'),
-    path('behavior/symbol/', views.XabslSymbolAPIView.as_view(), name='behavior-symbol'),
-    path('behavior/symbol2/', views.XabslSymbol2APIView.as_view(), name='behavior-symbol2'),
-    path('cog/input/', views.XabslSymbolAPIView.as_view(), name='behavior-symbol'),
+    path('behavior/count/', views.BehaviorFrameCountView.as_view(), name='behavior-count'),
+    path('behavior/symbol/count/', views.BehaviorSymbolCountView.as_view(), name='behavior-count'),
+    path('cognitionrepr/count/', views.CognitionReprCountView.as_view(), name='cognitionrepr-count'),
 ]
 
 router = routers.DefaultRouter()
@@ -36,7 +35,8 @@ router.register("motionrepr",views.MotionRepresentationViewSet)
 router.register("behavior-option",views.BehaviorOptionViewSet)
 router.register("behavior-option-state",views.BehaviorOptionStateViewSet)
 router.register("behavior-frame-option",views.BehaviorFrameOptionViewSet)
-router.register("xabsl-symbol",views.XabslSymbolViewSet)
+router.register("behavior/symbol/complete",views.XabslSymbolCompleteViewSet)
+router.register("behavior/symbol/sparse",views.XabslSymbolSparseViewSet)
 router.register("log-status",views.LogStatusViewSet)
 
 urlpatterns += router.urls

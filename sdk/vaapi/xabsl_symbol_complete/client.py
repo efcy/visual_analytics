@@ -7,18 +7,18 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
-from ..types.xabsl_symbol import XabslSymbol
+from ..types.xabsl_symbol_complete import XabslSymbolComplete
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
-class XabslSymbolClient:
+class XabslSymbolClientComplete:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> XabslSymbol:
+    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> XabslSymbolComplete:
         _response = self._client_wrapper.httpx_client.request(
-            f"api/xabsl-symbol/{jsonable_encoder(id)}/", method="GET", request_options=request_options
+            f"api/behavior/symbol/complete/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
@@ -61,7 +61,7 @@ class XabslSymbolClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/xabsl-symbol/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
+            f"api/behavior/symbol/complete/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
@@ -81,7 +81,7 @@ class XabslSymbolClient:
         symbol_name: typing.Optional[str] = OMIT,
         symbol_value: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> XabslSymbol:
+    ) -> XabslSymbolComplete:
         """
         Update attributes for an existing annotation.
 
@@ -158,7 +158,7 @@ class XabslSymbolClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/xabsl-symbol/{jsonable_encoder(id)}/",
+            f"api/behavior/symbol/complete/{jsonable_encoder(id)}/",
             method="PATCH",
             json={
                 "log_id": log_id,
@@ -172,7 +172,7 @@ class XabslSymbolClient:
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(XabslSymbol, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(XabslSymbolComplete, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
@@ -182,7 +182,7 @@ class XabslSymbolClient:
             self, 
             #log_id: int, *, 
             request_options: typing.Optional[RequestOptions] = None,
-            **filters: typing.Any) -> typing.List[XabslSymbol]:
+            **filters: typing.Any) -> typing.List[XabslSymbolComplete]:
         """
         List all logs.
 
@@ -219,7 +219,7 @@ class XabslSymbolClient:
 
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.List[XabslSymbol], _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(typing.List[XabslSymbolComplete], _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
@@ -229,41 +229,35 @@ class XabslSymbolClient:
         self,
         *,
         log_id: typing.Optional[int] = OMIT,
-        frame: typing.Optional[int] = OMIT,
-        symbol_type: typing.Optional[str] = OMIT,
-        symbol_name: typing.Optional[str] = OMIT,
-        symbol_value: typing.Optional[str] = OMIT,
+        data: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> XabslSymbol:
+    ) -> XabslSymbolComplete:
         """
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/xabsl-symbol/",
+            f"api/behavior/symbol/complete/",
             method="POST",
             json={
                 "log_id": log_id,
-                "frame": frame,
-                "symbol_type": symbol_type,
-                "symbol_name": symbol_name,
-                "symbol_value": symbol_value,
+                "data": data,
             },
             request_options=request_options,
             omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(XabslSymbol, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(XabslSymbolComplete, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
-
+    
     def bulk_create(
         self,
         *,
-        data_list: typing.List[XabslSymbol] = OMIT,
+        data_list: typing.List[XabslSymbolComplete] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> XabslSymbol:
+    ) -> XabslSymbolComplete:
         """
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -275,34 +269,7 @@ class XabslSymbolClient:
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(XabslSymbol, _response.json())  # type: ignore
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, body=_response.text)
-        raise ApiError(status_code=_response.status_code, body=_response_json)
-    
-class AsyncXabslSymbolClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def bulk_create(
-        self,
-        *,
-        data_list: typing.List[XabslSymbol] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> XabslSymbol:
-        """
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"api/xabsl-symbol/", 
-            method="POST",
-            json=data_list,
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(XabslSymbol, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(XabslSymbolComplete, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)

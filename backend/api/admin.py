@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import Event, Game, Log, Image, MotionRepresentation, CognitionRepresentation, Annotation, \
-BehaviorOption, BehaviorOptionState, BehaviorFrameOption, XabslSymbol, XabslSymbol2, LogStatus
+BehaviorOption, BehaviorOptionState, BehaviorFrameOption, LogStatus, XabslSymbolSparse, XabslSymbolComplete
 
 class AnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -67,9 +67,9 @@ class AnnotationAdmin(admin.ModelAdmin):
 class CognitionRepresentationAdmin(admin.ModelAdmin):
     search_fields = ['frame_number__icontains', 'representation_name__icontains']
     list_display = ["log_id","frame_number", 'representation_name']
-    list_per_page = 3000
 
 
+"""
 class BehaviorOptionAdmin(admin.ModelAdmin):
     list_display = ('get_log_id', 'id', 'xabsl_internal_option_id', 'option_name')
 
@@ -97,7 +97,7 @@ class BehaviorOptionStateAdmin(admin.ModelAdmin):
     get_option_id.short_description = 'Option ID'
     get_option_name.short_description = 'Option Name'
     get_name.short_description = 'State Name'
-
+"""
 class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     list_display = ('get_log_id', 'get_option_id','get_option_name', 'get_active_state', 'frame')
     search_fields = ['options_id__option_name']
@@ -118,13 +118,33 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     get_option_name.short_description = 'Option Name'
     get_active_state.short_description = 'Active State'
 
+class LogStatusAdmin(admin.ModelAdmin):
+    list_display = ["get_log_id", "get_id"]
 
-
-class XabslSymbolAdmin(admin.ModelAdmin):
-    list_display = ('get_log_id', 'frame', 'symbol_type','symbol_name', 'symbol_value')
-    search_fields = ['log_id__id', 'symbol_name', 'frame']
     def get_log_id(self, obj):
         return obj.log_id.id
+    
+    def get_id(self, obj):
+        return obj.id
+    
+    get_log_id.short_description = 'Log ID'
+    get_id.short_description = 'ID'
+
+
+class XabslSymbolCompleteAdmin(admin.ModelAdmin):
+    list_display = ["get_log_id"]
+
+    def get_log_id(self, obj):
+        return obj.log_id.id
+    
+    get_log_id.short_description = 'Log ID'
+
+
+#class XabslSymbolAdmin(admin.ModelAdmin):
+#    list_display = ('get_log_id', 'frame', 'symbol_type','symbol_name', 'symbol_value')
+#    search_fields = ['log_id__id', 'symbol_name', 'frame']
+#    def get_log_id(self, obj):
+#        return obj.log_id.id
 
 # Register your models here.
 admin.site.register(Event)
@@ -133,10 +153,12 @@ admin.site.register(Log, LogAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(CognitionRepresentation, CognitionRepresentationAdmin)
 admin.site.register(MotionRepresentation)
-admin.site.register(BehaviorOption, BehaviorOptionAdmin)
-admin.site.register(BehaviorOptionState, BehaviorOptionStateAdmin)
+admin.site.register(BehaviorOption)
+#admin.site.register(BehaviorOptionState, BehaviorOptionStateAdmin)
 admin.site.register(BehaviorFrameOption, BehaviorFrameOptionAdmin)
 admin.site.register(Annotation, AnnotationAdmin)
-admin.site.register(XabslSymbol, XabslSymbolAdmin)
-admin.site.register(XabslSymbol2)
-admin.site.register(LogStatus)
+#admin.site.register(XabslSymbol, XabslSymbolAdmin)
+#admin.site.register(XabslSymbol2)
+admin.site.register(LogStatus, LogStatusAdmin)
+admin.site.register(XabslSymbolComplete, XabslSymbolCompleteAdmin)
+admin.site.register(XabslSymbolSparse)

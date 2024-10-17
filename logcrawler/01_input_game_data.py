@@ -50,7 +50,7 @@ def get_robot_version(head_number):
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
-    log_root_path = "/mnt/c/RoboCup/rc24"
+
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -107,4 +107,10 @@ if __name__ == "__main__":
                         combined_log_path=combined_log_path,
                         sensor_log_path=sensor_log_path,
                     )
-                    #print("response", response)
+                    # get log id of the newly created log object
+                    log_id = response.id
+
+                    # create an empty log status object here
+                    response = client.log_status.create(
+                        log_id=log_id,
+                    )

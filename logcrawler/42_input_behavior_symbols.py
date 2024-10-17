@@ -21,7 +21,6 @@ def is_behavior_done(data):
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
-    #log_root_path = "/mnt/c/RoboCup/rc24"
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -108,6 +107,7 @@ if __name__ == "__main__":
                     input_boolean_lookup.update({i: {"name":item.name, "value":item.value}})
             
             if "BehaviorStateSparse" in frame:
+                quit()
                 # TODO build a check that makes sure behaviorcomplete was parsed already
                 sparse_behavior = frame["BehaviorStateSparse"]
                 # Actually only push the sparse values

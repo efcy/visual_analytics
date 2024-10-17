@@ -14,10 +14,12 @@ mode=$1
 if [ "$mode" == "renew" ]; then
 
     cd ../backend
-
-    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -path "./venv/*" -delete
+    pushd .
+    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -delete
+    find . -path "*/migrations/__pycache__/*" -delete
+    rm -rf ./venv
     cd /tmp
-  # Execute the drop database command
+    # Execute the drop database command
     sudo -u postgres psql -c "DROP DATABASE IF EXISTS $VAT_POSTGRES_DB";
 
     sudo -u postgres psql -c "CREATE DATABASE $VAT_POSTGRES_DB;"
@@ -27,11 +29,17 @@ if [ "$mode" == "renew" ]; then
     sudo -u postgres psql -c "CREATE USER $VAT_POSTGRES_USER WITH PASSWORD '${VAT_POSTGRES_PASS}'"
 
     # set permissions
-    sudo -u postgres psql -c  "GRANT ALL ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
-    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE vat_test TO $VAT_POSTGRES_USER;"
-    sudo -u postgres psql -c  "ALTER DATABASE vat_test OWNER TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL ON DATABASE $VAT_POSTGRES_DB TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE $VAT_POSTGRES_DB TO $VAT_POSTGRES_USER;"
+    sudo -u postgres psql -c  "ALTER DATABASE $VAT_POSTGRES_DB OWNER TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
 
+    popd
+    python3 -m venv venv
+    source venv/bin/activate
+    python -m pip install -r requirements.txt
+    python manage.py makemigrations
+    python manage.py migrate
 
     # Check if the command was successful
     if [ $? -eq 0 ]; then

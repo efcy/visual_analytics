@@ -6,7 +6,14 @@ Locally you can create backups of the database that django is using by running
 ```bash
 python manage.py dbbackup
 ```
-The location is controlled by the env var `VAT_BACKUP_FOLDER`.
+The location is controlled by the env var `VAT_BACKUP_FOLDER`. 
+It is advised to exclude the user tables from the backup. You can do it like this:
+
+```bash
+python manage.py dbbackup -x user_vatuser -x user_organization -x authtoken_token
+```
+
+More infoprmation can be found at: https://django-dbbackup.readthedocs.io/en/master/commands.html#dbrestore
 
 ### K8s
 In k8s you have to run this command inside the backend pod

@@ -5,7 +5,7 @@ from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
-class XabslSymbol(pydantic_v1.BaseModel):
+class XabslSymbolSparse(pydantic_v1.BaseModel):
     """
     Id assigned by django
     """
@@ -22,19 +22,10 @@ class XabslSymbol(pydantic_v1.BaseModel):
     frame: typing.Optional[int] = None
 
     """
-    symbol_type
+    data
     """
-    symbol_type: typing.Optional[str] = pydantic_v1.Field(default=None)
+    data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
 
-    """
-    symbol_name
-    """
-    symbol_name: typing.Optional[str] = pydantic_v1.Field(default=None)
-
-    """
-    symbol_value
-    """
-    symbol_value: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

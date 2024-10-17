@@ -10,6 +10,7 @@ import argparse
 def is_done(data, status_dict):
     # TODO get log_status representation here and check each field.
     try:
+        # we use list here because we only know the log_id here and not the if of the logstatus object
         response = client.log_status.list(log_id=data.id)
         if len(response) == 0:
             return False
@@ -23,7 +24,6 @@ def is_done(data, status_dict):
             if field_value == None:
                 print(f"\tdid not find a value for repr {k}")
                 return False
-            client.log_status.list(log_id=data.id)
         return True
     # TODO would be nice to handle the vaapi Apierror here explicitely
     except Exception as e:
@@ -37,7 +37,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     log_root_path = os.environ.get("VAT_LOG_ROOT")
-    log_root_path = "/mnt/c/RoboCup/rc24"
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -115,7 +114,7 @@ if __name__ == "__main__":
                 ScanLineEdgelPercept=status_dict['ScanLineEdgelPercept'],
                 ScanLineEdgelPerceptTop=status_dict['ScanLineEdgelPerceptTop'],
                 RansacCirclePercept2018=status_dict['RansacCirclePercept2018'],
-                num_cognition_frames=status_dict['RansacCirclePercept2018']
+                num_cognition_frames=status_dict['FrameInfo']
                 )
                 print(f"\t{response}")
             except Exception as e:
