@@ -293,6 +293,29 @@ class ImageViewSet(viewsets.ModelViewSet):
             return self.bulk_create(serializer)
         else:
             return self.single_create(serializer)
+
+    def update(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk update) or dict (single update)
+        is_many = isinstance(request.data, list)
+        if is_many:
+            return self.bulk_update()
+        else:
+            return self.single_update()
+
+    def single_update(self):
+        image_id = self.kwargs['pk']  # image id from the url: /api/image/17018/
+        data = self.request.data
+        
+        # we ignore the fields that act as unique identifiers here
+        update_fields = {k: v for k, v in data.items() if k not in ['log', 'camera', 'type', 'frame_number']}
+        updated = models.Image.objects.filter(id=image_id).update(**update_fields)
+
+        status_code = status.HTTP_201_CREATED if updated else status.HTTP_200_OK
+        return Response({}, status=status_code)
+
+    def bulk_update(self):
+        # TODO implement me
+        pass
         
     def single_create(self, serializer):
         validated_data = serializer.validated_data
@@ -308,7 +331,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         
         serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status_code)    
+        return Response(serializer.data, status=status_code)
     
     def bulk_create(self, serializer):
         validated_data = serializer.validated_data
@@ -343,69 +366,12 @@ class ImageViewSet(viewsets.ModelViewSet):
             # Bulk create new images
             created_data = models.Image.objects.bulk_create(new_data)
 
-        # Combine created and existing events
-        #all_data = created_data + existing_data
-
-        # Serialize the results
-        #result_serializer = self.get_serializer(all_data, many=True)
-
         return Response({
             'created': len(created_data),
             'existing': len(existing_data),
         #    'events': result_serializer.data
         }, status=status.HTTP_200_OK)
 
-    """
-    def create(self, request, *args, **kwargs):
-        data = request.data  # This should be a list of dictionaries
-        #print(data)
-        if not isinstance(data, list):
-            return Response({"error": "Data must be a list"}, status=status.HTTP_400_BAD_REQUEST)
-
-        with transaction.atomic():
-            # Fetch all relevant Log instances
-            log_ids = set(item['log'] for item in data)
-            robot_data_dict = {rd.id: rd for rd in models.Log.objects.filter(id__in=log_ids)}
-
-            # Get existing objects
-            existing_combinations = set(
-                models.Image.objects.filter(
-                    Q(log__in=log_ids) &
-                    Q(camera__in=[item['camera'] for item in data]) &
-                    Q(type__in=[item['type'] for item in data]) &
-                    Q(frame_number__in=[item['frame_number'] for item in data])
-                ).values_list('log', 'camera', 'type', 'frame_number')
-            )
-
-
-            # Prepare new objects, excluding existing combinations
-            new_objs = []
-            for item in data:
-                log_instance = robot_data_dict.get(item['log'])
-                if log_instance and (item['log'], item['camera'], item['type'], item['frame_number']) not in existing_combinations:
-                    new_item = item.copy()
-                    # Replace the log ID with the actual RobotData instance
-                    new_item['log'] = log_instance
-                    # Create a new Image instance with all provided fields
-                    new_obj = models.Image(**new_item)
-                    new_objs.append(new_obj)
-
-            # Bulk create new objects, ignoring conflicts
-            models.Image.objects.bulk_create(new_objs, ignore_conflicts=True)
-
-            # Fetch all objects (both existing and newly created)
-            all_objs = models.Image.objects.filter(
-                Q(log__in=[item['log'] for item in data]) &
-                Q(camera__in=[item['camera'] for item in data]) &
-                Q(type__in=[item['type'] for item in data]) &
-                Q(frame_number__in=[item['frame_number'] for item in data])
-            )
-
-            # Serialize the results
-            serializer = self.serializer_class(all_objs, many=True)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-    """
 
 class ImageCountView(APIView):
     # TODO to I still need this?
