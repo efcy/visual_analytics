@@ -39,6 +39,7 @@ def calculate_images(log_path, log_id):
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
+    log_root_path = "/mnt/c/RoboCup/rc24"
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),

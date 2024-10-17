@@ -380,6 +380,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             # Bulk create new images
             created_data = models.Image.objects.bulk_create(new_data)
 
+
         return Response({
             'created': len(created_data),
             'existing': len(existing_data),
@@ -958,6 +959,7 @@ class XabslSymbolViewSet(viewsets.ModelViewSet):
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         return queryset.filter(filters)
     
+
 class CognitonInputAPIView(APIView):
     def post(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -977,4 +979,41 @@ class CognitonInputAPIView(APIView):
         print( time.time() - starttime)
         return Response({
         }, status=status.HTTP_200_OK)
+
+
+class LogStatusViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.LogStatusSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.LogStatus.objects.all()
+
+    def get_queryset(self):
+        return models.LogStatus.objects.all()
+    
+    def get_queryset(self):
+        queryset = models.LogStatus.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in models.LogStatus._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+        return queryset.filter(filters)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        validated_data = serializer.validated_data
+        
+        instance, created = models.LogStatus.objects.update_or_create(
+            log_id=validated_data.get('log_id'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
 

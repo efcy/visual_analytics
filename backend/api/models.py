@@ -61,6 +61,32 @@ class Log(models.Model):
         return f"{self.log_path}"
 
 
+class LogStatus(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='log_status')
+    # holds the number of frames that should be in the db for each representation
+    BallModel = models.IntegerField(blank=True, null=True)
+    CameraMatrix = models.IntegerField(blank=True, null=True)
+    CameraMatrixTop = models.IntegerField(blank=True, null=True)
+    FieldPercept = models.IntegerField(blank=True, null=True)
+    FieldPerceptTop = models.IntegerField(blank=True, null=True)
+    GoalPercept = models.IntegerField(blank=True, null=True)
+    GoalPerceptTop = models.IntegerField(blank=True, null=True)
+    RansacLinePercept = models.IntegerField(blank=True, null=True)
+    RansacCirclePercept2018 = models.IntegerField(blank=True, null=True)
+    ShortLinePercept = models.IntegerField(blank=True, null=True)
+    ScanLineEdgelPercept = models.IntegerField(blank=True, null=True)
+    ScanLineEdgelPerceptTop = models.IntegerField(blank=True, null=True)
+    
+    OdometryData = models.IntegerField(blank=True, null=True)
+
+    num_cognition_frames = models.IntegerField(blank=True, null=True)
+    num_motion_frames = models.IntegerField(blank=True, null=True)
+    num_jpg_bottom = models.IntegerField(blank=True, null=True)
+    num_jpg_top = models.IntegerField(blank=True, null=True)
+    num_bottom = models.IntegerField(blank=True, null=True)
+    num_top = models.IntegerField(blank=True, null=True)
+
+
 class Image(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
@@ -76,7 +102,7 @@ class Image(models.Model):
     image_url = models.CharField(max_length=200, blank=True, null=True)
     blurredness_value = models.IntegerField(blank=True, null=True)
     brightness_value = models.IntegerField(blank=True, null=True)
-    resolution =  models.CharField(max_length=20, blank=True, null=True)
+    resolution =  models.CharField(max_length=11, blank=True, null=True) # 1640x1480x2
 
     #class Meta:
     #    unique_together = ('log', 'camera', 'type', 'frame_number')
@@ -170,7 +196,29 @@ class XabslSymbol(models.Model):
 class XabslSymbol2(models.Model):
     log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='xabsl_symbols2')
     frame = models.IntegerField(blank=True, null=True)
-    output_decimal = models.JSONField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame']),
+        ]
+        unique_together = ('log_id', 'frame')
+
+class XabslSymbol3(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='xabsl_symbols3')
+    frame = models.IntegerField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame']),
+        ]
+        unique_together = ('log_id', 'frame')
+
+class XabslSymbol3Sparse(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='xabsl_symbols3')
+    frame = models.IntegerField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
 
     class Meta:
         indexes = [
