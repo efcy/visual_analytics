@@ -7,22 +7,22 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
-from ..types.image import Image
+from ..types.log_status import LogStatus
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
-class ImageClient:
+class LogStatusClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Image:
+    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> LogStatus:
         _response = self._client_wrapper.httpx_client.request(
-            f"api/image/{jsonable_encoder(id)}/", method="GET", request_options=request_options
+            f"api/log-status/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Image, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(LogStatus, _response.json())  # type: ignore
             _response_json = _response.json()
             
         except JSONDecodeError:
@@ -31,7 +31,7 @@ class ImageClient:
 
     def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
-        Delete a Log., this will also delete all images and representations
+        Delete the log status for one log.
 
         <Warning>This action can't be undone!</Warning>
 
@@ -61,7 +61,7 @@ class ImageClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/image/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
+            f"api/log-status/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
         )
         try:
             if 200 <= _response.status_code < 300:
@@ -75,16 +75,28 @@ class ImageClient:
         self,
         id: int,
         *,
-        log: typing.Optional[int] = OMIT,
-        camera: typing.Optional[str] = OMIT,
-        type: typing.Optional[str] = OMIT,
-        frame_number: typing.Optional[int] = OMIT,
-        image_url: typing.Optional[str] = OMIT,
-        blurredness_value: typing.Optional[int] = OMIT,
-        brightness_value: typing.Optional[int] = OMIT,
-        resolution: typing.Optional[str] = OMIT,
+        log_id: typing.Optional[int] = OMIT,
+        BallModel: typing.Optional[int] = OMIT,
+        CameraMatrix: typing.Optional[int] = OMIT,
+        CameraMatrixTop: typing.Optional[int] = OMIT,
+        FieldPercept: typing.Optional[int] = OMIT,
+        FieldPerceptTop: typing.Optional[int] = OMIT,
+        GoalPercept: typing.Optional[int] = OMIT,
+        GoalPerceptTop: typing.Optional[int] = OMIT,
+        RansacLinePercept: typing.Optional[int] = OMIT,
+        RansacCirclePercept2018: typing.Optional[int] = OMIT,
+        ShortLinePercept: typing.Optional[int] = OMIT,
+        ScanLineEdgelPercept: typing.Optional[int] = OMIT,
+        ScanLineEdgelPerceptTop: typing.Optional[int] = OMIT,
+        OdometryData: typing.Optional[int] = OMIT,
+        num_cognition_frames: typing.Optional[int] = OMIT,
+        num_motion_frames: typing.Optional[int] = OMIT,
+        num_jpg_bottom: typing.Optional[int] = OMIT,
+        num_jpg_top: typing.Optional[int] = OMIT,
+        num_bottom: typing.Optional[int] = OMIT,
+        num_top: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Image:
+    ) -> LogStatus:
         """
         Update attributes for an existing annotation.
 
@@ -161,33 +173,46 @@ class ImageClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/image/{jsonable_encoder(id)}/",
+            f"api/log-status/{jsonable_encoder(id)}/",
             method="PATCH",
             json={
-                "log": log,
-                "camera": camera,
-                "type": type,
-                "frame_number": frame_number,
-                "image_url": image_url,
-                "blurredness_value":blurredness_value,
-                "brightness_value": brightness_value,
-                "resolution": resolution,
+                "log_id": log_id,
+                "BallModel": BallModel,
+                "CameraMatrix": CameraMatrix,
+                "CameraMatrixTop": CameraMatrixTop,
+                "FieldPercept": FieldPercept,
+                "FieldPerceptTop": FieldPerceptTop,
+                "GoalPercept": GoalPercept,
+                "GoalPerceptTop": GoalPerceptTop,
+                "RansacLinePercept": RansacLinePercept,
+                "RansacCirclePercept2018": RansacCirclePercept2018,
+                "ShortLinePercept": ShortLinePercept,
+                "ScanLineEdgelPercept": ScanLineEdgelPercept,
+                "ScanLineEdgelPerceptTop": ScanLineEdgelPerceptTop,
+                "OdometryData": OdometryData,
+                "num_cognition_frames": num_cognition_frames,
+                "num_motion_frames": num_motion_frames,
+                "num_jpg_bottom": num_jpg_bottom,
+                "num_jpg_top": num_jpg_top,
+                "num_bottom": num_bottom,
+                "num_top": num_top,
             },
             request_options=request_options,
             omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Image, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(LogStatus, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
     def list(
-            self,
+            self, 
+            #log_id: int, *, 
             request_options: typing.Optional[RequestOptions] = None,
-            **filters: typing.Any) -> typing.List[Image]:
+            **filters: typing.Any) -> typing.List[LogStatus]:
         """
         List all logs.
 
@@ -195,16 +220,16 @@ class ImageClient:
 
         Parameters
         ----------
-        event_id : int
-            Event ID
+        log_id : int
+            Game ID
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[Log]
-            Log
+        typing.List[LogStatus]
+            LogStatus
 
         Examples
         --------
@@ -219,11 +244,14 @@ class ImageClient:
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/image/?{query_string}" if query_string else "api/image/"
+        url = f"api/log-status/?{query_string}" if query_string else "api/log-status/"
         _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        #_response = self._client_wrapper.httpx_client.request(
+        #    f"api/cognitionrepr/?log={jsonable_encoder(log_id)}", method="GET", request_options=request_options
+        #)
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.List[Image], _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(typing.List[LogStatus], _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
@@ -232,157 +260,63 @@ class ImageClient:
     def create(
         self,
         *,
-        log: typing.Optional[int] = OMIT,
-        camera: typing.Optional[str] = OMIT,
-        type: typing.Optional[str] = OMIT,
-        frame_number: typing.Optional[int] = OMIT,
-        image_url: typing.Optional[str] = OMIT,
+        log_id: typing.Optional[int] = OMIT,
+        BallModel: typing.Optional[int] = OMIT,
+        CameraMatrix: typing.Optional[int] = OMIT,
+        CameraMatrixTop: typing.Optional[int] = OMIT,
+        FieldPercept: typing.Optional[int] = OMIT,
+        FieldPerceptTop: typing.Optional[int] = OMIT,
+        GoalPercept: typing.Optional[int] = OMIT,
+        GoalPerceptTop: typing.Optional[int] = OMIT,
+        RansacLinePercept: typing.Optional[int] = OMIT,
+        RansacCirclePercept2018: typing.Optional[int] = OMIT,
+        ShortLinePercept: typing.Optional[int] = OMIT,
+        ScanLineEdgelPercept: typing.Optional[int] = OMIT,
+        ScanLineEdgelPerceptTop: typing.Optional[int] = OMIT,
+        OdometryData: typing.Optional[int] = OMIT,
+        num_cognition_frames: typing.Optional[int] = OMIT,
+        num_motion_frames: typing.Optional[int] = OMIT,
+        num_jpg_bottom: typing.Optional[int] = OMIT,
+        num_jpg_top: typing.Optional[int] = OMIT,
+        num_bottom: typing.Optional[int] = OMIT,
+        num_top: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Image:
+    ) -> LogStatus:
         """
-        Add annotations to a task like an annotator does.
-
-        You will need to supply the task ID. You can find this in Label Studio by opening a task and checking the URL. It is also listed at the top of the labeling interface. Or you can use [Get tasks list](../tasks/list).
-
-        The content of the result field depends on your labeling configuration. For example, send the following data as part of your POST
-        request to send an empty annotation with the ID of the user who completed the task:
-
-        ```json
-        {
-        "result": {},
-        "was_cancelled": true,
-        "ground_truth": true,
-        "lead_time": 0,
-        "task": 0
-        "completed_by": 123
-        }
-        ```
-
-        Parameters
-        ----------
-        id : int
-            Task ID
-
-        result : typing.Optional[typing.Sequence[typing.Dict[str, typing.Any]]]
-            Labeling result in JSON format. Read more about the format in [the Label Studio documentation.](https://labelstud.io/guide/task_format)
-
-        task : typing.Optional[int]
-            Corresponding task for this annotation
-
-        project : typing.Optional[int]
-            Project ID for this annotation
-
-        completed_by : typing.Optional[int]
-            User ID of the person who created this annotation
-
-        updated_by : typing.Optional[int]
-            Last user who updated this annotation
-
-        was_cancelled : typing.Optional[bool]
-            User skipped the task
-
-        ground_truth : typing.Optional[bool]
-            This annotation is a Ground Truth
-
-        lead_time : typing.Optional[float]
-            How much time it took to annotate the task (in seconds)
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Annotation
-            Created annotation
-
-        Examples
-        --------
-        from label_studio_sdk.client import LabelStudio
-
-        client = LabelStudio(
-            api_key="YOUR_API_KEY",
-        )
-        client.annotations.create(
-            id=1,
-            result=[
-                {
-                    "original_width": 1920,
-                    "original_height": 1080,
-                    "image_rotation": 0,
-                    "from_name": "bboxes",
-                    "to_name": "image",
-                    "type": "rectanglelabels",
-                    "value": {
-                        "x": 20,
-                        "y": 30,
-                        "width": 50,
-                        "height": 60,
-                        "rotation": 0,
-                        "values": {"rectanglelabels": ["Person"]},
-                    },
-                }
-            ],
-            was_cancelled=False,
-            ground_truth=True,
-        )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/image/",
+            f"api/log-status/",
             method="POST",
             json={
-                "log": log,
-                "camera": camera,
-                "type": type,
-                "frame_number": frame_number,
-                "image_url": image_url,
+                "log_id": log_id,
+                "BallModel": BallModel,
+                "CameraMatrix": CameraMatrix,
+                "CameraMatrixTop": CameraMatrixTop,
+                "FieldPercept": FieldPercept,
+                "FieldPerceptTop": FieldPerceptTop,
+                "GoalPercept": GoalPercept,
+                "GoalPerceptTop": GoalPerceptTop,
+                "RansacLinePercept": RansacLinePercept,
+                "RansacCirclePercept2018": RansacCirclePercept2018,
+                "ShortLinePercept": ShortLinePercept,
+                "ScanLineEdgelPercept": ScanLineEdgelPercept,
+                "ScanLineEdgelPerceptTop": ScanLineEdgelPerceptTop,
+                "OdometryData": OdometryData,
+                "num_cognition_frames": num_cognition_frames,
+                "num_motion_frames": num_motion_frames,
+                "num_jpg_bottom": num_jpg_bottom,
+                "num_jpg_top": num_jpg_top,
+                "num_bottom": num_bottom,
+                "num_top": num_top,
             },
             request_options=request_options,
             omit=OMIT,
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(Image, _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(LogStatus, _response.json())  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def bulk_create(
-        self,
-        *,
-        data_list: typing.List[Image] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> Image:
-        """
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"api/image/",
-            method="POST",
-            json=data_list,
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                return _response.json()
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, body=_response.text)
-        raise ApiError(status_code=_response.status_code, body=_response_json)
-    
-    def get_image_count(
-            self,
-            request_options: typing.Optional[RequestOptions] = None,
-            **filters: typing.Any) -> typing.Optional[int]:
-
-        query_params = {k: v for k, v in filters.items() if v is not None}
-        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/image-count/?{query_string}" if query_string else "api/image-count/"
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
-        try:
-            if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.Dict[str, typing.Any], _response.json())  # type: ignore
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, body=_response.text)
-        raise ApiError(status_code=_response.status_code, body=_response_json)

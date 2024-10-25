@@ -28,7 +28,7 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     print(individual_extracted_folder)
     if not Path(individual_extracted_folder).is_dir():
         return
-    if check_insertion(log_id, camera, type):
+    if is_done(log_id, camera, type):
         return
 
     for batch in path_generator(individual_extracted_folder):
@@ -44,12 +44,16 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
                 "type": type,
                 "frame_number": framenumber,
                 "image_url": url_path,
+                # HACK we need to provide some default values
+                "blurredness_value": None,
+                "brightness_value": None,
+                "resolution": None,
             }
         try:
             response = client.image.bulk_create(
                 data_list=image_ar
             )
-            print(response)
+            print(f"\t{response}")
         except Exception as e:
             print(f"error inputing the data {log_path}")
             print(e)
@@ -57,19 +61,24 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
         sleep(0.5)
     #sleep(5)
 
-def check_insertion(robot_data_id, camera, type):
+def is_done(robot_data_id, camera, type):
     response = client.image.get_image_count(log=robot_data_id, camera=camera, type=type)
-    db_count = response["count"]
+    db_count = int(response["count"])
+    # FIXME use the correct data for check if its done
+    response2 = client.log_status.list(log_id=robot_data_id)
+    if len(response2) == 0:
+        print("\tno log_status found")
+        return False
+    log_status = response2[0]
 
-    response2 = client.logs.get(robot_data_id)
     if camera == "BOTTOM" and type == "RAW":
-        target_count = response2.num_bottom
+        target_count = int(log_status.num_bottom)
     elif camera == "TOP" and type == "RAW":
-        target_count = response2.num_top
+        target_count = int(log_status.num_top)
     elif camera == "BOTTOM" and type == "JPEG":
-        target_count = response2.num_jpg_bottom
+        target_count = int(log_status.num_jpg_bottom)
     elif camera == "TOP" and type == "JPEG":
-        target_count = response2.num_jpg_top
+        target_count = int(log_status.num_jpg_top)
     else:
         ValueError()
 
@@ -92,7 +101,7 @@ if __name__ == "__main__":
     def myfunc(data):
         return data.log_path
 
-    for data in sorted(existing_data, key=myfunc):
+    for data in sorted(existing_data, key=myfunc, reverse=True):
         log_id = data.id
         log_path = Path(log_root_path) / data.log_path
 
@@ -100,8 +109,7 @@ if __name__ == "__main__":
         robot_foldername = log_path.parent.name
         game_folder = log_path.parent.parent.parent.name
         extracted_path = log_path.parent.parent.parent / "extracted" / robot_foldername
-        # TODO figure out if raw or jpeg dynamically here
-        print(f"inserting bottom data for {game_folder} - {robot_foldername}")
+
         bottom_path = extracted_path / "log_bottom"
         top_path = extracted_path / "log_top"
         bottom_path_jpg = extracted_path / "log_bottom_jpg"

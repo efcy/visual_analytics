@@ -31,7 +31,7 @@ const AnnotationView = () => {
   const get_image_list = () => {
     api
       .get(
-        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
+        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=1`
       )
       .then((res) => res.data)
       .then((data) => {

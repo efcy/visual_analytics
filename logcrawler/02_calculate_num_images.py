@@ -7,6 +7,7 @@ from vaapi.client import Vaapi
 import os
 import time
 import subprocess
+import argparse
 
 
 def calculate_images(log_path, log_id):
@@ -27,18 +28,47 @@ def calculate_images(log_path, log_id):
     print(f"\t\tbottom jpeg: {num_jpg_bottom}")
     print(f"\t\ttop jpeg: {num_jpg_top}")
 
-    response = client.logs.update(
-        id=log_id, 
+    response = client.log_status.list(log_id=log_id)
+    if len(response) == 0:
+        return False
+    log_status = response[0]
+    # TODO do a try catch here
+    response = client.log_status.update(
+        id=log_status.id, 
         num_jpg_bottom=int(num_jpg_bottom),
         num_jpg_top=int(num_jpg_top),
         num_bottom=int(num_bottom),
         num_top=int(num_top),
     )
     # SSHFS can get overwhelmed if you run too many queries too fast - wait here a bit
-    time.sleep(5)
+    # TODO only do this when using sshfs
+    #time.sleep(5)
+
+
+def is_done(log_id):
+    # get the log status object for a given log_id
+    response = client.log_status.list(log_id=log_id)
+    if len(response) == 0:
+        print("\tno log_status found")
+        return False
+    
+    log_status = response[0]
+    # if all numbers are zero or null we return false
+    total_images = int(log_status.num_jpg_bottom or 0) + int(log_status.num_jpg_top or 0) + int(log_status.num_bottom or 0) + int(log_status.num_top or 0)
+
+    if total_images == 0:
+        return False
+    else:
+        return True
+
 
 if __name__ == "__main__":
     log_root_path = os.environ.get("VAT_LOG_ROOT")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--force", action="store_true", default=False)
+    args = parser.parse_args()
+
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
@@ -54,8 +84,7 @@ if __name__ == "__main__":
         log_path = Path(log_root_path) / data.log_path
         print(log_path)
 
-        total_images = int(data.num_jpg_bottom or 0) + int(data.num_jpg_top or 0) + int(data.num_bottom or 0) + int(data.num_top or 0)
-        if total_images == 0:
-            calculate_images(log_path.parent, log_id)
-        else:
+        if is_done(log_id) and not args.force:
             print("\tNumber of images are already put in the database - we assume that it is correct")
+        else:
+            calculate_images(log_path.parent, log_id)

@@ -1,3 +1,6 @@
+"""
+    test for a maybe a more space efficient implementation
+"""
 from pathlib import Path
 from naoth.log import Reader as LogReader
 from naoth.log import Parser
@@ -25,17 +28,12 @@ def is_input_done(representation_list):
         quit()
 
     # query the cognition representation and check how many frames with a given representations are there
-    response = client.cognition_repr.get_repr_count(log_id=log_id)
-
     new_list = list()
     for repr in representation_list:
-        num_repr_frames=response[repr]
+        num_repr_frames= len(client.cognition_repr.list(log_id=log_id, representation_name=repr))
         print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, repr)}")
-        if int(getattr(log_status, repr)) != int(num_repr_frames):
+        if getattr(log_status, repr) != num_repr_frames:
             new_list.append(repr)
-    if len(new_list) > 0:
-        print("\tneed to run insertion again")
-        print(f"{new_list}")
     return new_list
         
 
@@ -66,7 +64,7 @@ if __name__ == "__main__":
         if len(representation_list) == 0:
             print("\tall required representations are already inserted, will continue with the next log")
             continue
-
+        
         my_parser = Parser()
         my_parser.register("ImageJPEG"   , "Image")
         my_parser.register("ImageJPEGTop", "Image")
@@ -78,6 +76,11 @@ if __name__ == "__main__":
 
         my_array = list()
         for idx, frame in enumerate(tqdm(game_log, desc=f"Parsing frame", leave=True)):
+            json_frame_obj = {
+                "log_id":log_id, 
+                "frame_number":frame_number,
+                "representation_data":data
+            }
             for repr_name in frame.get_names():
                 if not repr_name in representation_list:
                     continue
@@ -101,14 +104,11 @@ if __name__ == "__main__":
                     print({e})
                     quit()
 
-                json_obj = {
-                    "log_id":log_id, 
-                    "frame_number":frame_number,
-                    "representation_name":repr_name,
-                    "representation_data":data
+                json_repr_obj = {
+                    "representation_name":data,
                 }
-                my_array.append(json_obj)
-
+                json_frame_obj.update({json_repr_obj})
+            my_array.append(json_frame_obj)
             if idx % 200 == 0:
                 try:
                     response = client.cognition_repr.bulk_create(

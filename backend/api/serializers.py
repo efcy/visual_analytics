@@ -84,7 +84,17 @@ class BehaviorFrameOptionCustomSerializer(serializers.ModelSerializer):
         model = models.BehaviorFrameOption
         fields = ['frame']
 
-class XabslSymbolSerializer(serializers.ModelSerializer):
+class XabslSymbolCompleteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.XabslSymbol
+        model = models.XabslSymbolComplete
+        fields = '__all__'
+
+class XabslSymbolSparseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.XabslSymbolSparse
+        fields = '__all__'
+
+class LogStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.LogStatus
         fields = '__all__'
