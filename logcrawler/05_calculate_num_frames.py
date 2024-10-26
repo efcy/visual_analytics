@@ -119,7 +119,6 @@ if __name__ == "__main__":
                 OdometryData=cognition_status_dict['OdometryData'],
                 num_cognition_frames=cognition_status_dict['FrameInfo']
                 )
-                print(f"\t{response}")
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
                 print(e)
@@ -177,7 +176,6 @@ if __name__ == "__main__":
                 GyrometerData=motion_status_dict['GyrometerData'],
                 num_motion_frames=motion_status_dict['FrameInfo']
                 )
-                print(f"\t{response}")
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
                 print(e)

@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     for data in sorted(data, key=sort_key_fn, reverse=True):
         log_id = data.id
-        
+        print(data.log_path)
         images = client.image.list(log=log_id,blurredness_value=None)
 
         # TODO use tqdm here to have a progressbar
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                  print(e)
                  continue
             
-            if idx % 100 == 0:
+            if idx % 100 == 0 and idx != 0:
                 try:
                     response = client.image.bulk_update(
                         data=image_data
@@ -79,11 +79,3 @@ if __name__ == "__main__":
                     print(e)
                     print(f"error inputing the data")
                     quit()
-            quit()
-            #cv2.imwrite("t.jpg", image)
-            
-
-            #if fm < 100:
-            #    print(f"the image {url} is blurry ({int(fm)})")
-
-            #client.image.update(id=img.id,blurredness_value=int(fm))

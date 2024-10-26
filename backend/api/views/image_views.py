@@ -36,31 +36,61 @@ class ImageCountView(APIView):
 class ImageUpdateView(APIView):
     def patch(self, request):
         data = self.request.data
-        update_fields = {k: v for k, v in data[0].items()}
-        print(update_fields)
+        try:
+            rows_updated = self.bulk_insert(data)
+    
+            return  Response({
+                'success': True,
+                'rows_updated': rows_updated,
+                'message': f'Successfully updated {rows_updated} images'
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'rows_updated': 0,
+                'message': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def bulk_insert(self, data):
+        
+        update_fields = set()
+
+        for item in data:
+            update_fields.update(key for key in item.keys() if key != 'id')
 
         starttime = time.time()
-        rows_tuples = [(
-            row['blurredness_value'], 
-            row['brightness_value'], 
-            row['resolution'], 
-            ) for row in data]
-        with connection.cursor() as cursor:
-            query = """
-            UPDATE api_image 
-            SET 
-                (blurredness_value, brightness_value, resolution)
-            VALUES %s
-            ON CONFLICT (log_id, camera, type, frame_number) DO NOTHING;
-            """ 
-            # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=1000)
-        print( time.time() - starttime)
-        # TODO calculate some statistics similar to what we did before here
-        return Response({}, status=status.HTTP_200_OK)
-    
-        return Response({'count': 1}, status=status.HTTP_200_OK)
+        # Build the case statements for each field
+        case_statements = []
+        for field in update_fields:
+            case_when_parts = []
+            for item in data:
+                if field in item and item[field] is not None:
+                    case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
+            
+            if case_when_parts:
+                case_stmt = f"""{field} = (CASE {' '.join(case_when_parts)} ELSE {field} END)"""
+                case_statements.append(case_stmt)
+        
+        # Collect all values for the parameterized query
+        update_values = []
+        for field in update_fields:
+            for item in data:
+                if field in item and item[field] is not None:
+                    update_values.append(item[field])
 
+        # Build the complete SQL query
+        ids = [str(item['id']) for item in data]
+        sql = f"""
+            UPDATE api_image
+            SET {', '.join(case_statements)}
+            WHERE id IN ({','.join(ids)})
+        """
+        #print(sql)
+
+        with connection.cursor() as cursor:
+            cursor.execute(sql, update_values)
+            return cursor.rowcount
+        print( time.time() - starttime)   
         
 
 class ImageViewSet(viewsets.ModelViewSet):
