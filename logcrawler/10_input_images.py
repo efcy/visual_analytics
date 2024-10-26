@@ -53,7 +53,6 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
             response = client.image.bulk_create(
                 data_list=image_ar
             )
-            print(f"\t{response}")
         except Exception as e:
             print(f"error inputing the data {log_path}")
             print(e)

@@ -5,7 +5,6 @@
 from pathlib import Path
 from vaapi.client import Vaapi
 import os
-import time
 import subprocess
 import argparse
 
@@ -32,9 +31,10 @@ def calculate_images(log_path, log_id):
     if len(response) == 0:
         return False
     log_status = response[0]
+    print(log_status)
     # TODO do a try catch here
     response = client.log_status.update(
-        id=log_status.id, 
+        log_id=log_status.log_id, 
         num_jpg_bottom=int(num_jpg_bottom),
         num_jpg_top=int(num_jpg_top),
         num_bottom=int(num_bottom),
@@ -48,6 +48,7 @@ def calculate_images(log_path, log_id):
 def is_done(log_id):
     # get the log status object for a given log_id
     response = client.log_status.list(log_id=log_id)
+    print(log_id)
     if len(response) == 0:
         print("\tno log_status found")
         return False

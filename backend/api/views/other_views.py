@@ -323,69 +323,24 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
         is_many = isinstance(request.data, list)
-        
-        serializer = self.get_serializer(data=request.data, many=is_many)
-        serializer.is_valid(raise_exception=True)
-        
-        if is_many:
-            return self.bulk_create(serializer)
-        else:
-            return self.single_create(serializer)
+        if not is_many:
+            print("error: input not a list")
+            return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-    def single_create(self, serializer):
-        validated_data = serializer.validated_data
-        
-        instance, created = models.MotionRepresentation.objects.get_or_create(
-            log_id=validated_data.get('log_id'),
-            sensor_frame_number=validated_data.get('sensor_frame_number'),
-            representation_name=validated_data.get('representation_name'),
-            defaults=validated_data
-        )
-        
-        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-        
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status_code)
+        starttime = time.time()
 
-    def bulk_create(self, serializer):
-        validated_data = serializer.validated_data
+        rows_tuples = [(row['log_id'], row['frame_number'], row['sensor_frame_time'], row['representation_name'], json.dumps(row['representation_data'])) for row in request.data]
 
-        with transaction.atomic():
-            # Get all existing games
-            existing_combinations = set(
-                models.MotionRepresentation.objects.values_list('log_id', 'sensor_frame_number', 'representation_name')
-            )
-
-            # Separate new and existing events
-            new_data = []
-            existing_data = []
-            for item in validated_data:
-                combo = (item['log_id'].id, item['sensor_frame_number'], item['representation_name'])
-                if combo not in existing_combinations:
-                    new_data.append(models.MotionRepresentation(**item))
-                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
-                else:
-                    # Fetch the existing event
-                    existing_event = models.MotionRepresentation.objects.get(
-                        log_id=item['log_id'],
-                        sensor_frame_number=item['sensor_frame_number'],
-                        representation_name=item['representation_name']
-                    )
-                    existing_data.append(existing_event)
-
-            # Bulk create new events
-            created_data = models.MotionRepresentation.objects.bulk_create(new_data)
-
-        # Combine created and existing events
-        all_data = created_data + existing_data
-
-        # Serialize the results
-        result_serializer = self.get_serializer(all_data, many=True)
-
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO api_motionrepresentation (log_id_id, sensor_frame_number, sensor_frame_time, representation_name, representation_data)
+            VALUES %s
+            ON CONFLICT (log_id_id, sensor_frame_number, representation_name) DO NOTHING;
+            """ 
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples, page_size=500)
+        print( time.time() - starttime)
         return Response({
-            'created': len(created_data),
-            'existing': len(existing_data),
-            'events': result_serializer.data
         }, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
@@ -396,8 +351,27 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+class MotionReprCountView(APIView):
+    def get(self, request):
+        # Get filter parameters from query string
+        log_id = request.query_params.get('log_id')
 
+        # start with all images
+        queryset = models.MotionRepresentation.objects.all()
 
+        # apply filters if provided
+        queryset = queryset.filter(log_id=log_id)
+        grouped_counts = queryset.values('representation_name').annotate(count=Count('id'))
+
+        for group in grouped_counts:
+            print(f"{group['representation_name']}: {group['count']}")
+        # get the count
+        result = {
+            item['representation_name']: item['count'] 
+            for item in grouped_counts
+        }
+        
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class LogStatusViewSet(viewsets.ModelViewSet):

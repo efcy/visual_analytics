@@ -53,7 +53,7 @@ class Log(models.Model):
 
 
 class LogStatus(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='log_status')
+    log_id = models.OneToOneField(Log,on_delete=models.CASCADE,related_name='log_status', primary_key=True)
     # holds the number of frames that should be in the db for each representation
     BallModel = models.IntegerField(blank=True, null=True)
     CameraMatrix = models.IntegerField(blank=True, null=True)
@@ -67,8 +67,17 @@ class LogStatus(models.Model):
     ShortLinePercept = models.IntegerField(blank=True, null=True)
     ScanLineEdgelPercept = models.IntegerField(blank=True, null=True)
     ScanLineEdgelPerceptTop = models.IntegerField(blank=True, null=True)
-    
     OdometryData = models.IntegerField(blank=True, null=True)
+
+    IMUData = models.IntegerField(blank=True, null=True)
+    FSRData = models.IntegerField(blank=True, null=True)
+    ButtonData = models.IntegerField(blank=True, null=True)
+    SensorJointData = models.IntegerField(blank=True, null=True)
+    AccelerometerData = models.IntegerField(blank=True, null=True)
+    InertialSensorData = models.IntegerField(blank=True, null=True)
+    MotionStatus = models.IntegerField(blank=True, null=True)
+    MotorJointData = models.IntegerField(blank=True, null=True)
+    GyrometerData = models.IntegerField(blank=True, null=True)
 
     num_cognition_frames = models.IntegerField(blank=True, null=True)
     num_motion_frames = models.IntegerField(blank=True, null=True)
@@ -111,6 +120,7 @@ class Annotation(models.Model):
 class CognitionRepresentation(models.Model):
     log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognition_repr')
     frame_number = models.IntegerField(blank=True, null=True)
+    # TODO maybe add frametime here
     representation_name = models.CharField(max_length=40)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -133,6 +143,12 @@ class MotionRepresentation(models.Model):
 
     def __str__(self):
         return f"{self.log_id}-{self.sensor_frame_number}-{self.representation_name}"
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'sensor_frame_number']),
+        ]
+        unique_together = ('log_id', 'sensor_frame_number', 'representation_name')
 
 
 class BehaviorOption(models.Model):

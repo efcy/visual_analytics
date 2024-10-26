@@ -340,3 +340,20 @@ class MotionRepresentationClient:
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
+
+    def get_repr_count(
+            self,
+            request_options: typing.Optional[RequestOptions] = None,
+            **filters: typing.Any) -> typing.Optional[int]:
+
+        query_params = {k: v for k, v in filters.items() if v is not None}
+        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
+        url = f"api/motionrepr/count/?{query_string}" if query_string else "api/motionrepr/count/"
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        try:
+            if 200 <= _response.status_code < 300:
+                return pydantic_v1.parse_obj_as(typing.Dict[str, typing.Any], _response.json())  # type: ignore
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, body=_response.text)
+        raise ApiError(status_code=_response.status_code, body=_response_json)

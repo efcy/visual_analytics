@@ -12,6 +12,7 @@ from naoth.pb.Framework_Representations_pb2 import Image
 from naoth.log import Parser
 from os import environ, stat
 import os
+from vaapi.client import Vaapi
 
 
 def create_image_log_dict(image_log, first_image_is_top):
@@ -187,6 +188,7 @@ def calculate_first_image(logpath):
     calculate the age of the log file. For everything prior 2023 the first image in the log is top after that its bottom
     """
     # TODO fix me, prefix is annoying here
+    logpath = str(logpath)
     event = logpath.split("_")[0]
     year = int(event.split("-")[0])
     if year < 2023:
@@ -196,41 +198,34 @@ def calculate_first_image(logpath):
 
 
 if __name__ == "__main__":
-    root_path = Path("/mnt/d/logs")
-    # FIXME now log list can contain folders and actual logs
-    #log_list = get_logs() if should_check_all else get_uncombined_logs()
-    log_list = [
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/1_23_Nao0010_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/2_15_Nao0006_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/3_22_Nao0004_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/4_24_Nao0011_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/5_25_Nao0006_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/6_21_Nao0041_240718-1722",
-        #"2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/7_26_Nao0028_240718-1722",
+    log_root_path = os.environ.get("VAT_LOG_ROOT")
 
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/1_23_Nao0010_240718-1708",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/2_15_Nao0006_240718-1707",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/3_22_Nao0004_240718-1707",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/4_24_Nao0011_240718-1707",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/5_25_Nao0006_240718-1707",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/6_21_Nao0041_240718-1707",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2/game_logs/7_26_Nao0028_240718-1707",
-    ]
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )
+    existing_data = client.logs.list()
 
-    for log in sorted(log_list, reverse=True):
-        
-        actual_log_folder = root_path / Path(log)
-        print(actual_log_folder)
-        if Path(actual_log_folder).is_file():
+    def sort_key_fn(data):
+        return data.log_path
+
+
+    for data in sorted(existing_data, key=sort_key_fn, reverse=True):
+        log_id = data.id
+        log_folder_path = Path(data.log_path).parent # data.log_path is path to file
+        log_path = Path(log_root_path) / log_folder_path
+        print("log_path: ", log_path)
+
+        if Path(log_path).is_file():
             print(
                 "\tpath is a experiment log - no automatic combining here. If needed combine the log manually and add to the event list"
             )
             continue
 
-        combined_log_path = actual_log_folder / "combined.log"
-        gamelog_path = actual_log_folder / "game.log"
-        img_log_path = actual_log_folder / "images.log"
-        img_jpeg_log_path = actual_log_folder / "images_jpeg.log"
+        combined_log_path = log_path / "combined.log"
+        gamelog_path = log_path / "game.log"
+        img_log_path = log_path / "images.log"
+        img_jpeg_log_path = log_path / "images_jpeg.log"
 
         has_game_log = Path(gamelog_path).is_file() and stat(str(gamelog_path)).st_size > 0
         has_image_log = Path(img_log_path).is_file() and stat(str(img_log_path)).st_size > 0
@@ -242,9 +237,9 @@ if __name__ == "__main__":
 
         if not combined_log_path.is_file():
             if has_image_log and has_image_jpeg_log:
-                write_combined_log(log, combined_log_path, img_log_path, gamelog_path, img_jpeg_log_path)
+                write_combined_log(log_folder_path, combined_log_path, img_log_path, gamelog_path, img_jpeg_log_path)
             elif has_image_log and not has_image_jpeg_log:
-                write_combined_log(log, combined_log_path, img_log_path, gamelog_path)
+                write_combined_log(log_folder_path, combined_log_path, img_log_path, gamelog_path)
             elif has_image_jpeg_log and not has_image_log:
                 write_combined_log_jpeg(combined_log_path, img_jpeg_log_path, gamelog_path)
             else:
