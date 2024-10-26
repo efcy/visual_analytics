@@ -119,16 +119,12 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     get_active_state.short_description = 'Active State'
 
 class LogStatusAdmin(admin.ModelAdmin):
-    list_display = ["get_log_id", "get_id"]
+    list_display = ["get_log_id"]
 
     def get_log_id(self, obj):
         return obj.log_id.id
     
-    def get_id(self, obj):
-        return obj.id
-    
     get_log_id.short_description = 'Log ID'
-    get_id.short_description = 'ID'
 
 
 class XabslSymbolCompleteAdmin(admin.ModelAdmin):

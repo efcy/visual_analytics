@@ -23,6 +23,9 @@ urlpatterns = [
     path('behavior/count/', views.BehaviorFrameCountView.as_view(), name='behavior-count'),
     path('behavior/symbol/count/', views.BehaviorSymbolCountView.as_view(), name='behavior-count'),
     path('cognitionrepr/count/', views.CognitionReprCountView.as_view(), name='cognitionrepr-count'),
+    path('motionrepr/count/', views.MotionReprCountView.as_view(), name='motionnrepr-count'),
+    path('image/update/', views.ImageUpdateView.as_view(), name='image-update'),
+
 ]
 
 router = routers.DefaultRouter()

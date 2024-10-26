@@ -1,9 +1,8 @@
 import typing
-import datetime as dt
 from json.decoder import JSONDecodeError
 
 from ..core.api_error import ApiError
-from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
+from ..core.client_wrapper import SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
@@ -73,9 +72,8 @@ class LogStatusClient:
 
     def update(
         self,
-        id: int,
+        log_id: int,
         *,
-        log_id: typing.Optional[int] = OMIT,
         BallModel: typing.Optional[int] = OMIT,
         CameraMatrix: typing.Optional[int] = OMIT,
         CameraMatrixTop: typing.Optional[int] = OMIT,
@@ -89,6 +87,15 @@ class LogStatusClient:
         ScanLineEdgelPercept: typing.Optional[int] = OMIT,
         ScanLineEdgelPerceptTop: typing.Optional[int] = OMIT,
         OdometryData: typing.Optional[int] = OMIT,
+        IMUData: typing.Optional[int] = OMIT,
+        FSRData: typing.Optional[int] = OMIT,
+        ButtonData: typing.Optional[int] = OMIT,
+        SensorJointData: typing.Optional[int] = OMIT,
+        AccelerometerData: typing.Optional[int] = OMIT,
+        InertialSensorData: typing.Optional[int] = OMIT,
+        MotionStatus: typing.Optional[int] = OMIT,
+        MotorJointData: typing.Optional[int] = OMIT,
+        GyrometerData: typing.Optional[int] = OMIT,
         num_cognition_frames: typing.Optional[int] = OMIT,
         num_motion_frames: typing.Optional[int] = OMIT,
         num_jpg_bottom: typing.Optional[int] = OMIT,
@@ -173,10 +180,9 @@ class LogStatusClient:
         )
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"api/log-status/{jsonable_encoder(id)}/",
+            f"api/log-status/{jsonable_encoder(log_id)}/",
             method="PATCH",
             json={
-                "log_id": log_id,
                 "BallModel": BallModel,
                 "CameraMatrix": CameraMatrix,
                 "CameraMatrixTop": CameraMatrixTop,
@@ -190,6 +196,15 @@ class LogStatusClient:
                 "ScanLineEdgelPercept": ScanLineEdgelPercept,
                 "ScanLineEdgelPerceptTop": ScanLineEdgelPerceptTop,
                 "OdometryData": OdometryData,
+                "IMUData": IMUData,
+                "FSRData": FSRData,
+                "ButtonData": ButtonData,
+                "SensorJointData": SensorJointData,
+                "AccelerometerData": AccelerometerData,
+                "InertialSensorData": InertialSensorData,
+                "MotionStatus": MotionStatus,
+                "MotorJointData": MotorJointData,
+                "GyrometerData": GyrometerData,
                 "num_cognition_frames": num_cognition_frames,
                 "num_motion_frames": num_motion_frames,
                 "num_jpg_bottom": num_jpg_bottom,
@@ -274,6 +289,15 @@ class LogStatusClient:
         ScanLineEdgelPercept: typing.Optional[int] = OMIT,
         ScanLineEdgelPerceptTop: typing.Optional[int] = OMIT,
         OdometryData: typing.Optional[int] = OMIT,
+        IMUData: typing.Optional[int] = OMIT,
+        FSRData: typing.Optional[int] = OMIT,
+        ButtonData: typing.Optional[int] = OMIT,
+        SensorJointData: typing.Optional[int] = OMIT,
+        AccelerometerData: typing.Optional[int] = OMIT,
+        InertialSensorData: typing.Optional[int] = OMIT,
+        MotionStatus: typing.Optional[int] = OMIT,
+        MotorJointData: typing.Optional[int] = OMIT,
+        GyrometerData: typing.Optional[int] = OMIT,
         num_cognition_frames: typing.Optional[int] = OMIT,
         num_motion_frames: typing.Optional[int] = OMIT,
         num_jpg_bottom: typing.Optional[int] = OMIT,
@@ -302,6 +326,15 @@ class LogStatusClient:
                 "ScanLineEdgelPercept": ScanLineEdgelPercept,
                 "ScanLineEdgelPerceptTop": ScanLineEdgelPerceptTop,
                 "OdometryData": OdometryData,
+                "IMUData": IMUData,
+                "FSRData": FSRData,
+                "ButtonData": ButtonData,
+                "SensorJointData": SensorJointData,
+                "AccelerometerData": AccelerometerData,
+                "InertialSensorData": InertialSensorData,
+                "MotionStatus": MotionStatus,
+                "MotorJointData": MotorJointData,
+                "GyrometerData": GyrometerData,
                 "num_cognition_frames": num_cognition_frames,
                 "num_motion_frames": num_motion_frames,
                 "num_jpg_bottom": num_jpg_bottom,

@@ -33,6 +33,36 @@ class ImageCountView(APIView):
         return Response({'count': count}, status=status.HTTP_200_OK)
 
 
+class ImageUpdateView(APIView):
+    def patch(self, request):
+        data = self.request.data
+        update_fields = {k: v for k, v in data[0].items()}
+        print(update_fields)
+
+        starttime = time.time()
+        rows_tuples = [(
+            row['blurredness_value'], 
+            row['brightness_value'], 
+            row['resolution'], 
+            ) for row in data]
+        with connection.cursor() as cursor:
+            query = """
+            UPDATE api_image 
+            SET 
+                (blurredness_value, brightness_value, resolution)
+            VALUES %s
+            ON CONFLICT (log_id, camera, type, frame_number) DO NOTHING;
+            """ 
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples, page_size=1000)
+        print( time.time() - starttime)
+        # TODO calculate some statistics similar to what we did before here
+        return Response({}, status=status.HTTP_200_OK)
+    
+        return Response({'count': 1}, status=status.HTTP_200_OK)
+
+        
+
 class ImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.Image.objects.all()
@@ -43,6 +73,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         # we use copy here so that the QueryDict object query_params become mutable
         query_params = self.request.query_params.copy()
 
+        bla = False
         # check if the frontend wants to use a frame filter
         if "use_filter" in query_params:
             # TODO check if we have a list of frames set here -> implement a model for this
@@ -51,7 +82,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             query_params.pop('use_filter')
 
         frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
-        # This is a generic filter on the queryset, the supplied filter must be a field in the Image model
+        # This is a generic filter on the queryset, the supplied filter must be a field in the Image model 
         filters = Q()
         for field in models.Image._meta.fields:
             param_value = query_params.get(field.name)
@@ -76,6 +107,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         # Check if the data is a list (bulk update) or dict (single update)
         is_many = isinstance(request.data, list)
+        print(is_many)
         if is_many:
             return self.bulk_update()
         else:
@@ -92,9 +124,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         status_code = status.HTTP_201_CREATED if updated else status.HTTP_200_OK
         return Response({}, status=status_code)
 
-    def bulk_update(self):
-        # TODO implement me
-        pass
+
         
     def single_create(self, data):
         serializer = self.get_serializer(data, many=False)
@@ -137,7 +167,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             execute_values(cursor, query, rows_tuples, page_size=1000)
         print( time.time() - starttime)
         # TODO calculate some statistics similar to what we did before here
-        return Response({"message": "blabla"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_200_OK)
         """
         with transaction.atomic():
             # Get all existing games

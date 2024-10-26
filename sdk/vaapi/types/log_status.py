@@ -7,11 +7,6 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 class LogStatus(pydantic_v1.BaseModel):
     """
-    Id assigned by django
-    """
-    id: typing.Optional[int] = None
-
-    """
     Foreign key to the log the image belongs to
     """
     log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
@@ -80,6 +75,51 @@ class LogStatus(pydantic_v1.BaseModel):
     OdometryData
     """
     OdometryData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    IMUData
+    """
+    IMUData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    FSRData
+    """
+    FSRData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    ButtonData
+    """
+    ButtonData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    SensorJointData
+    """
+    SensorJointData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    AccelerometerData
+    """
+    AccelerometerData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    InertialSensorData
+    """
+    InertialSensorData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    MotionStatus
+    """
+    MotionStatus: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    MotorJointData
+    """
+    MotorJointData: typing.Optional[str] = pydantic_v1.Field(default=None)
+
+    """
+    GyrometerData
+    """
+    GyrometerData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     """
     num_cognition_frames

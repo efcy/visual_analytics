@@ -10,6 +10,7 @@ import numpy as np
 import io
 from PIL import PngImagePlugin
 from PIL import Image as PIL_Image
+from vaapi.client import Vaapi
 
 
 def export_images(logfile, img, output_folder_top, output_folder_bottom, out_top_jpg, out_bottom_jpg):
@@ -233,21 +234,25 @@ def calculate_output_path(log_folder: str):
 
 
 if __name__ == "__main__":
-    root_path = Path("/mnt/d/logs")
-    log_list = [
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/1_23_Nao0010_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/2_15_Nao0006_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/3_22_Nao0004_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/4_24_Nao0011_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/5_25_Nao0006_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/6_21_Nao0041_240718-1722",
-        "2024-07-15_RC24/2024-07-18_16-30-00_BerlinUnited_vs_Roboeirean_half2-to/game_logs/7_26_Nao0028_240718-1722",
-    ]
+    log_root_path = os.environ.get("VAT_LOG_ROOT")
 
-    for log_folder in log_list:
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )
+
+    existing_data = client.logs.list()
+
+    def sort_key_fn(data):
+        return data.log_path
+    
+    for data in sorted(existing_data, key=sort_key_fn, reverse=True):
+        log_id = data.id
+        log_path = Path(log_root_path) / data.log_path
+
         data_queue = queue.Queue()
-        print(log_folder)
-        log, out_top, out_bottom, out_top_jpg, out_bottom_jpg = calculate_output_path(log_folder)
+        print(log_path)
+        log, out_top, out_bottom, out_top_jpg, out_bottom_jpg = calculate_output_path(log_path)
         if log is None:
             continue
 

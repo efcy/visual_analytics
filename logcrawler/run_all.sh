@@ -1,0 +1,7 @@
+source venv/bin/activate
+#python 02_calculate_num_images.py
+#python 03_calculate_num_frames.py
+python 04_input_cognition_representation_data.py
+python 06_input_behavior_frames.py
+python 07_input_behavior_symbols.py
+python 08_input_images.py
