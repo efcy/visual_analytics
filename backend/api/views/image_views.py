@@ -36,31 +36,61 @@ class ImageCountView(APIView):
 class ImageUpdateView(APIView):
     def patch(self, request):
         data = self.request.data
-        update_fields = {k: v for k, v in data[0].items()}
-        print(update_fields)
+        try:
+            rows_updated = self.bulk_insert(data)
+    
+            return  Response({
+                'success': True,
+                'rows_updated': rows_updated,
+                'message': f'Successfully updated {rows_updated} images'
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'rows_updated': 0,
+                'message': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def bulk_insert(self, data):
+        
+        update_fields = set()
+
+        for item in data:
+            update_fields.update(key for key in item.keys() if key != 'id')
 
         starttime = time.time()
-        rows_tuples = [(
-            row['blurredness_value'], 
-            row['brightness_value'], 
-            row['resolution'], 
-            ) for row in data]
-        with connection.cursor() as cursor:
-            query = """
-            UPDATE api_image 
-            SET 
-                (blurredness_value, brightness_value, resolution)
-            VALUES %s
-            ON CONFLICT (log_id, camera, type, frame_number) DO NOTHING;
-            """ 
-            # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=1000)
-        print( time.time() - starttime)
-        # TODO calculate some statistics similar to what we did before here
-        return Response({}, status=status.HTTP_200_OK)
-    
-        return Response({'count': 1}, status=status.HTTP_200_OK)
+        # Build the case statements for each field
+        case_statements = []
+        for field in update_fields:
+            case_when_parts = []
+            for item in data:
+                if field in item and item[field] is not None:
+                    case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
+            
+            if case_when_parts:
+                case_stmt = f"""{field} = (CASE {' '.join(case_when_parts)} ELSE {field} END)"""
+                case_statements.append(case_stmt)
+        
+        # Collect all values for the parameterized query
+        update_values = []
+        for field in update_fields:
+            for item in data:
+                if field in item and item[field] is not None:
+                    update_values.append(item[field])
 
+        # Build the complete SQL query
+        ids = [str(item['id']) for item in data]
+        sql = f"""
+            UPDATE api_image
+            SET {', '.join(case_statements)}
+            WHERE id IN ({','.join(ids)})
+        """
+        #print(sql)
+
+        with connection.cursor() as cursor:
+            cursor.execute(sql, update_values)
+            return cursor.rowcount
+        print( time.time() - starttime)   
         
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -73,25 +103,30 @@ class ImageViewSet(viewsets.ModelViewSet):
         # we use copy here so that the QueryDict object query_params become mutable
         query_params = self.request.query_params.copy()
 
-        bla = False
+        #bla = False
         # check if the frontend wants to use a frame filter
-        if "use_filter" in query_params:
-            # TODO check if we have a list of frames set here -> implement a model for this
-            bla = True
-            # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
-            query_params.pop('use_filter')
+        #if "use_filter" in query_params:
+        #    # TODO check if we have a list of frames set here -> implement a model for this
+        #    bla = True
+        #    # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
+        #    query_params.pop('use_filter')
 
-        frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
+        #frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
         # This is a generic filter on the queryset, the supplied filter must be a field in the Image model 
         filters = Q()
         for field in models.Image._meta.fields:
             param_value = query_params.get(field.name)
-            if param_value:
+            if param_value == "None" or param_value == "null":
+                filters &= Q(**{f"{field.name}__isnull": True})
+                #print(f"filter with {field.name} = {param_value}")
+            elif param_value:
+                #print(f"filter with {field.name} = {param_value}")
                 filters &= Q(**{field.name: param_value})
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        qs = queryset.filter(filters).order_by('frame_number')
-        if bla:
-            qs = qs.filter(frame_number__in=frame_numbers)
+        qs = queryset.filter(filters)
+        #print(qs.order_by('frame_number').count())
+        #if bla:
+        #    qs = qs.filter(frame_number__in=frame_numbers)
         #return queryset.filter(filters).filter(frame_number__in=frame_numbers).order_by('frame_number')
         return qs.order_by('frame_number')
     
