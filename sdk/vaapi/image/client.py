@@ -217,7 +217,7 @@ class ImageClient:
             id=1,
         )
         """
-        query_params = {k: v for k, v in filters.items() if v is not None}
+        query_params = {k: v for k, v in filters.items()}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/image/?{query_string}" if query_string else "api/image/"
         _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)

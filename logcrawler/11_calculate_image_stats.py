@@ -6,6 +6,7 @@ from tqdm import tqdm
 import numpy as np
 import argparse
 from pathlib import Path
+#from PIL import Image 
 
 
 def variance_of_laplacian(image):
@@ -32,14 +33,18 @@ if __name__ == "__main__":
     for data in sorted(data, key=sort_key_fn, reverse=True):
         log_id = data.id
         print(data.log_path)
-        images = client.image.list(log=log_id,blurredness_value=None)
+        images = client.image.list(log=log_id, blurredness_value=None)
 
-        # TODO use tqdm here to have a progressbar
         image_data = list()
+        print(len(images))
+        #print(images)
+        #quit()
         for idx, img in enumerate(tqdm(images)):
             if args.local:
-                 image_path = Path(log_root_path) / img.image_url
-                 image_cv = cv2.imread(image_path, cv2.IMREAD_COLOR)
+                image_path = Path(log_root_path) / img.image_url
+                image_cv = cv2.imread(image_path, cv2.IMREAD_COLOR)
+                #im = Image.open(str(image_path))
+                #image_cv = np.asarray(im)
             else:
                 # TODO try for timeout use the other one if one is not working
                 url = "https://logs.berlin-united.com/" + img.image_url
@@ -69,7 +74,7 @@ if __name__ == "__main__":
                  print(e)
                  continue
             
-            if idx % 100 == 0 and idx != 0:
+            if idx % 1000 == 0 and idx != 0:
                 try:
                     response = client.image.bulk_update(
                         data=image_data
@@ -79,3 +84,15 @@ if __name__ == "__main__":
                     print(e)
                     print(f"error inputing the data")
                     quit()
+
+        if len(image_data) > 0:
+            print(len(image_data))
+            try:
+                response = client.image.bulk_update(
+                    data=image_data
+                )
+            except Exception as e:
+                print(e)
+                print(f"error inputing the data")
+                quit()
+

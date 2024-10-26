@@ -103,25 +103,30 @@ class ImageViewSet(viewsets.ModelViewSet):
         # we use copy here so that the QueryDict object query_params become mutable
         query_params = self.request.query_params.copy()
 
-        bla = False
+        #bla = False
         # check if the frontend wants to use a frame filter
-        if "use_filter" in query_params:
-            # TODO check if we have a list of frames set here -> implement a model for this
-            bla = True
-            # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
-            query_params.pop('use_filter')
+        #if "use_filter" in query_params:
+        #    # TODO check if we have a list of frames set here -> implement a model for this
+        #    bla = True
+        #    # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
+        #    query_params.pop('use_filter')
 
-        frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
+        #frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
         # This is a generic filter on the queryset, the supplied filter must be a field in the Image model 
         filters = Q()
         for field in models.Image._meta.fields:
             param_value = query_params.get(field.name)
-            if param_value:
+            if param_value == "None" or param_value == "null":
+                filters &= Q(**{f"{field.name}__isnull": True})
+                #print(f"filter with {field.name} = {param_value}")
+            elif param_value:
+                #print(f"filter with {field.name} = {param_value}")
                 filters &= Q(**{field.name: param_value})
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        qs = queryset.filter(filters).order_by('frame_number')
-        if bla:
-            qs = qs.filter(frame_number__in=frame_numbers)
+        qs = queryset.filter(filters)
+        #print(qs.order_by('frame_number').count())
+        #if bla:
+        #    qs = qs.filter(frame_number__in=frame_numbers)
         #return queryset.filter(filters).filter(frame_number__in=frame_numbers).order_by('frame_number')
         return qs.order_by('frame_number')
     
