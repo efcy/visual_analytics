@@ -61,7 +61,17 @@ if __name__ == "__main__":
         log_path = Path(log_root_path) / data.sensor_log_path
         print("log_path: ", log_path)
 
-        representation_list = ["IMUData", "FSRData"]
+        representation_list = [
+            "IMUData", 
+            "FSRData", 
+            "ButtonData", 
+            "SensorJointData", 
+            "AccelerometerData", 
+            "InertialSensorData", 
+            "MotionStatus",
+            "MotorJointData",
+            "GyrometerData",
+        ]
         # check if we need to insert this log
         representation_list = is_input_done(representation_list)
         if len(representation_list) == 0:
@@ -81,6 +91,7 @@ if __name__ == "__main__":
                 # last frame
                 try:
                     sensor_frame_number = frame['FrameInfo'].frameNumber
+                    sensor_frame_time = frame['FrameInfo'].time
                 except Exception as e:
                     print(f"FrameInfo not found in current frame - will not parse any other representation from this frame")
                     print({e})
@@ -100,6 +111,7 @@ if __name__ == "__main__":
                 json_obj = {
                     "log_id":log_id, 
                     "sensor_frame_number":sensor_frame_number,
+                    "sensor_frame_time": sensor_frame_time,
                     "representation_name":repr_name,
                     "representation_data":data
                 }
@@ -125,4 +137,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"error inputing the data {log_path}")
         # only do the first log for now
-        break

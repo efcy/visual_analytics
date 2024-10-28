@@ -329,7 +329,7 @@ class MotionRepresentationViewSet(viewsets.ModelViewSet):
 
         starttime = time.time()
 
-        rows_tuples = [(row['log_id'], row['frame_number'], row['sensor_frame_time'], row['representation_name'], json.dumps(row['representation_data'])) for row in request.data]
+        rows_tuples = [(row['log_id'], row['sensor_frame_number'], row['sensor_frame_time'], row['representation_name'], json.dumps(row['representation_data'])) for row in request.data]
 
         with connection.cursor() as cursor:
             query = """

@@ -341,6 +341,29 @@ class MotionRepresentationClient:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
+    def bulk_create(
+        self,
+        *,
+        repr_list: typing.List[MotionRepresentation] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> MotionRepresentation:
+        """
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"api/motionrepr/",
+            method="POST",
+            json=repr_list,
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                return pydantic_v1.parse_obj_as(MotionRepresentation, _response.json())  # type: ignore
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, body=_response.text)
+        raise ApiError(status_code=_response.status_code, body=_response_json)
+
     def get_repr_count(
             self,
             request_options: typing.Optional[RequestOptions] = None,
