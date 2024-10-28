@@ -121,7 +121,7 @@ DATABASES = {
 # https://django-dbbackup.readthedocs.io/en/master/installation.html
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': os.getenv('VAT_BACKUP_FOLDER')}
-
+DBBACKUP_CONNECTORS = {"default": {"SINGLE_TRANSACTION": False}}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

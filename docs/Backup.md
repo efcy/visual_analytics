@@ -25,11 +25,15 @@ The backup file will be saved on the server where k8s is running on. You can dow
 
 ## Restore a backup
 You can use backups from the live version and use it in your local version. This only works if the postgres database is set up in the same way as the live version.
-TODO: check if password also needs to be the same
+
 
 ```bash
 python manage.py dbrestore -I <backup file>
 ```
 
+### Troubleshooting
+see this issue if you have errors while restoring the backup that have to do with constraints
+https://github.com/jazzband/django-dbbackup/issues/478
+pyt
 ## Backup Automation
 Not implemented yet
