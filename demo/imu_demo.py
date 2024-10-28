@@ -1,9 +1,4 @@
 """
-    Small demo showing what is possible with our new Visual Analytics Tool
-
-    1. get all frames where option name path_striker2024 and forwardkick from behavior frame options
-        => only return the frame numbers
-    2. Use the frames as filter for Images (not implemented yet)
 """
 from vaapi.client import Vaapi
 import os
