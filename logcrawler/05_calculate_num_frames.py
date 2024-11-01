@@ -76,11 +76,13 @@ if __name__ == "__main__":
             "FrameInfo": 0,
         }
 
-        cognition_status_dict = is_done(log_id, cognition_status_dict)
+        new_cognition_status_dict = is_done(log_id, cognition_status_dict)
         if not args.force and len(cognition_status_dict) == 0:
             print("\twe already calculated number of full cognition frames for this log")
             
         else:
+            if args.force:
+                new_cognition_status_dict = cognition_status_dict
             my_parser = Parser()
             my_parser.register("FieldPerceptTop", "FieldPercept")
             my_parser.register("GoalPerceptTop", "GoalPercept")
@@ -96,10 +98,10 @@ if __name__ == "__main__":
                     print(f"FrameInfo not found in current frame - will not parse any other frames from this log and continue with the next one")
                     continue
                 # TODO: speed it up by removing representations that we dont care about in this dict
-                for repr in cognition_status_dict:
+                for repr in new_cognition_status_dict:
                     try:
                         data = MessageToDict(frame[repr])
-                        cognition_status_dict[repr] += 1
+                        new_cognition_status_dict[repr] += 1
                     except AttributeError:
                         # TODO only print something when in debug mode
                         #print("skip frame because representation is not present")
@@ -110,11 +112,11 @@ if __name__ == "__main__":
 
             try:
                 # rename the dict key such that it matches what the database expects here
-                cognition_status_dict['num_cognition_frames'] = cognition_status_dict.pop('FrameInfo')
+                new_cognition_status_dict['num_cognition_frames'] = new_cognition_status_dict.pop('FrameInfo')
                 
                 response = client.log_status.update(
                 log_id=log_id, 
-                **cognition_status_dict
+                **new_cognition_status_dict
                 )
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
@@ -136,10 +138,12 @@ if __name__ == "__main__":
             'GyrometerData': 0,
         }
 
-        motion_status_dict = is_done(log_id, motion_status_dict)
+        new_motion_status_dict = is_done(log_id, motion_status_dict)
         if not args.force and len(motion_status_dict) == 0:
             print("\twe already calculated number of full sensor frames for this log")
         else:
+            if args.force:
+                new_motion_status_dict = motion_status_dict
             my_parser = Parser()
             game_log = LogReader(str(sensor_log_path), my_parser)
             for idx, frame in enumerate(tqdm(game_log)):
@@ -149,10 +153,10 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"FrameInfo not found in current frame - will not parse any other frames from this log and continue with the next one")
                     continue
-                for repr in motion_status_dict:
+                for repr in new_motion_status_dict:
                     try:
                         data = MessageToDict(frame[repr])
-                        motion_status_dict[repr] += 1
+                        new_motion_status_dict[repr] += 1
                     except AttributeError:
                         # TODO only print something when in debug mode
                         #print("skip frame because representation is not present")
@@ -162,10 +166,10 @@ if __name__ == "__main__":
                         print({e})
 
             try:
-                cognition_status_dict['num_motion_frames'] = cognition_status_dict.pop('FrameInfo')
+                new_motion_status_dict['num_motion_frames'] = new_motion_status_dict.pop('FrameInfo')
                 response = client.log_status.update(
                 log_id=log_id, 
-                **cognition_status_dict
+                **new_motion_status_dict
                 )
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")

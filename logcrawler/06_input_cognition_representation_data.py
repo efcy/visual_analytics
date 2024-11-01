@@ -2,6 +2,7 @@ from pathlib import Path
 from naoth.log import Reader as LogReader
 from naoth.log import Parser
 from google.protobuf.json_format import MessageToDict
+import argparse
 
 import os
 from tqdm import tqdm
@@ -46,6 +47,10 @@ def is_input_done(representation_list):
         
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--force", action="store_true", default=False)
+    args = parser.parse_args()
+
     log_root_path = os.environ.get("VAT_LOG_ROOT")
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),
@@ -63,12 +68,14 @@ if __name__ == "__main__":
         print("log_path: ", log_path)
 
         representation_list = ["BallModel", "BallCandidates", "BallCandidatesTop", "CameraMatrix", "CameraMatrixTop", "OdometryData", "FieldPercept", "FieldPerceptTop", "GoalPercept", "GoalPerceptTop", "RansacLinePercept", "ShortLinePercept", "ScanLineEdgelPercept", "ScanLineEdgelPerceptTop", "RansacCirclePercept2018"]
+        representation_list = ["BallCandidates", "BallCandidatesTop"]
         # check if we need to insert this log
-        representation_list = is_input_done(representation_list)
-        if len(representation_list) == 0:
+        new_representation_list = is_input_done(representation_list)
+        if not args.force and len(new_representation_list) == 0:
             print("\tall required representations are already inserted, will continue with the next log")
             continue
-
+        if args.force:
+            new_representation_list = representation_list
         my_parser = Parser()
         my_parser.register("ImageJPEG"   , "Image")
         my_parser.register("ImageJPEGTop", "Image")
@@ -81,7 +88,7 @@ if __name__ == "__main__":
         my_array = list()
         for idx, frame in enumerate(tqdm(game_log, desc=f"Parsing frame", leave=True)):
             for repr_name in frame.get_names():
-                if not repr_name in representation_list:
+                if not repr_name in new_representation_list:
                     continue
                 
                 # try accessing framenumber directly because we can have the situation where the framenumber is missing in the
@@ -94,6 +101,12 @@ if __name__ == "__main__":
 
                 try:
                     data = MessageToDict(frame[repr_name])
+                    # drop binary data from BallCandidates
+                    if repr_name in ["BallCandidates", "BallCandidatesTop"]:
+                        for patch in data['patches']:
+                            del patch['data']
+                            del patch['type']
+
                 except AttributeError:
                     #print("skip frame because representation is not present")
                     continue

@@ -271,7 +271,7 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             query = """
             INSERT INTO api_cognitionrepresentation (log_id_id, frame_number, representation_name, representation_data)
             VALUES %s
-            ON CONFLICT (log_id_id, frame_number, representation_name) DO NOTHING;
+            ON CONFLICT (log_id_id, frame_number, representation_name) DO UPDATE SET representation_data = EXCLUDED.representation_data;;
             """ 
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
