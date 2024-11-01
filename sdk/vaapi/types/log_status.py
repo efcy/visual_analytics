@@ -17,6 +17,16 @@ class LogStatus(pydantic_v1.BaseModel):
     BallModel: typing.Optional[int] = None
 
     """
+    BallModel
+    """
+    BallModel: typing.Optional[int] = None
+
+    """
+    BallModel
+    """
+    BallModel: typing.Optional[int] = None
+
+    """
     CameraMatrix
     """
     CameraMatrix: typing.Optional[int] = None

@@ -9,27 +9,30 @@ import argparse
 
 def is_done(log_id, status_dict):
     # TODO get log_status representation here and check each field.
+    new_dict = status_dict.copy()
     try:
         # we use list here because we only know the log_id here and not the if of the logstatus object
         response = client.log_status.list(log_id=log_id)
         if len(response) == 0:
-            return False
+            return status_dict
         log_status = response[0]
 
         for k,v in status_dict.items():
             if k == "FrameInfo":
-                k = "num_cognition_frames"
-            field_value = getattr(log_status, k)
+                field_value = getattr(log_status, "num_cognition_frames")
+            else:
+                field_value = getattr(log_status, k)
             
             if field_value == None:
                 print(f"\tdid not find a value for repr {k}")
-                return False
-        return True
-    # TODO would be nice to handle the vaapi Apierror here explicitely
+            else:
+                new_dict.pop(k)
+        return new_dict
+    # TODO would be nice to handle the vaapi API error here explicitely
     except Exception as e:
         print("error", e)
         quit()
-        return False
+        return status_dict
 
 
 if __name__ == "__main__":
@@ -56,6 +59,8 @@ if __name__ == "__main__":
 
         cognition_status_dict = {
             'BallModel': 0,
+            'BallCandidates': 0,
+            'BallCandidatesTop': 0,
             'CameraMatrix': 0,
             'CameraMatrixTop': 0,
             'FieldPercept': 0,
@@ -71,8 +76,10 @@ if __name__ == "__main__":
             "FrameInfo": 0,
         }
 
-        if is_done(log_id, cognition_status_dict) and not args.force:
+        cognition_status_dict = is_done(log_id, cognition_status_dict)
+        if not args.force and len(cognition_status_dict) == 0:
             print("\twe already calculated number of full cognition frames for this log")
+            
         else:
             my_parser = Parser()
             my_parser.register("FieldPerceptTop", "FieldPercept")
@@ -88,7 +95,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"FrameInfo not found in current frame - will not parse any other frames from this log and continue with the next one")
                     continue
-
+                # TODO: speed it up by removing representations that we dont care about in this dict
                 for repr in cognition_status_dict:
                     try:
                         data = MessageToDict(frame[repr])
@@ -102,27 +109,17 @@ if __name__ == "__main__":
                         print({e})
 
             try:
+                # rename the dict key such that it matches what the database expects here
+                cognition_status_dict['num_cognition_frames'] = cognition_status_dict.pop('FrameInfo')
+                
                 response = client.log_status.update(
                 log_id=log_id, 
-                BallModel=cognition_status_dict['BallModel'],
-                CameraMatrix=cognition_status_dict['CameraMatrix'],
-                CameraMatrixTop=cognition_status_dict['CameraMatrixTop'],
-                FieldPercept=cognition_status_dict['FieldPercept'],
-                FieldPerceptTop=cognition_status_dict['FieldPerceptTop'],
-                GoalPercept=cognition_status_dict['GoalPercept'],
-                GoalPerceptTop=cognition_status_dict['GoalPerceptTop'],
-                RansacLinePercept=cognition_status_dict['RansacLinePercept'],
-                ShortLinePercept=cognition_status_dict['ShortLinePercept'],
-                ScanLineEdgelPercept=cognition_status_dict['ScanLineEdgelPercept'],
-                ScanLineEdgelPerceptTop=cognition_status_dict['ScanLineEdgelPerceptTop'],
-                RansacCirclePercept2018=cognition_status_dict['RansacCirclePercept2018'],
-                OdometryData=cognition_status_dict['OdometryData'],
-                num_cognition_frames=cognition_status_dict['FrameInfo']
+                **cognition_status_dict
                 )
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
                 print(e)
-
+            
 
         # TODO figure out how we should handle adding additional representations?
         # NOTE when we use create above we have to use update for sensor log,
@@ -138,7 +135,9 @@ if __name__ == "__main__":
             'MotorJointData':0,
             'GyrometerData': 0,
         }
-        if is_done(log_id, motion_status_dict) and not args.force:
+
+        motion_status_dict = is_done(log_id, motion_status_dict)
+        if not args.force and len(motion_status_dict) == 0:
             print("\twe already calculated number of full sensor frames for this log")
         else:
             my_parser = Parser()
@@ -163,18 +162,10 @@ if __name__ == "__main__":
                         print({e})
 
             try:
+                cognition_status_dict['num_motion_frames'] = cognition_status_dict.pop('FrameInfo')
                 response = client.log_status.update(
                 log_id=log_id, 
-                IMUData=motion_status_dict['IMUData'],
-                FSRData=motion_status_dict['FSRData'],
-                ButtonData=motion_status_dict['ButtonData'],
-                SensorJointData=motion_status_dict['SensorJointData'],
-                AccelerometerData=motion_status_dict['AccelerometerData'],
-                InertialSensorData=motion_status_dict['InertialSensorData'],
-                MotionStatus=motion_status_dict['MotionStatus'],
-                MotorJointData=motion_status_dict['MotorJointData'],
-                GyrometerData=motion_status_dict['GyrometerData'],
-                num_motion_frames=motion_status_dict['FrameInfo']
+                **cognition_status_dict
                 )
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")

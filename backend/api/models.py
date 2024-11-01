@@ -56,6 +56,8 @@ class LogStatus(models.Model):
     log_id = models.OneToOneField(Log,on_delete=models.CASCADE,related_name='log_status', primary_key=True)
     # holds the number of frames that should be in the db for each representation
     BallModel = models.IntegerField(blank=True, null=True)
+    BallCandidates = models.IntegerField(blank=True, null=True)
+    BallCandidatesTop = models.IntegerField(blank=True, null=True)
     CameraMatrix = models.IntegerField(blank=True, null=True)
     CameraMatrixTop = models.IntegerField(blank=True, null=True)
     FieldPercept = models.IntegerField(blank=True, null=True)
