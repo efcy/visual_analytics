@@ -8,7 +8,7 @@ import argparse
 from pathlib import Path
 #from PIL import Image 
 
-def is_server_alive(url, timeout=5):
+def is_server_alive(url, timeout=2):
     try:
         response = requests.get(url, timeout=timeout)
         response.raise_for_status()  # Check for HTTP errors
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                 #im = Image.open(str(image_path))
                 #image_cv = np.asarray(im)
             else:
-                # TODO try for timeout use the other one if one is not working
+                # try for timeout use the other one if one is not working
                 if online:
                     url = "https://logs.berlin-united.com/" + img.image_url
                 else:
