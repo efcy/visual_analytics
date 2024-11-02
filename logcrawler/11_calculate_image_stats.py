@@ -8,6 +8,16 @@ import argparse
 from pathlib import Path
 #from PIL import Image 
 
+def is_server_alive(url, timeout=2):
+    try:
+        response = requests.get(url, timeout=timeout)
+        response.raise_for_status()  # Check for HTTP errors
+        print(f"Server {url} is alive.")
+        return True
+    except requests.exceptions.RequestException as e:
+        print(f"Server {url} is not reachable: {e}")
+        return False
+
 
 def variance_of_laplacian(image):
 	# compute the Laplacian of the image and then return the focus
@@ -30,6 +40,8 @@ if __name__ == "__main__":
     def sort_key_fn(data):
         return data.log_path
 
+    online = is_server_alive("https://logs.berlin-united.com/")
+
     for data in sorted(data, key=sort_key_fn, reverse=True):
         log_id = data.id
         print(data.log_path)
@@ -46,9 +58,14 @@ if __name__ == "__main__":
                 #im = Image.open(str(image_path))
                 #image_cv = np.asarray(im)
             else:
-                # TODO try for timeout use the other one if one is not working
-                url = "https://logs.berlin-united.com/" + img.image_url
-                url = "https://logs.naoth.de/" + img.image_url
+                # try for timeout use the other one if one is not working
+                if online:
+                    url = "https://logs.berlin-united.com/" + img.image_url
+                else:
+                    url = "https://logs.naoth.de/" + img.image_url
+                
+
+
                 response = requests.get(url)
                 response.raise_for_status()  # Raise an error for bad status codes
 
