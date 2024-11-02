@@ -64,6 +64,7 @@ class LogStatus(models.Model):
     FieldPerceptTop = models.IntegerField(blank=True, null=True)
     GoalPercept = models.IntegerField(blank=True, null=True)
     GoalPerceptTop = models.IntegerField(blank=True, null=True)
+    MultiBallPercept = models.IntegerField(blank=True, null=True)
     RansacLinePercept = models.IntegerField(blank=True, null=True)
     RansacCirclePercept2018 = models.IntegerField(blank=True, null=True)
     ShortLinePercept = models.IntegerField(blank=True, null=True)

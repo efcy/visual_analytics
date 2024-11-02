@@ -57,6 +57,11 @@ class LogStatus(pydantic_v1.BaseModel):
     GoalPerceptTop: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     """
+    MultiBallPercept
+    """
+    MultiBallPercept: typing.Optional[str] = pydantic_v1.Field(default=None)
+    
+    """
     RansacLinePercept
     """
     RansacLinePercept: typing.Optional[str] = pydantic_v1.Field(default=None)

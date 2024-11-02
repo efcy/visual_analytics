@@ -67,6 +67,7 @@ if __name__ == "__main__":
             'FieldPerceptTop': 0,
             'GoalPercept': 0,
             'GoalPerceptTop': 0,
+            'MultiBallPercept': 0,
             'RansacLinePercept': 0,
             'RansacCirclePercept2018':0,
             'ShortLinePercept': 0,
@@ -77,9 +78,8 @@ if __name__ == "__main__":
         }
 
         new_cognition_status_dict = is_done(log_id, cognition_status_dict)
-        if not args.force and len(cognition_status_dict) == 0:
+        if not args.force and len(new_cognition_status_dict) == 0:
             print("\twe already calculated number of full cognition frames for this log")
-            
         else:
             if args.force:
                 new_cognition_status_dict = cognition_status_dict
@@ -112,7 +112,8 @@ if __name__ == "__main__":
 
             try:
                 # rename the dict key such that it matches what the database expects here
-                new_cognition_status_dict['num_cognition_frames'] = new_cognition_status_dict.pop('FrameInfo')
+                if "FrameInfo" in new_cognition_status_dict:
+                    new_cognition_status_dict['num_cognition_frames'] = new_cognition_status_dict.pop('FrameInfo')
                 
                 response = client.log_status.update(
                 log_id=log_id, 
@@ -121,6 +122,7 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
                 print(e)
+                quit()
             
 
         # TODO figure out how we should handle adding additional representations?
@@ -139,7 +141,7 @@ if __name__ == "__main__":
         }
 
         new_motion_status_dict = is_done(log_id, motion_status_dict)
-        if not args.force and len(motion_status_dict) == 0:
+        if not args.force and len(new_motion_status_dict) == 0:
             print("\twe already calculated number of full sensor frames for this log")
         else:
             if args.force:
@@ -166,7 +168,8 @@ if __name__ == "__main__":
                         print({e})
 
             try:
-                new_motion_status_dict['num_motion_frames'] = new_motion_status_dict.pop('FrameInfo')
+                if "FrameInfo" in new_motion_status_dict:
+                    new_motion_status_dict['num_motion_frames'] = new_motion_status_dict.pop('FrameInfo')
                 response = client.log_status.update(
                 log_id=log_id, 
                 **new_motion_status_dict
@@ -174,3 +177,4 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"\terror inputing the data {log_path}")
                 print(e)
+                quit()
