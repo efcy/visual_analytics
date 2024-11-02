@@ -77,9 +77,8 @@ if __name__ == "__main__":
         }
 
         new_cognition_status_dict = is_done(log_id, cognition_status_dict)
-        if not args.force and len(cognition_status_dict) == 0:
+        if not args.force and len(new_cognition_status_dict) == 0:
             print("\twe already calculated number of full cognition frames for this log")
-            
         else:
             if args.force:
                 new_cognition_status_dict = cognition_status_dict
@@ -139,7 +138,7 @@ if __name__ == "__main__":
         }
 
         new_motion_status_dict = is_done(log_id, motion_status_dict)
-        if not args.force and len(motion_status_dict) == 0:
+        if not args.force and len(new_motion_status_dict) == 0:
             print("\twe already calculated number of full sensor frames for this log")
         else:
             if args.force:
