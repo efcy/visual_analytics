@@ -17,6 +17,16 @@ class MotionRepresentationClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> MotionRepresentation:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/motionrepr/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +61,10 @@ class MotionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -128,9 +139,10 @@ class MotionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -202,9 +214,10 @@ class MotionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -291,9 +304,10 @@ class MotionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.create(
@@ -348,6 +362,14 @@ class MotionRepresentationClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> MotionRepresentation:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/motionrepr/",
@@ -368,7 +390,16 @@ class MotionRepresentationClient:
             self,
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.Optional[int]:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
 
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/motionrepr/count/?{query_string}" if query_string else "api/motionrepr/count/"

@@ -17,6 +17,16 @@ class GameClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Game:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/games/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +61,10 @@ class GameClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -134,9 +145,10 @@ class GameClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -211,9 +223,10 @@ class GameClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -305,9 +318,10 @@ class GameClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.create(

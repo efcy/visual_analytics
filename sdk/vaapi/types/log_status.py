@@ -6,164 +6,100 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
 class LogStatus(pydantic_v1.BaseModel):
-    """
-    Foreign key to the log the image belongs to
-    """
+    #: Foreign key to the log the image belongs to
     log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
     
-    """
-    BallModel
-    """
+    #: BallModel
     BallModel: typing.Optional[int] = None
 
-    """
-    BallModel
-    """
-    BallModel: typing.Optional[int] = None
+    #: BallCandidates
+    BallCandidates: typing.Optional[int] = None
 
-    """
-    BallModel
-    """
-    BallModel: typing.Optional[int] = None
+    #: BallCandidatesTop
+    BallCandidatesTop: typing.Optional[int] = None
 
-    """
-    CameraMatrix
-    """
+    #: CameraMatrix
     CameraMatrix: typing.Optional[int] = None
 
-    """
-    CameraMatrixTop
-    """
+    #: CameraMatrixTop
     CameraMatrixTop: typing.Optional[int] = pydantic_v1.Field(default=None)
     
-    """
-    FieldPercept
-    """
+    #: FieldPercept
     FieldPercept: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    FieldPerceptTop
-    """
+    #: FieldPerceptTop
     FieldPerceptTop: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    GoalPercept
-    """
+    #: GoalPercept
     GoalPercept: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    GoalPerceptTop
-    """
+    #: GoalPerceptTop
     GoalPerceptTop: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    MultiBallPercept
-    """
+    #: MultiBallPercept
     MultiBallPercept: typing.Optional[str] = pydantic_v1.Field(default=None)
     
-    """
-    RansacLinePercept
-    """
+    #: RansacLinePercept
     RansacLinePercept: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    RansacCirclePercept2018
-    """
+    #: RansacCirclePercept2018
     RansacCirclePercept2018: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    ShortLinePercept
-    """
+    #: ShortLinePercept
     ShortLinePercept: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    ScanLineEdgelPercept
-    """
+    #: ScanLineEdgelPercept
     ScanLineEdgelPercept: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    ScanLineEdgelPerceptTop
-    """
+    #: ScanLineEdgelPerceptTop
     ScanLineEdgelPerceptTop: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    OdometryData
-    """
+    #: OdometryData
     OdometryData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    IMUData
-    """
+    #: IMUData
     IMUData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    FSRData
-    """
+    #: FSRData
     FSRData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    ButtonData
-    """
+    #: ButtonData
     ButtonData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    SensorJointData
-    """
+    #: SensorJointData
     SensorJointData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    AccelerometerData
-    """
+    #: AccelerometerData
     AccelerometerData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    InertialSensorData
-    """
+    #: InertialSensorData
     InertialSensorData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    MotionStatus
-    """
+    #: MotionStatus
     MotionStatus: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    MotorJointData
-    """
+    #: MotorJointData
     MotorJointData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    GyrometerData
-    """
+    #: GyrometerData
     GyrometerData: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_cognition_frames
-    """
+    #: num_cognition_frames
     num_cognition_frames: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_motion_frames
-    """
+    #: num_motion_frames
     num_motion_frames: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_jpg_bottom
-    """
+    #: num_jpg_bottom
     num_jpg_bottom: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_jpg_top
-    """
+    #: num_jpg_top
     num_jpg_top: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_bottom
-    """
+    #: num_bottom
     num_bottom: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_top
-    """
+    #: num_top
     num_top: typing.Optional[str] = pydantic_v1.Field(default=None)
 
 

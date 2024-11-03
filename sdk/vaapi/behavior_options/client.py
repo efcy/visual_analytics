@@ -17,6 +17,9 @@ class BehaviorOptionClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> BehaviorOptions:
+        """
+        
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-option/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +54,10 @@ class BehaviorOptionClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -126,9 +130,10 @@ class BehaviorOptionClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -198,9 +203,10 @@ class BehaviorOptionClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -231,6 +237,14 @@ class BehaviorOptionClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BehaviorOptions:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-option/",
@@ -258,6 +272,14 @@ class BehaviorOptionClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BehaviorOptions:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-option/",

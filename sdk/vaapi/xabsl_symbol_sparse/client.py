@@ -12,13 +12,68 @@ from ..types.xabsl_symbol_sparse import XabslSymbolSparse
 OMIT = typing.cast(typing.Any, ...)
 
 class XabslSymbolClientSparse:
+    """Wrapper for interacting with the XabslSymbolSparse Table of the database.
+    
+    This class provides methods to interact with XabslSymbolSparse entries
+    in the database through the API.
+    
+    Parameters
+    ----------
+    client_wrapper : SyncClientWrapper
+        The client wrapper instance used for making HTTP requests.
+    
+    Attributes
+    ----------
+    _client_wrapper : SyncClientWrapper
+        Internal reference to the client wrapper.
+    """
     def __init__(self, *, client_wrapper: SyncClientWrapper):
+        """Initialize the XabslSymbolClientSparse.
+        
+        Parameters
+        ----------
+        client_wrapper : SyncClientWrapper
+            The client wrapper instance for making HTTP requests.
+        """
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> XabslSymbolSparse:
+        """Retrieve an XabslSymbolSparse entry by its ID.
+
+        Parameters
+        ----------
+        id : int
+            The unique identifier of the XabslSymbolSparse entry.
+        request_options : RequestOptions, optional
+            Additional options for the HTTP request.
+            
+        Returns
+        -------
+        XabslSymbolSparse
+            The retrieved XabslSymbolSparse object.
+
+        Raises
+        ------
+        ApiError
+            If the API request fails or returns an error status code.
+
+        Examples
+        --------
+        ```python
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+         
+        symbol = client.behavior.symbol.sparse.get(id=123)
+        ```
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/sparse/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
+
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(XabslSymbolSparse, _response.json())  # type: ignore
@@ -30,16 +85,14 @@ class XabslSymbolClientSparse:
 
     def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
-        Delete a Motion Representation.
+        Delete a Xabsl Symbol from the XabslSymbolSparse Table.
 
         <Warning>This action can't be undone!</Warning>
 
-        You will need to supply the logs's unique ID. You can find the ID in 
-        the django admin panel or in the log settings in the UI. 
         Parameters
         ----------
         id : int
-            A unique integer value identifying this annotation.
+            A unique integer value identifying this Xabsl Symbol.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -50,14 +103,17 @@ class XabslSymbolClientSparse:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        ```python
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.delete(
+        client.xabsl_symbol_sparse.delete(
             id=1,
         )
+        ```
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/sparse/{jsonable_encoder(id)}/", method="DELETE", request_options=request_options
@@ -125,36 +181,19 @@ class XabslSymbolClientSparse:
         Annotation
             Updated annotation
 
-        Examples
+       Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        ```python
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.update(
+        client.xabsl_symbol_sparse.update(
             id=1,
-            result=[
-                {
-                    "original_width": 1920,
-                    "original_height": 1080,
-                    "image_rotation": 0,
-                    "from_name": "bboxes",
-                    "to_name": "image",
-                    "type": "rectanglelabels",
-                    "value": {
-                        "x": 20,
-                        "y": 30,
-                        "width": 50,
-                        "height": 60,
-                        "rotation": 0,
-                        "values": {"rectanglelabels": ["Person"]},
-                    },
-                }
-            ],
-            was_cancelled=False,
-            ground_truth=True,
         )
+        ```
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/sparse/{jsonable_encoder(id)}/",
@@ -183,9 +222,9 @@ class XabslSymbolClientSparse:
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.List[XabslSymbolSparse]:
         """
-        List all logs.
+        List XabslSymbolSparse with or without filters.
 
-        You will need to supply the event ID. You can find this in ...
+        You should always use at least filter by log_id, otherwise the response will be too large.
 
         Parameters
         ----------
@@ -202,14 +241,17 @@ class XabslSymbolClientSparse:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        ```python
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.list(
+        client.xabsl_symbol_sparse.list(
             id=1,
         )
+        ```
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
@@ -233,6 +275,31 @@ class XabslSymbolClientSparse:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> XabslSymbolSparse:
         """
+        Parameters
+        ----------
+        id : int
+            A unique integer value identifying this Xabsl Symbol.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        ```python
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        client.xabsl_symbol_sparse.create(
+            id=1,
+        )
+        ```
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/sparse/",
@@ -240,6 +307,7 @@ class XabslSymbolClientSparse:
             json={
                 "log_id": log_id,
                 "frame": frame,
+                "data": data,
                 "request_options": request_options,
             },
             request_options=request_options,
@@ -261,6 +329,31 @@ class XabslSymbolClientSparse:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> XabslSymbolSparse:
         """
+        Parameters
+        ----------
+        id : int
+            A unique integer value identifying this Xabsl Symbol.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        ```python
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        client.xabsl_symbol_sparse.bulk_create(
+            id=1,
+        )
+        ```
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/sparse/",
@@ -281,7 +374,33 @@ class XabslSymbolClientSparse:
             self,
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.Optional[int]:
+        """
+        Parameters
+        ----------
+        id : int
+            A unique integer value identifying this Xabsl Symbol.
 
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        ```python
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        client.xabsl_symbol_sparse.get_behavior_count(
+            id=1,
+        )
+        ```
+        """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/behavior/symbol/count/?{query_string}" if query_string else "api/behavior/symbol/count/"

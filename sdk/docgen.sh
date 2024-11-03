@@ -1,1 +1,1 @@
-python -m pdoc -o docs -d google vaapi
+pdoc ./vaapi -o docs --template-dir docs/templates/ 

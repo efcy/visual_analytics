@@ -16,6 +16,9 @@ class BehaviorFrameOptionClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> BehaviorFrameOption:
+        """
+        
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-frame-option/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -76,11 +79,7 @@ class BehaviorFrameOptionClient:
         log_id: typing.Optional[int] = OMIT,
         options_id: typing.Optional[int] = OMIT,
         activeState: typing.Optional[int] = OMIT,
-        parent: typing.Optional[int] = OMIT,
         frame: typing.Optional[int] = OMIT,
-        time: typing.Optional[int] = OMIT,
-        timeOfExecution: typing.Optional[int] = OMIT,
-        stateTime: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BehaviorFrameOption:
         """
@@ -95,67 +94,36 @@ class BehaviorFrameOptionClient:
         id : int
             A unique integer value identifying this annotation.
 
-        result : typing.Optional[typing.Sequence[typing.Dict[str, typing.Any]]]
+        log_id : typing.Optional[typing.Sequence[typing.Dict[str, typing.Any]]]
             Labeling result in JSON format. Read more about the format in [the Label Studio documentation.](https://labelstud.io/guide/task_format)
 
-        task : typing.Optional[int]
+        options_id : typing.Optional[int]
             Corresponding task for this annotation
 
-        project : typing.Optional[int]
+        activeState : typing.Optional[int]
             Project ID for this annotation
 
-        completed_by : typing.Optional[int]
+        frame : typing.Optional[int]
             User ID of the person who created this annotation
-
-        updated_by : typing.Optional[int]
-            Last user who updated this annotation
-
-        was_cancelled : typing.Optional[bool]
-            User skipped the task
-
-        ground_truth : typing.Optional[bool]
-            This annotation is a Ground Truth
-
-        lead_time : typing.Optional[float]
-            How much time it took to annotate the task (in seconds)
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        Annotation
-            Updated annotation
+        BehaviorFrameOption
+            Updated BehaviorFrameOption
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.update(
-            id=1,
-            result=[
-                {
-                    "original_width": 1920,
-                    "original_height": 1080,
-                    "image_rotation": 0,
-                    "from_name": "bboxes",
-                    "to_name": "image",
-                    "type": "rectanglelabels",
-                    "value": {
-                        "x": 20,
-                        "y": 30,
-                        "width": 50,
-                        "height": 60,
-                        "rotation": 0,
-                        "values": {"rectanglelabels": ["Person"]},
-                    },
-                }
-            ],
-            was_cancelled=False,
-            ground_truth=True,
+        client.behavior_frame_option.update(
+
         )
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -248,6 +216,12 @@ class BehaviorFrameOptionClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BehaviorFrameOption:
         """
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-frame-option/",
@@ -280,6 +254,12 @@ class BehaviorFrameOptionClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BehaviorFrameOption:
         """
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior-frame-option/",
@@ -355,7 +335,9 @@ class BehaviorFrameOptionClient:
             self,
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.Optional[int]:
-
+        """
+        
+        """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/behavior/count/?{query_string}" if query_string else "api/behavior/count/"

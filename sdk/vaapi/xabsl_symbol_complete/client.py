@@ -3,7 +3,7 @@ import datetime as dt
 from json.decoder import JSONDecodeError
 
 from ..core.api_error import ApiError
-from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
+from ..core.client_wrapper import SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
@@ -17,6 +17,16 @@ class XabslSymbolClientComplete:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> XabslSymbolComplete:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/complete/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +61,10 @@ class XabslSymbolClientComplete:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -128,9 +139,10 @@ class XabslSymbolClientComplete:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -203,9 +215,10 @@ class XabslSymbolClientComplete:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -233,6 +246,14 @@ class XabslSymbolClientComplete:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> XabslSymbolComplete:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/complete/",
@@ -259,6 +280,14 @@ class XabslSymbolClientComplete:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> XabslSymbolComplete:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/behavior/symbol/",

@@ -6,51 +6,20 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
 class BehaviorFrameOption(pydantic_v1.BaseModel):
-    """
-    Id assigned by django
-    """
+    #: Id assigned by django
     id: typing.Optional[int] = None
 
-    """
-    Log ID: Id of related log / robot data
-    """
+    #: Log ID: Id of related log / robot data
     log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    options_id
-    """
+    #: options_id
     options_id: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    activeState
-    """
+    #: activeState
     activeState: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    frame
-    """
+    #: frame
     frame: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    time
-    """
-    time: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    parent
-    """
-    parent: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    timeOfExecution
-    """
-    timeOfExecution: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    stateTime
-    """
-    stateTime: typing.Optional[int] = pydantic_v1.Field(default=None)
-
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

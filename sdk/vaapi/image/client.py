@@ -17,6 +17,16 @@ class ImageClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> Image:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/image/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +61,10 @@ class ImageClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -131,9 +142,10 @@ class ImageClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -189,31 +201,27 @@ class ImageClient:
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.List[Image]:
         """
-        List all logs.
-
-        You will need to supply the event ID. You can find this in ...
+        List all Image with optional filters applied.
 
         Parameters
         ----------
-        event_id : int
-            Event ID
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[Log]
-            Log
+        typing.List[Image]
+            Image
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.list(
+        client.image.list(
             id=1,
         )
         """
@@ -297,9 +305,10 @@ class ImageClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.create(
@@ -354,6 +363,14 @@ class ImageClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Image:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/image/",
@@ -378,6 +395,14 @@ class ImageClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Image:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/image/update/",
@@ -399,7 +424,16 @@ class ImageClient:
             self,
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.Optional[int]:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
 
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/image-count/?{query_string}" if query_string else "api/image-count/"

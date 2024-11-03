@@ -7,12 +7,12 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 class Annotation(pydantic_v1.BaseModel):
     """
-    Id assigned by django
+    #: Id assigned by django
     """
     id: typing.Optional[int] = None
 
     """
-    List of annotation results for the task
+    #: List of annotation results for the task
     FIXME: 
     """
     result: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic_v1.Field(default=None)

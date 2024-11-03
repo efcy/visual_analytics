@@ -6,39 +6,25 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
 class Image(pydantic_v1.BaseModel):
-    """
-    Id assigned by django
-    """
+    #: Id assigned by django
     id: typing.Optional[int] = None
 
-    """
-    Foreign key to the log the image belongs to
-    """
+    #: Foreign key to the log the image belongs to
     log: typing.Optional[int] = pydantic_v1.Field(default=None)
     
-    """
-    camera
-    """
+    #: camera
     camera: typing.Optional[str] = None
 
-    """
-    type
-    """
+    #: type
     type: typing.Optional[str] = None
 
-    """
-    frame_number
-    """
+    #: frame_number
     frame_number: typing.Optional[int] = pydantic_v1.Field(default=None)
     
-    """
-    image_url
-    """
+    #: image_url
     image_url: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    blurredness_value
-    """
+    #: blurredness_value
     blurredness_value: typing.Optional[int] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:

@@ -3,3 +3,7 @@ you can perform with the API of the visual analytics tool by Berlin United for t
 
 
 __version__ = "0.4.2"
+
+__pdoc__ = {
+    'core': False,  # Excludes the entire module/folder
+}

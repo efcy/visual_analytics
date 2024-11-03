@@ -16,6 +16,16 @@ class LogStatusClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> LogStatus:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/log-status/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -50,9 +60,10 @@ class LogStatusClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -153,9 +164,10 @@ class LogStatusClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -254,14 +266,15 @@ class LogStatusClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        ```python
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.list(
-            id=1,
-        )
+        client.log_status.list(log_id=1)
+        ```
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
@@ -316,6 +329,23 @@ class LogStatusClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> LogStatus:
         """
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+
+        Examples
+        --------
+        ```python
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        ```
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/log-status/",

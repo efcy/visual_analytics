@@ -6,34 +6,22 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 
 class BehaviorOptionState(pydantic_v1.BaseModel):
-    """
-    Id assigned by django
-    """
+    #: Id assigned by django
     id: typing.Optional[int] = None
 
-    """
-    Log ID: Id of related log / robot data
-    """
+    #: Log ID: Id of related log / robot data
     log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    option_id
-    """
+    #: option_id
     option_id: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    xabsl_internal_state_id
-    """
+    #: xabsl_internal_state_id
     xabsl_internal_state_id: typing.Optional[int] = pydantic_v1.Field(default=None)
 
-    """
-    state name
-    """
+    #: state name
     name: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    target
-    """
+    #: target
     target: typing.Optional[bool] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:

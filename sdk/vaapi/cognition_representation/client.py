@@ -1,9 +1,8 @@
 import typing
-import datetime as dt
 from json.decoder import JSONDecodeError
 
 from ..core.api_error import ApiError
-from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
+from ..core.client_wrapper import SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
@@ -17,6 +16,16 @@ class CognitionRepresentationClient:
         self._client_wrapper = client_wrapper
 
     def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> CognitionRepresentation:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         _response = self._client_wrapper.httpx_client.request(
             f"api/cognitionrepr/{jsonable_encoder(id)}/", method="GET", request_options=request_options
         )
@@ -51,9 +60,10 @@ class CognitionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -201,9 +211,10 @@ class CognitionRepresentationClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -235,6 +246,14 @@ class CognitionRepresentationClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CognitionRepresentation:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/cognitionrepr/",
@@ -263,6 +282,14 @@ class CognitionRepresentationClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CognitionRepresentation:
         """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/cognitionrepr/",
@@ -283,7 +310,14 @@ class CognitionRepresentationClient:
             self,
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.Optional[int]:
+        """
+        from vaapi.client import Vaapi
 
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
+            api_key="YOUR_API_KEY",
+        )
+        """
         query_params = {k: v for k, v in filters.items() if v is not None}
         query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
         url = f"api/cognitionrepr/count/?{query_string}" if query_string else "api/cognitionrepr/count/"

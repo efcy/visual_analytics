@@ -28,15 +28,6 @@ class VaapiBase:
     base_url : typing.Optional[str]
         The base url to use for requests from the client.
 
-    environment : LabelStudioEnvironment
-        The environment to use for requests from the client. from .environment import LabelStudioEnvironment
-
-
-
-        Defaults to LabelStudioEnvironment.DEFAULT
-
-
-
     api_key : typing.Optional[str]
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
@@ -49,11 +40,13 @@ class VaapiBase:
 
     Examples
     --------
+    ```python
     from label_studio_sdk.client import LabelStudio
 
     client = LabelStudio(
         api_key="YOUR_API_KEY",
     )
+    ```
     """
 
     def __init__(
