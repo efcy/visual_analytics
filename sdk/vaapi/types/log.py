@@ -96,6 +96,9 @@ class Log(pydantic_v1.BaseModel):
         return deep_union_pydantic_dicts(
             super().dict(**kwargs_with_defaults_exclude_unset), super().dict(**kwargs_with_defaults_exclude_none)
         )
+    
+    def __str__(self):
+        return f"{self.id} - {self.log_path}"
 
     class Config:
         frozen = True

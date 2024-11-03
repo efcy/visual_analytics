@@ -280,52 +280,6 @@ class BehaviorFrameOptionAPIView(APIView):
             return Response({"error": "Invalid log_id."}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class XabslSymbol2APIView(APIView):
-    def post(self, request, *args, **kwargs):
-        # Check if the data is a list (bulk create) or dict (single create)
-        is_many = isinstance(request.data, list)
-        
-        #serializer = self.get_serializer(data=request.data, many=is_many)
-        #serializer.is_valid(raise_exception=True)
-        
-        if is_many:
-            return self.bulk_insert_with_no_duplicates(request.data)
-        else:
-            return self.single_create(request.data)
-
-    def single_create(self, validated_data):
-        
-        instance, created = models.XabslSymbol.objects.get_or_create(
-            log_id=validated_data.get('log_id'),
-            frame=validated_data.get('frame'),
-            symbol_name=validated_data.get('symbol_name'),
-            defaults=validated_data
-        )
-        
-        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-        
-        #serializer = self.get_serializer(instance)
-        return Response(status=status_code)
-
-    
-    
-    def bulk_insert_with_no_duplicates(self, data):
-        starttime = time.time()
-        rows_tuples = [(row['log_id'], row['frame'], json.dumps(row['output_decimal'])) for row in data]
-
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO api_xabslsymbol2 (log_id_id, frame, output_decimal)
-            VALUES %s
-            ON CONFLICT (log_id_id, frame) DO NOTHING;
-            """ 
-            # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples)
-        print( time.time() - starttime)
-        return Response({
-        }, status=status.HTTP_200_OK)
-
-
 class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
     permission_classes = [IsAuthenticated]
