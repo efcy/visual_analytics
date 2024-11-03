@@ -1,9 +1,8 @@
 import typing
-import datetime as dt
 from json.decoder import JSONDecodeError
 
 from ..core.api_error import ApiError
-from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
+from ..core.client_wrapper import SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
@@ -31,16 +30,14 @@ class BehaviorFrameOptionClient:
 
     def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> None:
         """
-        Delete a Motion Representation.
+        Delete a BehaviorFrameOption.
 
         <Warning>This action can't be undone!</Warning>
 
-        You will need to supply the logs's unique ID. You can find the ID in 
-        the django admin panel or in the log settings in the UI. 
         Parameters
         ----------
         id : int
-            A unique integer value identifying this annotation.
+            A unique integer value identifying this BehaviorFrameOption.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -51,12 +48,13 @@ class BehaviorFrameOptionClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.delete(
+        client.behavior_frame_option.delete(
             id=1,
         )
         """
@@ -190,9 +188,7 @@ class BehaviorFrameOptionClient:
             request_options: typing.Optional[RequestOptions] = None,
             **filters: typing.Any) -> typing.List[BehaviorFrameOption]:
         """
-        List all logs.
-
-        You will need to supply the event ID. You can find this in ...
+        List all BehaviorFrameOptions. This endpoint requires to give id's for options_id and active_state if set. You can't put the names here. If you want that you have to use the filter endpoint.
 
         Parameters
         ----------
@@ -209,13 +205,18 @@ class BehaviorFrameOptionClient:
 
         Examples
         --------
-        from label_studio_sdk.client import LabelStudio
+        from vaapi.client import Vaapi
 
-        client = LabelStudio(
+        client = Vaapi(
+            base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
-        client.annotations.list(
-            id=1,
+
+        client.behavior_frame_option.list(
+            log_id=1,
+            options_id
+            active_state
+            frame
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
@@ -329,9 +330,6 @@ class BehaviorFrameOptionClient:
         --------
         from vaapi.client import Vaapi
 
-        client = LabelStudio(
-            api_key="YOUR_API_KEY",
-        )
         client = Vaapi(
             base_url='https://api.berlin-united.com/',  
             api_key="YOUR_API_KEY",
