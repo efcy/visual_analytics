@@ -67,8 +67,25 @@ if __name__ == "__main__":
         log_path = Path(log_root_path) / data.log_path
         print("log_path: ", log_path)
 
-        representation_list = ["BallModel", "BallCandidates", "BallCandidatesTop", "CameraMatrix", "CameraMatrixTop", "OdometryData", "FieldPercept", "FieldPerceptTop", "GoalPercept", "GoalPerceptTop", "RansacLinePercept", "ShortLinePercept", "ScanLineEdgelPercept", "ScanLineEdgelPerceptTop", "RansacCirclePercept2018"]
-        representation_list = ["BallCandidates", "BallCandidatesTop", "MultiBallPercept"]
+        representation_list = [
+            "BallModel",
+            "BallCandidates",
+            "BallCandidatesTop",
+            "CameraMatrix",
+            "CameraMatrixTop",
+            "OdometryData",
+            "FieldPercept",
+            "FieldPerceptTop",
+            "GoalPercept",
+            "GoalPerceptTop",
+            "MultiBallPercept"
+            "RansacLinePercept", 
+            "ShortLinePercept",
+            "ScanLineEdgelPercept",
+            "ScanLineEdgelPerceptTop",
+            "RansacCirclePercept2018"
+        ]
+
         # check if we need to insert this log
         new_representation_list = is_input_done(representation_list)
         if not args.force and len(new_representation_list) == 0:
