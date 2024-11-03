@@ -58,32 +58,6 @@ class Log(pydantic_v1.BaseModel):
     """
     combined_log_path: typing.Optional[str] = pydantic_v1.Field(default=None)
 
-    """
-    num_cognition_frames
-    """
-    num_cognition_frames: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    num_motion_frames
-    """
-    num_motion_frames: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    """
-    num_jpg_bottom
-    """
-    num_jpg_bottom: typing.Optional[int] = pydantic_v1.Field(default=None)
-    """
-    num_jpg_top
-    """
-    num_jpg_top: typing.Optional[int] = pydantic_v1.Field(default=None)
-    """
-    num_bottom
-    """
-    num_bottom: typing.Optional[int] = pydantic_v1.Field(default=None)
-    """
-    num_top
-    """
-    num_top: typing.Optional[int] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}
