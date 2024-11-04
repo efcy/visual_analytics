@@ -41,5 +41,6 @@ router.register("behavior-frame-option",views.BehaviorFrameOptionViewSet)
 router.register("behavior/symbol/complete",views.XabslSymbolCompleteViewSet)
 router.register("behavior/symbol/sparse",views.XabslSymbolSparseViewSet)
 router.register("log-status",views.LogStatusViewSet)
+router.register("frame-filter",views.FrameFilterView)
 
 urlpatterns += router.urls

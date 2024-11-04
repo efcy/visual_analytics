@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import Event, Game, Log, Image, MotionRepresentation, CognitionRepresentation, Annotation, \
-BehaviorOption, BehaviorOptionState, BehaviorFrameOption, LogStatus, XabslSymbolSparse, XabslSymbolComplete
+BehaviorOption, BehaviorOptionState, BehaviorFrameOption, LogStatus, XabslSymbolSparse, XabslSymbolComplete, FrameFilter
 
 class AnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -135,6 +135,16 @@ class XabslSymbolCompleteAdmin(admin.ModelAdmin):
     
     get_log_id.short_description = 'Log ID'
 
+class FrameFilterAdmin(admin.ModelAdmin):
+    list_display = ("get_log_id", "get_user")
+
+    def get_log_id(self, obj):
+        return obj.log_id.id
+    
+    def get_user(self, obj):
+        return obj.user
+    
+    get_log_id.short_description = 'Log ID'
 
 #class XabslSymbolAdmin(admin.ModelAdmin):
 #    list_display = ('get_log_id', 'frame', 'symbol_type','symbol_name', 'symbol_value')
@@ -158,3 +168,4 @@ admin.site.register(Annotation, AnnotationAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
 admin.site.register(XabslSymbolComplete, XabslSymbolCompleteAdmin)
 admin.site.register(XabslSymbolSparse)
+admin.site.register(FrameFilter, FrameFilterAdmin)

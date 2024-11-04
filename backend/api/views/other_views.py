@@ -410,3 +410,15 @@ class LogStatusViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status_code)
 
+class FrameFilterView(viewsets.ModelViewSet):
+    serializer_class = serializers.FrameFilterSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = models.FrameFilter.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # Make sure the request is available in the serializer context
+        return context
+
+    def perform_create(self, serializer):
+        serializer.save()  

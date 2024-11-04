@@ -98,3 +98,21 @@ class LogStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LogStatus
         fields = '__all__'
+
+class FrameFilterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FrameFilter
+        fields = ['log_id', 'frames']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        
+        # Using update_or_create instead of create
+        instance, created = models.FrameFilter.objects.update_or_create(
+            log_id=validated_data['log_id'],
+            user=user,
+            defaults={
+                'frames': validated_data['frames']
+            }
+        )
+        return instance

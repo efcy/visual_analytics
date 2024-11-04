@@ -289,6 +289,8 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
         queryset = models.XabslSymbolSparse.objects.all()
         query_params = self.request.query_params
 
+        # FIXME combine with behaviorfull
+        # FIXME filter does not seem to work because we now store json
         filters = Q()
         for field in models.XabslSymbolSparse._meta.fields:
             param_value = query_params.get(field.name)
