@@ -9,28 +9,26 @@ import classes from "./AnnotationView.module.css";
 const AnnotationView = () => {
   console.log("AnnotationView called")
   const [imageList, setImageList] = useState([]);
+  const [frameFilter, setFrameFilter] = useState(0);
   const [currentImage, setCurrentImage] = useState(null);
   const [camera, setCamera] = useState("BOTTOM");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id, imageIndex  } = useParams();
-  
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const navigate = useNavigate();
 
-  // TODO in the future also preload a few of the other camera images. and then initialize the setPreloadedImages correctly
 
   useEffect(() => {
     setIsInitialLoading(true);
     get_image_list();
     console.log("switch camera")
-  }, [camera]); // this list is called dependency array
+  }, [camera, frameFilter]); // this list is called dependency array
 
   const get_image_list = () => {
     api
       .get(
-        //`${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=0`
-        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
+        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=${frameFilter}`
       )
       .then((res) => res.data)
       .then((data) => {
@@ -96,7 +94,12 @@ const AnnotationView = () => {
     <div className={classes.mainView}>
       <div className={classes.dataView}>
         {currentImage  ? (
-        <CanvasView image={currentImage}  currentCamera={camera} setCamera={setCamera}/>
+        <CanvasView 
+          image={currentImage}
+          currentCamera={camera}
+          setCamera={setCamera}
+          setFrameFilter={setFrameFilter}
+        />
       ) : (
         <div>Image not loaded yet</div>
       )}

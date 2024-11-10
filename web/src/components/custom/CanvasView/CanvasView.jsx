@@ -4,8 +4,9 @@ import uuid4 from "uuid4";
 import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button"
 
-const CanvasView = ({ image, currentCamera, setCamera }) => {
+const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -188,6 +189,11 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
     );
     setSelectedId(null);
   };
+  
+
+  const toggle_frame_filter = ( ) => {
+    setFrameFilter(prevValue => prevValue === 0 ? 1 : 0);
+  }
 
   return (
     <div className={classes.canvasView}>
@@ -253,6 +259,7 @@ const CanvasView = ({ image, currentCamera, setCamera }) => {
             );
           })}
         </ToggleGroup>
+        <Button onClick={() => toggle_frame_filter(1)}>FrameFilter</Button>
       </div>
     </div>
   );

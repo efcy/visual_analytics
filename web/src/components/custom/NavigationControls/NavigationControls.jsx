@@ -159,7 +159,7 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
     <>
       <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
       <Button disabled={store_idx === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
-      <p>{store_idx}</p>
+      <p>{store_idx} / {totalImages}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
           <div

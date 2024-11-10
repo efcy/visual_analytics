@@ -9,6 +9,7 @@ def frame_filter_demo(client):
         state_name="forwardkick",
     )
 
+    # publish the frames list
     resp = client.frame_filter.create(
         log_id=168,
         frames={"frame_list": response},
