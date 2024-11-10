@@ -103,15 +103,17 @@ class ImageViewSet(viewsets.ModelViewSet):
         # we use copy here so that the QueryDict object query_params become mutable
         query_params = self.request.query_params.copy()
 
-        #bla = False
         # check if the frontend wants to use a frame filter
-        #if "use_filter" in query_params:
-        #    # TODO check if we have a list of frames set here -> implement a model for this
-        #    bla = True
-        #    # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
-        #    query_params.pop('use_filter')
+        #FIXME: use_filter=0 still counts as applying
+        bla = False
+        if "use_filter" in query_params:
+            print("yeah we are applying some filters")
+            # TODO check if we have a list of frames set here -> implement a model for this
+            frame_numbers = [6504, 11033]
+            bla = True
+            # we remove the frame filter query param for the QueryDict so that we can parse the rest of the filters normaly
+            query_params.pop('use_filter')
 
-        #frame_numbers = [19108, 19109, 19110, 19111, 19112, 19113, 19114, 19115, 19116, 19117]
         # This is a generic filter on the queryset, the supplied filter must be a field in the Image model 
         filters = Q()
         for field in models.Image._meta.fields:
@@ -124,10 +126,11 @@ class ImageViewSet(viewsets.ModelViewSet):
                 filters &= Q(**{field.name: param_value})
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         qs = queryset.filter(filters)
-        #print(qs.order_by('frame_number').count())
-        #if bla:
-        #    qs = qs.filter(frame_number__in=frame_numbers)
+        
+        if bla:
+            qs = qs.filter(frame_number__in=frame_numbers)
         #return queryset.filter(filters).filter(frame_number__in=frame_numbers).order_by('frame_number')
+        print(qs.order_by('frame_number').count())
         return qs.order_by('frame_number')
     
     def create(self, request, *args, **kwargs):

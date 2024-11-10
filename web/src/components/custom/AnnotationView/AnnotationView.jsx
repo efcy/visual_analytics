@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import api from "@/api";
-import { useParams } from "react-router-dom";
-import MultiRowRangeSlider from "../MultiRowRangeSlider/MultiRowRangeSlider";
-import { useSelector } from "react-redux";
+import { useParams, useNavigate  } from "react-router-dom";
+import NavigationControls from "../NavigationControls/NavigationControls.jsx";
 import DataView from "../DataView/DataView.jsx";
 import CanvasView from "../CanvasView/CanvasView.jsx";
 import classes from "./AnnotationView.module.css";
@@ -10,120 +9,88 @@ import classes from "./AnnotationView.module.css";
 const AnnotationView = () => {
   console.log("AnnotationView called")
   const [imageList, setImageList] = useState([]);
-  const [preloadedImagesBottom, setPreloadedImagesBottom] = useState([]);
-  const [preloadedImagesTop, setPreloadedImagesTop] = useState([]);
+  const [currentImage, setCurrentImage] = useState(null);
   const [camera, setCamera] = useState("BOTTOM");
-  const { id } = useParams();
-  const store_idx = useSelector((state) => state.canvasReducer.index);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { id, imageIndex  } = useParams();
+  
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const preloadRange = 4;
+  const navigate = useNavigate();
 
   // TODO in the future also preload a few of the other camera images. and then initialize the setPreloadedImages correctly
 
   useEffect(() => {
     setIsInitialLoading(true);
     get_image_list();
-    setPreloadedImagesBottom([]);
-    setPreloadedImagesTop([]);
     console.log("switch camera")
   }, [camera]); // this list is called dependency array
 
   const get_image_list = () => {
     api
       .get(
-        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=1`
+        //`${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=0`
+        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}`
       )
       .then((res) => res.data)
       .then((data) => {
         setImageList(data);
         setIsInitialLoading(false);
+
+        if (data.length > 0 && (imageIndex < 0 || imageIndex >= data.length)) {
+          navigate(`/data/${id}/image/0`, { replace: true });
+        }
       })
       .catch((err) => alert(err));
   };
 
   useEffect(() => {
     if(imageList.length > 0){
-      console.log(imageList[0])
+      console.log(imageList)
     }
-    
   }, [imageList]); // this list is called dependency array
   
-  const loadImage = useCallback((url) => {
+  
+
+  // Load specific image
+  const loadImage = (imageIndex) => {
+    setIsLoading(true);
+    setError(null);
+
+    const currentImageIdx = parseInt(imageIndex);
+    if (!imageList[currentImageIdx]) {
+      setError('Image not found');
+      setIsLoading(false);
+      return;
+    }
+
+    const imageUrl = "https://logs.berlin-united.com/" + imageList[currentImageIdx].image_url;
+    
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = url;
+      
+      img.onload = () => {
+        setIsLoading(false);
+        resolve(img);
+      };
+      
+      img.onerror = () => {
+        setError('Failed to load image');
+        setIsLoading(false);
+        reject();
+      };
+
+      img.src = imageUrl;
+      setCurrentImage(img);
     });
-  }, []);
+  };
 
-  const loadImagesProgressively = useCallback(async () => {
-    const startIndex = Math.max(0, store_idx - preloadRange);
-    const endIndex = Math.min(imageList.length - 1, store_idx + preloadRange + 1);
-    var updatedArray = [];
-    var preloaded_images = Object()
-
-    if (camera === "TOP"){
-      preloaded_images = preloadedImagesTop
-      updatedArray = [...preloadedImagesTop];
-    }else{
-      preloaded_images = preloadedImagesBottom
-      updatedArray = [...preloadedImagesBottom];
-    }
-
-    for (let i = startIndex; i < endIndex; i++) {
-      if (!preloaded_images[i] && imageList[i]) {
-        const imageUrl = "https://logs.berlin-united.com/" + imageList[i].image_url;
-        try {
-          const loadedImage = await loadImage(imageUrl);
-          // copy existing array => research better ways
-          // one idea is to not have it in state
-          updatedArray[i] = loadedImage;
-        } catch (error) {
-          console.error(`Error loading image at index ${i}:`, error);
-        }
-      }
-    }
-    // delete previous entries
-    for (let i = 0; i < startIndex; i++) {
-      updatedArray[i] = null;
-    }
-    // delete images after the range
-    for (let i = endIndex; i < imageList.length - 1; i++) {
-      updatedArray[i] = null;
-    }
-
-    // set state
-    if (camera === "TOP"){
-      setPreloadedImagesTop(updatedArray);
-    }else{
-      setPreloadedImagesBottom(updatedArray);
-    }
-
-  }, [store_idx, imageList, loadImage, preloadRange, camera]);
-
+  // Load new image when imageIndex changes
   useEffect(() => {
-    if (!isInitialLoading) {
-      loadImagesProgressively();
+    if (imageList.length > 0) {
+      loadImage(imageIndex);
     }
-  }, [loadImagesProgressively, isInitialLoading]);
-  /*
-  useEffect(() => {
-    console.log(preloadedImages)
-  }, [preloadedImages]); // this list is called dependency array
-  */
-
-  // FIXME
-  const currentImage = useMemo(() => {
-    if (camera === "TOP"){
-      return preloadedImagesTop[store_idx];
-    }else{
-      return preloadedImagesBottom[store_idx];
-    }
-    
-  },
-  [preloadedImagesBottom, preloadedImagesTop, store_idx, camera]);
-
+  }, [imageIndex, imageList]);
 
   return (
     <div className={classes.mainView}>
@@ -138,7 +105,11 @@ const AnnotationView = () => {
 
       <div className="p-4">
       {imageList.length > 0  ? (
-        <MultiRowRangeSlider length={imageList.length} />
+        <NavigationControls  
+          imageIndex={imageIndex}
+          totalImages={imageList.length}
+          id={id}
+        />
       ) : (
         <div></div>
       )}

@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
+import { useNavigate  } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "@/reducers/canvasSlice";
-import classes from './MultiRowRangeSlider.module.css'
+import classes from './NavigationControls.module.css'
 import { Button } from "@/components/ui/button"
 
-const MultiRowRangeSlider = ( {length} ) => {
-  console.log("MultiRowRangeSlider called", length)
+const NavigationControls = ( { imageIndex, totalImages, id } ) => {
+  const navigate = useNavigate();
+
   const [sliderValue, setSliderValue] = useState(0);
   const [stepSize, setStepSize] = useState(51);
   const [gradientStyle, setGradientStyle] = useState({});
@@ -16,8 +18,8 @@ const MultiRowRangeSlider = ( {length} ) => {
   const store_idx = useSelector((state) => state.canvasReducer.index);
   const dispatch = useDispatch();
 
-  const maxValue = length;
-  const totalBars = length;
+  const maxValue = totalImages;
+  const totalBars = totalImages;
   const minStepSize = 23; // Width of each bar including the indicator
 
   const updateGradientStyle = useCallback(() => {
@@ -39,18 +41,19 @@ const MultiRowRangeSlider = ( {length} ) => {
   const previous_frame = ( step = 1 ) => {
     const stepValue = step === undefined ? 1 : Number(step);
     setSliderValue(prevValue => prevValue - stepValue);
+    navigate(`/data/${id}/image/${Math.max(0, parseInt(imageIndex) - 1)}`)
   }
   const next_frame = ( step = 1 ) => {
-    
     const stepValue = step === undefined ? 1 : Number(step);
     setSliderValue(prevValue => prevValue + stepValue);
+    navigate(`/data/${id}/image/${Math.min(totalImages - 1, parseInt(imageIndex) + 1)}`)
   }
 
   const handleKeyPress = useCallback((event) => {
     switch(event.key) {
       // FIXME make step configurable
       case 'ArrowRight':
-        if (store_idx < length - 1) {
+        if (store_idx < totalImages - 1) {
           next_frame(1);
         }
         break;
@@ -62,7 +65,7 @@ const MultiRowRangeSlider = ( {length} ) => {
       default:
         console.log(`Key pressed: ${event.key}`);
     }
-  }, [store_idx, length, next_frame, previous_frame]);
+  }, [store_idx, totalImages, next_frame, previous_frame]);
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -118,6 +121,7 @@ const MultiRowRangeSlider = ( {length} ) => {
         container.scrollLeft = data.x;
       }
     }
+    navigate(`/data/${id}/image/${newValue}`)
   };
 
   const getHandlePosition = () => {
@@ -146,6 +150,7 @@ const MultiRowRangeSlider = ( {length} ) => {
         containerRef.current.scrollLeft =
           clickPosition - containerRef.current.clientWidth / 2;
       }
+      navigate(`/data/${id}/image/${newValue}`)
     }
   };
 
@@ -153,7 +158,7 @@ const MultiRowRangeSlider = ( {length} ) => {
   return (
     <>
       <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
-      <Button disabled={store_idx === length -1} onClick={() => next_frame(1)}>Next</Button>
+      <Button disabled={store_idx === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
       <p>{store_idx}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
@@ -185,4 +190,4 @@ const MultiRowRangeSlider = ( {length} ) => {
   );
 };
 
-export default MultiRowRangeSlider;
+export default NavigationControls ;

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.jsx";
 import EventListView from "./components/custom/EventListView.jsx";
 import GameListView from "./components/custom/GameListView.jsx";
@@ -18,6 +18,10 @@ function Logout() {
   return <Navigate to="/login" />;
 }
 
+const RedirectToImage = () => {
+  const { id } = useParams();
+  return <Navigate replace to={`/data/${id}/image/0`} />;
+};
 
 function App() {
   return (
@@ -25,14 +29,21 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
+              
               <Route path="/" element={<ProtectedRoute><EventPage /></ProtectedRoute>}>
                 <Route index element={<EventListView />} />
                 <Route path="/" element={<ProtectedRoute><EventListView /></ProtectedRoute>} />
                 <Route path="/events/:id" element={<ProtectedRoute><GameListView /></ProtectedRoute>} />
                 <Route path="/games/:id" element={<ProtectedRoute><LogListView /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/images/:id" element={<ProtectedRoute><AnnotationView /></ProtectedRoute>} />
-              </Route>
+                {/* Redirect /data/:id to /data/:id/image/0 */}
+                <Route 
+                  path="/data/:id" 
+                  element={<ProtectedRoute><RedirectToImage /></ProtectedRoute>} 
+                />
+                <Route path="/data/:id/image/:imageIndex" element={<ProtectedRoute><AnnotationView /></ProtectedRoute>} />
+                
+            </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />}></Route>
