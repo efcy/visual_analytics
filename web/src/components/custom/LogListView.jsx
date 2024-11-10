@@ -18,7 +18,7 @@ function LogListView() {
 
     const getLogs = () => {
         api
-            .get(`${import.meta.env.VITE_API_URL}/api/logs?game=${id}`)
+            .get(`${import.meta.env.VITE_API_URL}/api/logs?game_id=${id}`)
             .then((res) => res.data)
             .then((data) => {
                 setLogs(data);
