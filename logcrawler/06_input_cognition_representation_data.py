@@ -68,6 +68,7 @@ if __name__ == "__main__":
         print("log_path: ", log_path)
 
         representation_list = [
+            "FrameInfo",
             "BallModel",
             "BallCandidates",
             "BallCandidatesTop",
@@ -78,7 +79,7 @@ if __name__ == "__main__":
             "FieldPerceptTop",
             "GoalPercept",
             "GoalPerceptTop",
-            "MultiBallPercept"
+            "MultiBallPercept",
             "RansacLinePercept", 
             "ShortLinePercept",
             "ScanLineEdgelPercept",

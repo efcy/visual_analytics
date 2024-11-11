@@ -55,6 +55,7 @@ class Log(models.Model):
 class LogStatus(models.Model):
     log_id = models.OneToOneField(Log,on_delete=models.CASCADE,related_name='log_status', primary_key=True)
     # holds the number of frames that should be in the db for each representation
+    FrameInfo = models.IntegerField(blank=True, null=True)
     BallModel = models.IntegerField(blank=True, null=True)
     BallCandidates = models.IntegerField(blank=True, null=True)
     BallCandidatesTop = models.IntegerField(blank=True, null=True)
@@ -115,9 +116,10 @@ class Image(models.Model):
 
 
 class Annotation(models.Model):
-    image= models.ForeignKey(Image,on_delete=models.CASCADE,related_name='Annotation')
-    annotation_id  = models.CharField(max_length=100)
+    image= models.OneToOneField(Image,on_delete=models.CASCADE,related_name='Annotation', primary_key=True)
     annotation = models.JSONField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
 
 class CognitionRepresentation(models.Model):
