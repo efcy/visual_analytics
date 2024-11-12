@@ -15,7 +15,7 @@ def check_if_imu_changes(response):
 
 if __name__ == "__main__":
     client = Vaapi(
-        base_url='https://api.berlin-united.com/',  
+        base_url=os.environ.get("VAT_API_URL"),
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
     response = client.motion_repr.list(

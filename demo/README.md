@@ -1,32 +1,18 @@
-# Run the demo
+## Demos for the Berlin United Visual Analytics Tool
+
+## Setup
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 
 python -m pip install -r requirements.txt
-
-python demo.py
 ```
 
-The output should be
-```txt
-Number of times the robot tried to kick: 17
-Spend 24 frames doing the forwardkick
-Spend 28 frames doing the forwardkick
-Spend 44 frames doing the forwardkick
-Spend 154 frames doing the forwardkick
-Spend 18 frames doing the forwardkick
-Spend 31 frames doing the forwardkick
-Spend 73 frames doing the forwardkick
-Spend 29 frames doing the forwardkick
-Spend 34 frames doing the forwardkick
-Spend 28 frames doing the forwardkick
-Spend 116 frames doing the forwardkick
-Spend 1 frames doing the forwardkick
-Spend 24 frames doing the forwardkick
-Spend 10 frames doing the forwardkick
-Spend 93 frames doing the forwardkick
-Spend 75 frames doing the forwardkick
-Spend 70 frames doing the forwardkick
+You need to the environment variables for the URL and the API token. 
 ```
+export VAT_API_URL=<http://127.0.0.1:8000/ or https://api.berlin-united.com/>
+export VAT_API_TOKEN=<your token>
+```
+
+If you are using api.berlin-united.com you should have received a token from the admin. If you are using the self hosted version you can get the token by login to the django admin panel. 
