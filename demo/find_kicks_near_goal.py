@@ -43,7 +43,8 @@ def find_kick_frames(client):
         # TODO find the location in the xabsl symbols
         symbols = client.xabsl_symbol_sparse.list(log_id=168, frame=group[0])
 
-        print(symbols[0].data['input']['log_id=168']['robot_pose.planned.x'])
+        print(symbols[0].data['input']['robot_pose.planned.x'])
+        
         quit()
 
 if __name__ == "__main__":
