@@ -32,14 +32,24 @@ def is_input_done(representation_list):
     new_list = list()
     for repr in representation_list:
         # if no entry for a given representation is present this will throw an error
+        print(repr, type(repr))
         try:
-            num_repr_frames=response[repr]
-            print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, repr)}")
-            if int(getattr(log_status, repr)) != int(num_repr_frames):
-                new_list.append(repr)
-        except:
+            if repr == "FrameInfo":
+                # handle this differently because we called the field num_cognition_frames in the db
+                # FIXME fix the db schema so that this code can be easier
+                num_repr_frames=response[repr]
+                print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, 'num_cognition_frames')}")
+                if int(getattr(log_status, "num_cognition_frames")) != int(num_repr_frames):
+                    new_list.append(repr)
+            else:
+                num_repr_frames=response[repr]
+                print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, repr)}")
+                if int(getattr(log_status, repr)) != int(num_repr_frames):
+                    new_list.append(repr)
+        except Exception as e:
+            print(e)
             new_list.append(repr)
-        
+
     if len(new_list) > 0:
         print("\tneed to run insertion again")
         print(f"{new_list}")

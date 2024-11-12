@@ -19,7 +19,7 @@ def is_input_done(representation_list):
         print(e)
 
     # check if number of frames were calculated already
-    num_motion_frames =log_status.num_motion_frames
+    num_motion_frames = log_status.num_motion_frames
     if not num_motion_frames or int(num_motion_frames) == 0:
         print("\tWARNING: first calculate the number of motion frames and put it in the db")
         quit()
@@ -31,10 +31,18 @@ def is_input_done(representation_list):
     for repr in representation_list:
         # if no entry for a given representation is present this will throw an error
         try:
-            num_repr_frames=response[repr]
-            print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, repr)}")
-            if int(getattr(log_status, repr)) != int(num_repr_frames):
-                new_list.append(repr)
+            if repr == "FrameInfo":
+                # handle this differently because we called the field num_motion_frames in the db
+                # FIXME fix the db schema so that this code can be easier
+                num_repr_frames=response[repr]
+                print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, 'num_motion_frames')}")
+                if int(getattr(log_status, "num_motion_frames")) != int(num_repr_frames):
+                    new_list.append(repr)
+            else:
+                num_repr_frames=response[repr]
+                print(f"\t{repr} inserted frames: {num_repr_frames}/{getattr(log_status, repr)}")
+                if int(getattr(log_status, repr)) != int(num_repr_frames):
+                    new_list.append(repr)
         except:
             new_list.append(repr)
         
@@ -62,6 +70,7 @@ if __name__ == "__main__":
         print("log_path: ", log_path)
 
         representation_list = [
+            "FrameInfo",
             "IMUData", 
             "FSRData", 
             "ButtonData", 
