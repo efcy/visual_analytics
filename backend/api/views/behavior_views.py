@@ -357,3 +357,16 @@ class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
         print(time.time() - starttime)
         return Response({
         }, status=status.HTTP_200_OK)
+
+class XabslSymbol(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        """
+        Returns the list of XabslSymbol where we check that everything that is not in Sparse is replaced with data from BehaviorComplete
+        """
+        # we get as inputs the log_id, symbol name and possibly the value
+        # we could first check if the value matches the behavior complete value if not
+        #   the easy way we can just return the xabslsymbolsparse table with filter for value
+        # if the value matches the behaviorcomplete value we need to somehow create a table
+        #   that contains all frames and then remove the frames where behavorsparse has something else
