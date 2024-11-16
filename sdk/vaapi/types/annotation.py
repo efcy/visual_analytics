@@ -7,30 +7,25 @@ from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
 class Annotation(pydantic_v1.BaseModel):
     """
-    #: Id assigned by django
+    #: id of image - 1:1 relationship with image
     """
-    id: typing.Optional[int] = None
-
-    """
-    #: List of annotation results for the task
-    FIXME: 
-    """
-    result: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic_v1.Field(default=None)
+    image_id: typing.Optional[int] = pydantic_v1.Field(default=None)
     
     """
-    List of annotation results for the task
+    All annotations for an image
     """
-    unique_id: typing.Optional[str] = None
+    annotation: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
 
-    image: typing.Optional[int] = pydantic_v1.Field(default=None)
     """
-    Corresponding task for this annotation
+    creation timestamp
     """
-
-    robot_data: typing.Optional[int] = pydantic_v1.Field(default=None)
+    created: typing.Optional[dt.datetime] = pydantic_v1.Field(default=None)
+    
     """
-    robot_data id for this annotation, it will get the robot data id from the image
+    last modified timestamp
     """
+    modified: typing.Optional[dt.datetime] = pydantic_v1.Field(default=None)
+    
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {"by_alias": True, "exclude_unset": True, **kwargs}

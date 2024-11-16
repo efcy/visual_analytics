@@ -15,11 +15,10 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
   const containerRef = useRef(null);
   const draggableRef = React.useRef(null);
 
-  const store_idx = useSelector((state) => state.canvasReducer.index);
   const dispatch = useDispatch();
 
-  const maxValue = totalImages;
-  const totalBars = totalImages;
+  const maxValue = totalImages - 1;
+  const totalBars = totalImages - 1;
   const minStepSize = 23; // Width of each bar including the indicator
 
   const updateGradientStyle = useCallback(() => {
@@ -53,19 +52,19 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
     switch(event.key) {
       // FIXME make step configurable
       case 'ArrowRight':
-        if (store_idx < totalImages - 1) {
+        if (imageIndex < totalImages - 1) {
           next_frame(1);
         }
         break;
       case 'ArrowLeft':
-        if (store_idx > 0) {
+        if (imageIndex > 0) {
           previous_frame(1);
         }
         break;
       default:
         console.log(`Key pressed: ${event.key}`);
     }
-  }, [store_idx, totalImages, next_frame, previous_frame]);
+  }, [imageIndex, totalImages, next_frame, previous_frame]);
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -157,9 +156,9 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
 
   return (
     <>
-      <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
-      <Button disabled={store_idx === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
-      <p>{store_idx} / {totalImages}</p>
+      <Button disabled={imageIndex === 0} onClick={() => previous_frame(1)}>Previous</Button>
+      <Button disabled={imageIndex === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
+      <p>{imageIndex} / {totalImages - 1}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
           <div

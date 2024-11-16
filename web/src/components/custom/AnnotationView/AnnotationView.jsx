@@ -11,6 +11,7 @@ const AnnotationView = () => {
   const [imageList, setImageList] = useState([]);
   const [frameFilter, setFrameFilter] = useState(0);
   const [currentImage, setCurrentImage] = useState(null);
+  const [currentAnnotations, setcurrentAnnotations] = useState(null);
   const [camera, setCamera] = useState("BOTTOM");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +26,11 @@ const AnnotationView = () => {
     console.log("switch camera")
   }, [camera, frameFilter]); // this list is called dependency array
 
+  useEffect(() => {
+    //setIsInitialLoading(true);
+    get_annotations();
+  }, [imageIndex, imageList]); // this list is called dependency array
+
   const get_image_list = () => {
     api
       .get(
@@ -36,16 +42,45 @@ const AnnotationView = () => {
         setIsInitialLoading(false);
 
         if (data.length > 0 && (imageIndex < 0 || imageIndex >= data.length)) {
+          //FIXME that prohibits reloading a page on specific image  -- maybe???
           navigate(`/data/${id}/image/0`, { replace: true });
         }
       })
       .catch((err) => alert(err));
   };
 
-  useEffect(() => {
-    if(imageList.length > 0){
-      console.log(imageList)
+  const get_annotations = () => {
+    const currentImageIdx = parseInt(imageIndex);
+    if (!imageList[currentImageIdx]) {
+      setError('Image not found');
+      setIsLoading(false);
+      return;
     }
+    //3389974
+    api
+      .get(
+        `${import.meta.env.VITE_API_URL}/api/annotation/3389974`
+        //`${import.meta.env.VITE_API_URL}/api/annotation/${imageList[currentImageIdx].id}`
+      )
+      .then((res) => res.data)
+      .then((data) => {
+        
+        setcurrentAnnotations(data);
+      })
+      .catch((err) => {
+        if (error.response.status === 404){
+          setcurrentAnnotations(null);
+        }
+        else{
+          alert(err)
+        }
+      });
+    
+  };
+
+  useEffect(() => {
+      console.log(imageList.length)
+
   }, [imageList]); // this list is called dependency array
   
   

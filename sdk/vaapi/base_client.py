@@ -4,7 +4,7 @@ import httpx
 
 from .core.api_error import ApiError
 from .core.client_wrapper import SyncClientWrapper
-from .annotations.client import AnnotationsClient
+from .annotations.client import AnnotationClient
 from .events.client import EventsClient
 from .game.client import GameClient
 from .logs.client import LogClient
@@ -74,7 +74,7 @@ class VaapiBase:
             else httpx.Client(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self.annotations = AnnotationsClient(client_wrapper=self._client_wrapper)
+        self.annotation = AnnotationClient(client_wrapper=self._client_wrapper)
         self.events = EventsClient(client_wrapper=self._client_wrapper)
         self.games = GameClient(client_wrapper=self._client_wrapper)  
         self.logs = LogClient(client_wrapper=self._client_wrapper)

@@ -422,3 +422,13 @@ class FrameFilterView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()  
+
+
+class AnnotationView(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = models.Annotation.objects.all()
+    serializer_class = serializers.AnnotationSerializer
+
+    # use default behavior here
+    def get_queryset(self):
+        return super().get_queryset()
