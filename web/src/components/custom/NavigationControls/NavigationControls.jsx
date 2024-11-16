@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
 import { useNavigate  } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { set } from "@/reducers/canvasSlice";
 import classes from './NavigationControls.module.css'
 import { Button } from "@/components/ui/button"
 
-const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
+const NavigationControls = ( { frameList, frameIndex, totalFrames, id, setFrameFilter, currentCamera, setCamera } ) => {
   const navigate = useNavigate();
-
   const [sliderValue, setSliderValue] = useState(0);
   const [stepSize, setStepSize] = useState(51);
   const [gradientStyle, setGradientStyle] = useState({});
@@ -45,7 +44,6 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
   const next_frame = ( step = 1 ) => {
     const stepValue = step === undefined ? 1 : Number(step);
     setSliderValue(prevValue => prevValue + stepValue);
-    console.log("frameList[parseInt(frameIndex) + stepValue]", frameList[parseInt(frameIndex) + stepValue].frame_number)
     navigate(`/log/${id}/frame/${Math.min(totalFrames - 1, frameList[parseInt(frameIndex) + stepValue].frame_number)}`)
   }
 
@@ -62,8 +60,8 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
           previous_frame(1);
         }
         break;
-      default:
-        console.log(`Key pressed: ${event.key}`);
+      //default:
+      //  console.log(`Key pressed: ${event.key}`);
     }
   }, [frameIndex, totalFrames, next_frame, previous_frame]);
 
@@ -127,7 +125,7 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
   const getHandlePosition = () => {
     const barIndex = Math.round((sliderValue / maxValue) * (totalBars - 1));
     dispatch(set(barIndex));
-    console.log("position:", barIndex * stepSize + stepSize / 2, barIndex);
+    //console.log("position:", barIndex * stepSize + stepSize / 2, barIndex);
     return barIndex * stepSize + stepSize / 2;
   };
 
@@ -154,11 +152,20 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
     }
   };
 
+  const toggle_frame_filter = ( ) => {
+    setFrameFilter(prevValue => prevValue === 0 ? 1 : 0);
+  }
 
+
+  
   return (
     <>
       <Button disabled={frameIndex === 0} onClick={() => previous_frame(1)}>Previous</Button>
       <Button disabled={frameIndex === totalFrames -1} onClick={() => next_frame(1)}>Next</Button>
+      <Button onClick={() => toggle_frame_filter(1)}>FrameFilter</Button>
+      <Button onClick={() => setCamera("BOTTOM")}>Bottom</Button>
+      <Button onClick={() => setCamera("TOP")}>Top</Button>
+      <Button onClick={() => setCamera("BOTH")}>Both</Button>
       <p>{frameIndex} / {totalFrames - 1}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>

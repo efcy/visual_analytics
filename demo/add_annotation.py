@@ -15,13 +15,15 @@ if __name__ == "__main__":
     #print(result)
 
 
-    result = client.cognition_repr.list(
-        log_id=168,
-        representation_name="FrameInfo",
-        use_filter="0"
-    )
-    print(len(result))
-    print(result[0])
+    #result = client.cognition_repr.list(
+    #    log_id=168,
+    #    representation_name="FrameInfo",
+    #    use_filter="0"
+    #)
+    #print(len(result))
+    #print(result[0])
+    images = client.image.list(log=168, camera="TOP")
+    print(images[0])
     """
     {
     "bbox": [

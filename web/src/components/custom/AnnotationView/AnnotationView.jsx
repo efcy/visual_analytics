@@ -7,11 +7,12 @@ import CanvasView from "../CanvasView/CanvasView.jsx";
 import classes from "./AnnotationView.module.css";
 
 const AnnotationView = () => {
-  console.log("AnnotationView called")
   const [frameList, setFrameList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [frameFilter, setFrameFilter] = useState(0);
+  const [currentTopImageData, setCurrentTopImageData] = useState(null);
   const [currentTopImage, setCurrentTopImage] = useState(null);
+  const [currentBottomImageData, setCurrentBottomImageData] = useState(null);
   const [currentBottomImage, setCurrentBottomImage] = useState(null);
   const [currentAnnotations, setcurrentAnnotations] = useState(null);
   const [camera, setCamera] = useState("BOTTOM");
@@ -28,9 +29,13 @@ const AnnotationView = () => {
     setIsInitialLoading(false);
   }, [camera, frameFilter]); // this list is called dependency array
 
-  //useEffect(() => {
-  //  get_annotations();
-  //}, [imageIndex, imageList]); // this list is called dependency array
+  useEffect(() => {
+    loadImage(currentBottomImageData, setCurrentBottomImage);
+  }, [currentBottomImageData]); // this list is called dependency array
+
+  useEffect(() => {
+    loadImage(currentTopImageData, setCurrentTopImage);
+  }, [currentTopImageData]); // this list is called dependency array
 
   useEffect(() => {
     console.log("frameList.length", frameList.length)
@@ -46,22 +51,50 @@ const AnnotationView = () => {
         frame => frame.frame_number === currentFrame
       );
       setCurrentIndex(currentIndex)
-      console.log("frameList[10]", frameList[10])
-      console.log("frameNumber", frameNumber)
-      console.log("currentFrame", currentFrame)
-      console.log("currentIndex", currentIndex)
-      //getImageId(frameidx);
+      get_image_url(frameNumber)
     }
   }, [frameNumber, frameList]);
 
   const get_frame_list = () => {
     api
       .get(
-        `${import.meta.env.VITE_API_URL}/api/cognitionrepr/?log_id=168&representation_name=FrameInfo&use_filter=${frameFilter}`
+        `${import.meta.env.VITE_API_URL}/api/cognitionrepr/?log_id=${id}&representation_name=FrameInfo&use_filter=${frameFilter}`
       )
       .then((res) => res.data)
       .then((data) => {
         setFrameList(data);
+      })
+      .catch((err) => alert(err));
+  };
+
+  const get_image_url = ( frameNumber ) => {
+    api
+      .get(
+        `${import.meta.env.VITE_API_URL}/api/image/?log=${id}&camera=BOTTOM&frame_number=${frameNumber}`
+      )
+      .then((res) => res.data)
+      .then((data) => {
+        if(data.length > 0){
+          setCurrentBottomImageData(data);
+        }else{
+          setCurrentBottomImageData(null);
+          setCurrentBottomImage(null);
+        }
+      })
+      .catch((err) => alert(err));
+
+      api
+      .get(
+        `${import.meta.env.VITE_API_URL}/api/image/?log=${id}&camera=TOP&frame_number=${frameNumber}`
+      )
+      .then((res) => res.data)
+      .then((data) => {
+        if(data.length > 0){
+          setCurrentTopImageData(data);
+        }else{
+          setCurrentTopImageData(null);
+          setCurrentTopImage(null);
+        }
       })
       .catch((err) => alert(err));
   };
@@ -97,47 +130,21 @@ const AnnotationView = () => {
     
   };
   */
-  /*
-  const getImageId = ( frameidx ) => {
-    const currentFrameidx= parseInt(frameidx);
-    if (!frameList[currentFrameidx]) {
-      setError('frame not found');
-      setIsLoading(false);
-      return;
-    }
-    api
-      .get(
-        `${import.meta.env.VITE_API_URL}/api/image/?log=${id}&frame_number=${frameFilter}`
-      )
-      .then((res) => res.data)
-      .then((data) => {
-        setFrameList(data);
-      })
-      .catch((err) => alert(err));
-  };
-  }
-  */
+
   // Load specific image
-  /*
-  const loadImage = ( frameidx ) => {
+  const loadImage = ( current_image_data , set_image ) => {
     setIsLoading(true);
     setError(null);
-
-    const currentFrameidx= parseInt(frameidx);
-    if (!imageList[currentImageIdx]) {
+    if (!current_image_data) {
       setError('Image not found');
       setIsLoading(false);
       return;
     }
+    console.log(current_image_data)
 
-    lookup = {
-      image_id: idx,
-
-    }
-    lookup.value() == 2
-
-    const imageUrl = "https://logs.berlin-united.com/" + imageList[currentImageIdx].image_url;
-    
+    //Fixme build check that list returns only one item
+    const imageUrl = "https://logs.berlin-united.com/" + current_image_data[0].image_url;
+    console.log(imageUrl)
     return new Promise((resolve, reject) => {
       const img = new Image();
       
@@ -153,19 +160,23 @@ const AnnotationView = () => {
       };
 
       img.src = imageUrl;
-      setCurrentImage(img);
+      set_image(img);
     });
   };
-   */
+
   return (
     <div className={classes.mainView}>
       <div className={classes.dataView}>
         {currentTopImage  ? (
         <CanvasView
           image={currentTopImage}
-          currentCamera={camera}
-          setCamera={setCamera}
-          setFrameFilter={setFrameFilter}
+        />
+      ) : (
+        <div>Image not loaded yet</div>
+      )}
+      {currentBottomImage  ? (
+        <CanvasView
+          image={currentBottomImage}
         />
       ) : (
         <div>Image not loaded yet</div>
@@ -180,6 +191,9 @@ const AnnotationView = () => {
           frameIndex={currentIndex}
           totalFrames={frameList.length}
           id={id}
+          setFrameFilter={setFrameFilter}
+          currentCamera={camera}
+          setCamera={setCamera}
         />
       ) : (
         <div></div>

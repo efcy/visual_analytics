@@ -3,10 +3,8 @@ import { Stage, Layer, Image } from "react-konva";
 import uuid4 from "uuid4";
 import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Button } from "@/components/ui/button"
 
-const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
+const CanvasView = ({ image }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -14,26 +12,21 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
   const [boundingBoxes, setBoundingBoxes] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [selectedCamera, setSelectedCamera] = useState(currentCamera);
+  
   const stageRef = useRef(null);
-  const cameraList = ["TOP", "BOTTOM"];
   const canvasWidth = 640;
   const canvasHeight = 480;
-
-  const click = (value) => {
-    setSelectedCamera(value);
-    setCamera(value);
-  };
 
   useEffect(() => {
     //TODO eventually load the existing annotations here
     setBoundingBoxes([]);
   }, [image]); // this list is called dependency array
 
+  /*
   useEffect(() => {
     console.log("boundingBoxes: ", boundingBoxes);
   }, [boundingBoxes]);
-
+  */
   
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
@@ -45,7 +38,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
   };
 
   useEffect(() => {
-    if (image) {
+    if (image && image.width > 0) {
       const aspectRatio = image.width / image.height;
       const initialScale = Math.min(
         canvasWidth / image.width,
@@ -123,7 +116,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
           opacity: 0.5,
           id: uuid4(),
         };
-        console.log("handleMouseDown")
+        //console.log("handleMouseDown")
         setBoundingBoxes([...boundingBoxes, newBox]);
       }
     }
@@ -190,11 +183,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
     setSelectedId(null);
   };
   
-
-  const toggle_frame_filter = ( ) => {
-    setFrameFilter(prevValue => prevValue === 0 ? 1 : 0);
-  }
-
   return (
     <div className={classes.canvasView}>
       <Stage
@@ -213,6 +201,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
         <Layer>
           <Image image={image} />
         </Layer>
+         
         <Layer>
           {boundingBoxes.map((box, i) => (
             <Rectangle
@@ -232,35 +221,8 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
             />
           ))}
         </Layer>
+        
       </Stage>
-      <div className={classes.controls}>
-        <ToggleGroup
-          type="single"
-          defaultValue={selectedCamera.toString()}
-          value={selectedCamera.toString()}
-          className=""
-          onValueChange={(value) => {
-            if (value) {
-              click(value);
-            }
-          }}
-        >
-          {cameraList.map((value) => {
-            return (
-              <ToggleGroupItem
-                variant="outline"
-                key={value}
-                value={value.toString()}
-                aria-label={`Toggle ${value}`}
-                className="data-[state=on]:bg-red-200"
-              >
-                {value}
-              </ToggleGroupItem>
-            );
-          })}
-        </ToggleGroup>
-        <Button onClick={() => toggle_frame_filter(1)}>FrameFilter</Button>
-      </div>
     </div>
   );
 };
