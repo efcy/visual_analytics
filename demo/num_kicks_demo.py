@@ -57,15 +57,6 @@ def demo1(client):
         )
         print(f"Ball model valid is {response[0].representation_data['valid']} for frame {frame}")
 
-def demo2(client):
-    # filter function is not implemented yet - use less efficient list here
-    response = client.xabsl_symbol.list(
-        log_id=118,
-        symbol_name="ball.team.is_valid",
-        symbol_value="False"
-    )
-
-    print(f"Number of frames the team ball was not valid: {len(response)}")
 
 if __name__ == "__main__":
     client = Vaapi(
@@ -74,4 +65,3 @@ if __name__ == "__main__":
     )
 
     demo1(client)
-    demo2(client)
