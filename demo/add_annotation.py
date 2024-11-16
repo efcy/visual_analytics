@@ -11,8 +11,17 @@ if __name__ == "__main__":
     )
     
 
-    result = client.annotation.get(id=3389974)
-    print(result)
+    #result = client.annotation.get(id=3389974)
+    #print(result)
+
+
+    result = client.cognition_repr.list(
+        log_id=168,
+        representation_name="FrameInfo",
+        use_filter="0"
+    )
+    print(len(result))
+    print(result[0])
     """
     {
     "bbox": [

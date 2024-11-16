@@ -20,7 +20,7 @@ function Logout() {
 
 const RedirectToImage = () => {
   const { id } = useParams();
-  return <Navigate replace to={`/data/${id}/image/0`} />;
+  return <Navigate replace to={`/log/${id}/frame/1`} />;
 };
 
 function App() {
@@ -36,12 +36,12 @@ function App() {
                 <Route path="/events/:id" element={<ProtectedRoute><GameListView /></ProtectedRoute>} />
                 <Route path="/games/:id" element={<ProtectedRoute><LogListView /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                {/* Redirect /data/:id to /data/:id/image/0 */}
+                {/* Redirect /log/:id to /log/:id/image/0 -  FIXME*/}
                 <Route 
-                  path="/data/:id" 
+                  path="/log/:id" 
                   element={<ProtectedRoute><RedirectToImage /></ProtectedRoute>} 
                 />
-                <Route path="/data/:id/image/:imageIndex" element={<ProtectedRoute><AnnotationView /></ProtectedRoute>} />
+                <Route path="/log/:id/frame/:frameNumber" element={<ProtectedRoute><AnnotationView /></ProtectedRoute>} />
                 
             </Route>
             <Route path="/login" element={<LoginPage />} />

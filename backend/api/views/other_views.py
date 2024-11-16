@@ -254,7 +254,22 @@ class CognitionRepresentationViewSet(viewsets.ModelViewSet):
             if param_value:
                 filters &= Q(**{field.name: param_value})
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        return queryset.filter(filters)
+
+        qs = queryset.filter(filters)
+
+        # check if the frontend wants to use a frame filter
+        if "use_filter" in query_params and query_params.get("use_filter") == "1":
+
+            # check if we have a list of frames set here
+            frames = models.FrameFilter.objects.filter(
+                log_id=query_params.get("log_id"),
+                user=self.request.user,
+            ).first()
+
+            if frames:
+                qs = qs.filter(frame_number__in=frames.frames["frame_list"])
+        # TODO maybe add a return filter
+        return qs.order_by('frame_number')
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)

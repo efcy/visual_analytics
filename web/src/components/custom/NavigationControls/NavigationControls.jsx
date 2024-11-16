@@ -6,7 +6,7 @@ import { set } from "@/reducers/canvasSlice";
 import classes from './NavigationControls.module.css'
 import { Button } from "@/components/ui/button"
 
-const NavigationControls = ( { imageIndex, totalImages, id } ) => {
+const NavigationControls = ( { frameList, frameIndex, totalFrames, id } ) => {
   const navigate = useNavigate();
 
   const [sliderValue, setSliderValue] = useState(0);
@@ -17,8 +17,8 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
 
   const dispatch = useDispatch();
 
-  const maxValue = totalImages - 1;
-  const totalBars = totalImages - 1;
+  const maxValue = totalFrames - 1;
+  const totalBars = totalFrames - 1;
   const minStepSize = 23; // Width of each bar including the indicator
 
   const updateGradientStyle = useCallback(() => {
@@ -40,31 +40,32 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
   const previous_frame = ( step = 1 ) => {
     const stepValue = step === undefined ? 1 : Number(step);
     setSliderValue(prevValue => prevValue - stepValue);
-    navigate(`/data/${id}/image/${Math.max(0, parseInt(imageIndex) - 1)}`)
+    navigate(`/log/${id}/frame/${Math.max(0, frameList[parseInt(frameIndex) - stepValue].frame_number)}`)
   }
   const next_frame = ( step = 1 ) => {
     const stepValue = step === undefined ? 1 : Number(step);
     setSliderValue(prevValue => prevValue + stepValue);
-    navigate(`/data/${id}/image/${Math.min(totalImages - 1, parseInt(imageIndex) + 1)}`)
+    console.log("frameList[parseInt(frameIndex) + stepValue]", frameList[parseInt(frameIndex) + stepValue].frame_number)
+    navigate(`/log/${id}/frame/${Math.min(totalFrames - 1, frameList[parseInt(frameIndex) + stepValue].frame_number)}`)
   }
 
   const handleKeyPress = useCallback((event) => {
     switch(event.key) {
       // FIXME make step configurable
       case 'ArrowRight':
-        if (imageIndex < totalImages - 1) {
+        if (frameIndex < totalFrames - 1) {
           next_frame(1);
         }
         break;
       case 'ArrowLeft':
-        if (imageIndex > 0) {
+        if (frameIndex > 0) {
           previous_frame(1);
         }
         break;
       default:
         console.log(`Key pressed: ${event.key}`);
     }
-  }, [imageIndex, totalImages, next_frame, previous_frame]);
+  }, [frameIndex, totalFrames, next_frame, previous_frame]);
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -120,7 +121,7 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
         container.scrollLeft = data.x;
       }
     }
-    navigate(`/data/${id}/image/${newValue}`)
+    navigate(`/log/${id}/frame/${frameList[newValue].frame_number}`)
   };
 
   const getHandlePosition = () => {
@@ -149,16 +150,16 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
         containerRef.current.scrollLeft =
           clickPosition - containerRef.current.clientWidth / 2;
       }
-      navigate(`/data/${id}/image/${newValue}`)
+      navigate(`/log/${id}/frame/${frameList[newValue].frame_number}`)
     }
   };
 
 
   return (
     <>
-      <Button disabled={imageIndex === 0} onClick={() => previous_frame(1)}>Previous</Button>
-      <Button disabled={imageIndex === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
-      <p>{imageIndex} / {totalImages - 1}</p>
+      <Button disabled={frameIndex === 0} onClick={() => previous_frame(1)}>Previous</Button>
+      <Button disabled={frameIndex === totalFrames -1} onClick={() => next_frame(1)}>Next</Button>
+      <p>{frameIndex} / {totalFrames - 1}</p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
           <div

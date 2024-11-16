@@ -8,47 +8,66 @@ import classes from "./AnnotationView.module.css";
 
 const AnnotationView = () => {
   console.log("AnnotationView called")
-  const [imageList, setImageList] = useState([]);
+  const [frameList, setFrameList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [frameFilter, setFrameFilter] = useState(0);
-  const [currentImage, setCurrentImage] = useState(null);
+  const [currentTopImage, setCurrentTopImage] = useState(null);
+  const [currentBottomImage, setCurrentBottomImage] = useState(null);
   const [currentAnnotations, setcurrentAnnotations] = useState(null);
   const [camera, setCamera] = useState("BOTTOM");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { id, imageIndex  } = useParams();
+  const { id, frameNumber  } = useParams();
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const navigate = useNavigate();
 
 
   useEffect(() => {
     setIsInitialLoading(true);
-    get_image_list();
-    console.log("switch camera")
+    get_frame_list();
+    setIsInitialLoading(false);
   }, [camera, frameFilter]); // this list is called dependency array
 
-  useEffect(() => {
-    //setIsInitialLoading(true);
-    get_annotations();
-  }, [imageIndex, imageList]); // this list is called dependency array
+  //useEffect(() => {
+  //  get_annotations();
+  //}, [imageIndex, imageList]); // this list is called dependency array
 
-  const get_image_list = () => {
+  useEffect(() => {
+    console.log("frameList.length", frameList.length)
+  }, [frameList]); // this list is called dependency array
+
+  // Load new image when imageIndex changes
+  useEffect(() => {
+    if (frameList.length > 0) {
+      // Convert current frame number to number for comparison
+      const currentFrame = parseInt(frameNumber);
+
+      const currentIndex = frameList.findIndex(
+        frame => frame.frame_number === currentFrame
+      );
+      setCurrentIndex(currentIndex)
+      console.log("frameList[10]", frameList[10])
+      console.log("frameNumber", frameNumber)
+      console.log("currentFrame", currentFrame)
+      console.log("currentIndex", currentIndex)
+      //getImageId(frameidx);
+    }
+  }, [frameNumber, frameList]);
+
+  const get_frame_list = () => {
     api
       .get(
-        `${import.meta.env.VITE_API_URL}/api/image?log=${id}&camera=${camera}&use_filter=${frameFilter}`
+        `${import.meta.env.VITE_API_URL}/api/cognitionrepr/?log_id=168&representation_name=FrameInfo&use_filter=${frameFilter}`
       )
       .then((res) => res.data)
       .then((data) => {
-        setImageList(data);
-        setIsInitialLoading(false);
-
-        if (data.length > 0 && (imageIndex < 0 || imageIndex >= data.length)) {
-          //FIXME that prohibits reloading a page on specific image  -- maybe???
-          navigate(`/data/${id}/image/0`, { replace: true });
-        }
+        setFrameList(data);
       })
       .catch((err) => alert(err));
   };
 
+
+  /*
   const get_annotations = () => {
     const currentImageIdx = parseInt(imageIndex);
     if (!imageList[currentImageIdx]) {
@@ -77,25 +96,45 @@ const AnnotationView = () => {
       });
     
   };
-
-  useEffect(() => {
-      console.log(imageList.length)
-
-  }, [imageList]); // this list is called dependency array
-  
-  
-
+  */
+  /*
+  const getImageId = ( frameidx ) => {
+    const currentFrameidx= parseInt(frameidx);
+    if (!frameList[currentFrameidx]) {
+      setError('frame not found');
+      setIsLoading(false);
+      return;
+    }
+    api
+      .get(
+        `${import.meta.env.VITE_API_URL}/api/image/?log=${id}&frame_number=${frameFilter}`
+      )
+      .then((res) => res.data)
+      .then((data) => {
+        setFrameList(data);
+      })
+      .catch((err) => alert(err));
+  };
+  }
+  */
   // Load specific image
-  const loadImage = (imageIndex) => {
+  /*
+  const loadImage = ( frameidx ) => {
     setIsLoading(true);
     setError(null);
 
-    const currentImageIdx = parseInt(imageIndex);
+    const currentFrameidx= parseInt(frameidx);
     if (!imageList[currentImageIdx]) {
       setError('Image not found');
       setIsLoading(false);
       return;
     }
+
+    lookup = {
+      image_id: idx,
+
+    }
+    lookup.value() == 2
 
     const imageUrl = "https://logs.berlin-united.com/" + imageList[currentImageIdx].image_url;
     
@@ -117,20 +156,13 @@ const AnnotationView = () => {
       setCurrentImage(img);
     });
   };
-
-  // Load new image when imageIndex changes
-  useEffect(() => {
-    if (imageList.length > 0) {
-      loadImage(imageIndex);
-    }
-  }, [imageIndex, imageList]);
-
+   */
   return (
     <div className={classes.mainView}>
       <div className={classes.dataView}>
-        {currentImage  ? (
-        <CanvasView 
-          image={currentImage}
+        {currentTopImage  ? (
+        <CanvasView
+          image={currentTopImage}
           currentCamera={camera}
           setCamera={setCamera}
           setFrameFilter={setFrameFilter}
@@ -140,12 +172,13 @@ const AnnotationView = () => {
       )}
         <DataView />
       </div>
-
+       
       <div className="p-4">
-      {imageList.length > 0  ? (
-        <NavigationControls  
-          imageIndex={imageIndex}
-          totalImages={imageList.length}
+      {frameList.length > 0  ? (
+        <NavigationControls
+          frameList={frameList}
+          frameIndex={currentIndex}
+          totalFrames={frameList.length}
           id={id}
         />
       ) : (
