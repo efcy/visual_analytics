@@ -31,6 +31,22 @@ You can use backups from the live version and use it in your local version. This
 python manage.py dbrestore -I <backup file>
 ```
 
+
+## Backing up specific logs
+There are django commands for storing logs in .json files and restoring them
+
+Usage:
+```bash
+python manage.py export_log <log_id> --output=<output_path> 
+```
+
+Restoring a log can take up to 30 minutes:
+
+```bash
+python manage.py restore_log <backup_path> 
+```
+
+
 ### Troubleshooting
 see this issue if you have errors while restoring the backup that have to do with constraints
 https://github.com/jazzband/django-dbbackup/issues/478
