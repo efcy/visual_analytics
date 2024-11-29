@@ -131,33 +131,8 @@ class Command(BaseCommand):
                             defaults=state_data
                         )
 
-            # Restore Behavior Frame Options
-            behavior_frame_opts_data = export_data.get('behavior_frame_options', [])
-            for frame_opt_data in behavior_frame_opts_data:
-                frame_opt_data['log_id'] = log
-                frame_opt_id = frame_opt_data.pop('id', None)
-                
-                # Find the corresponding option and active state
-                option = BehaviorOption.objects.filter(
-                    log_id=log, 
-                    xabsl_internal_option_id=frame_opt_data.get('options_id')
-                ).first()
-                
-                active_state = BehaviorOptionState.objects.filter(
-                    log_id=log, 
-                    xabsl_internal_state_id=frame_opt_data.get('active_state')
-                ).first()
-                
-                if option and active_state:
-                    frame_opt_data['options_id'] = option
-                    frame_opt_data['active_state'] = active_state
-                    
-                    BehaviorFrameOption.objects.update_or_create(
-                        id=frame_opt_id,
-                        defaults=frame_opt_data
-                    )
 
-            # Restore Xabsl Symbol Complete
+                # Restore Xabsl Symbol Complete
             xabsl_symbol_complete_data = export_data.get('xabsl_symbol_complete', {})
             if xabsl_symbol_complete_data:
                 xabsl_symbol_complete_data['log_id'] = log
@@ -175,6 +150,27 @@ class Command(BaseCommand):
                     id=symbol_id,
                     defaults=symbol_data
                 )
+
+            # Restore Behavior Frame Options
+            behavior_frame_opts_data = export_data.get('behavior_frame_options', [])
+            print(len(behavior_frame_opts_data))
+            for frame_opt_data in behavior_frame_opts_data:
+                frame_opt_data['log_id'] = log
+                frame_opt_id = frame_opt_data.pop('id', None)
+                
+                # Find the corresponding option and active state
+                option = BehaviorOption.objects.get(id=frame_opt_data.get('options_id'))
+                
+                active_state = BehaviorOptionState.objects.get(id=frame_opt_data['active_state'])
+                
+                frame_opt_data['options_id'] = option
+                frame_opt_data['active_state'] = active_state
+                BehaviorFrameOption.objects.update_or_create(
+                    id=frame_opt_id,
+                    defaults=frame_opt_data
+                )
+
+        
 
             self.stdout.write(
                 self.style.SUCCESS(f'Successfully restored log {log.id} from {input_file}')
