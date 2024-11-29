@@ -113,8 +113,16 @@ class Command(BaseCommand):
                     for filter in log.frame_filter.all()
                 ],
             }
-
-            # Remove None values
+            print(f"Images length: {len(log.images.all())}")
+            print(f"Annotations length: {len([img.Annotation for img in log.images.all() if hasattr(img, 'Annotation')])}")
+            print(f"Cognition representations length: {len(log.cognition_repr.all())}")
+            print(f"Motion representations length: {len(log.motion_repr.all())}")
+            print(f"Behavior options length: {len(log.behavior_options.all())}")
+            print(f"Behavior option states length: {len([state for option in log.behavior_options.all() for state in option.behavior_options_states.all()])}")
+            print(f"Behavior frame options length: {len(log.behavior_frame_option.all())}")
+            print(f"XABSL symbol sparse length: {len(log.xabsl_symbol_sparse.all())}")
+            print(f"Frame filters length: {len(log.frame_filter.all())}")
+                        # Remove None values
             export_data = {k: v for k, v in export_data.items() if v is not None}
 
             # Ensure the output directory exists
