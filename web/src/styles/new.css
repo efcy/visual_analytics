@@ -32,6 +32,8 @@
   --color-rose-bar: #ffcccb;
   --color-rose-bar-indicator1: #ff69b4;
   --handle-color: #333;
+  --light-blue: rgb(159, 232, 253);
+  --bar-indicator: rgb(255, 255, 255);
 }
 
 .dark:root {
@@ -100,8 +102,6 @@ button, a {
   
 }
 
-
-
 .search-wrapper {
   border-radius: 20px;
   background-color: var(--search-area-bg);
@@ -116,6 +116,7 @@ button, a {
   box-shadow: 0 2px 6px 0 rgba(136, 148, 171, 0.2), 0 24px 20px -24px rgba(71, 82, 107, 0.1);
   overflow: hidden;
 }
+
 .dark .search-wrapper {
   box-shadow: none;
 }
@@ -130,12 +131,11 @@ button, a {
   background-color: var(--search-area-bg);
   color: var(--main-color);
 }
+
 .search-input:placeholder {
   color: var(--main-color);
   opacity: 0.6;
 }
-
-
 
 .projects-section {
   flex: 2;
@@ -154,11 +154,12 @@ button, a {
   padding-bottom: 32px;
 }
 
-
 .project-boxes {
   margin: 0 -8px;
   overflow-y: auto;
 }
+
+/*  */
 .project-boxes.jsGridView {
   --min: 300px;
   --gap: 1rem;
@@ -168,27 +169,22 @@ button, a {
   grid-template-columns: repeat(auto-fit, var(--min));
 }
 
-
-
-
-
-
 .project-boxes::-webkit-scrollbar{
   width: 8px;
   height: 1em;
 }
 
 .project-boxes::-webkit-scrollbar-track{
-  background-color: #e7e7e7;
-  border: 1px solid #cacaca;
+  background-color: #fff;
+  border: 1px solid #000;
   border-radius: 8px;
   margin-block: 0.5em;
 }
 
 .project-boxes::-webkit-scrollbar-thumb{
   border-radius: 8px;
-  background-color: #d55959;
-  
+  border: 1px solid #000;
+  background-color: var(--light-blue);
 }
 
 .project-box-wrapper{

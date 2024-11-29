@@ -14,7 +14,6 @@ import {
 
 // TODO this should be a shadcn ui card component
 function GameCard({ game }) {
-    console.log("single game", game)
     return (
       <Card>
         <CardHeader>

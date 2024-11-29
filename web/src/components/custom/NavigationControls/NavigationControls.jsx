@@ -23,8 +23,8 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id, setFrameF
   const updateGradientStyle = useCallback(() => {
     const newStyle = {
       backgroundImage: `repeating-linear-gradient(90deg, 
-        var(--color-rose-bar) 0px ${stepSize - 1}px, 
-        var(--color-rose-bar-indicator1) ${stepSize - 1}px ${stepSize}px)`,
+        var(--light-blue) 0px ${stepSize - 1}px, 
+        var(--bar-indicator) ${stepSize - 1}px ${stepSize}px)`,
       width: "100%",
       height: "100px",
     };
@@ -156,8 +156,6 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id, setFrameF
     setFrameFilter(prevValue => prevValue === 0 ? 1 : 0);
   }
 
-
-  
   return (
     <>
       <Button disabled={frameIndex === 0} onClick={() => previous_frame(1)}>Previous</Button>
@@ -167,7 +165,7 @@ const NavigationControls = ( { frameList, frameIndex, totalFrames, id, setFrameF
       <Button onClick={() => setCamera("TOP")}>Top</Button>
       <Button onClick={() => setCamera("BOTH")}>Both</Button>
       <p>{frameIndex} / {totalFrames - 1}</p>
-
+      
       <div className={classes.multi_row_range_slider} ref={containerRef}>
           <div
             className={classes.range_slider_container}

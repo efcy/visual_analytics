@@ -24,7 +24,7 @@ function LogListView() {
             .then((res) => res.data)
             .then((data) => {
                 setGames(data);
-                console.log("Game List", data);
+                //console.log("Game List", data);
             })
             .catch((err) => alert(err));
         dispatch(reset_game());
