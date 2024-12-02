@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from rest_framework.authtoken.models import Token
 
+
 class Organization(models.Model):
     name = models.CharField(max_length=100)
 
@@ -29,7 +30,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         # Add any additional fields or modifications here
-        admin_organization, created = Organization.objects.get_or_create(name='admin')
+        admin_organization, created = Organization.objects.get_or_create(name='berlin_united')
         extra_fields['organization'] = admin_organization
 
 
