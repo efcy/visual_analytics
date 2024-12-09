@@ -17,6 +17,7 @@ import json
 from django.db import connection
 from psycopg2.extras import execute_values
 from django.db.models import Count
+from user.permission import IsBerlinUnited
 
 
 User = get_user_model()
@@ -33,8 +34,18 @@ class CreateUserView(generics.CreateAPIView):
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsBerlinUnited]
     queryset = models.Event.objects.all()
+
+    #overwrite get_permission function
+    def get_permissions(self):
+        #allow get requests to authenticated user but all other methods only to members of berlin united
+        method = self.request.method
+        if method == 'GET':
+            self.permission_classes = [IsAuthenticated,]
+        else:
+            self.permission_classes = [IsBerlinUnited,]
+        return super(EventViewSet, self).get_permissions()
 
     def get_queryset(self):
         return models.Event.objects.all()
@@ -152,7 +163,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
         
 class LogViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
 
