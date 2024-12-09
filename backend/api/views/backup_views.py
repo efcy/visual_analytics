@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 class backup(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def run_backup(self,id):
         management.call_command('export_log',id,f'--output=./backups/{id}.json')
@@ -22,7 +22,7 @@ class backup(APIView):
         return JsonResponse({"message":f"started backing up log with id={id}"}, status=200)
 
 class backup_status(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get(self,request,id):
         path = f"./backups/{id}.json"
         if os.path.exists(path):
