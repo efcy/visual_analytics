@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
 import json
+import gzip
 from pathlib import Path
 from datetime import datetime
 from ...models import (
@@ -32,7 +33,7 @@ class Command(BaseCommand):
 
         try:
             # Read the JSON file
-            with open(input_file, 'r') as f:
+            with gzip.open(input_file, 'rt') as f:
                 export_data = json.load(f)
 
             # Restore Event

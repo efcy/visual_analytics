@@ -6,7 +6,7 @@ from ...models import (
     BehaviorFrameOption, XabslSymbolComplete, XabslSymbolSparse,
     FrameFilter, Game, Event
 )
-import json
+import json,gzip
 from pathlib import Path
 from datetime import datetime, date
 from django.forms.models import model_to_dict
@@ -128,6 +128,8 @@ class Command(BaseCommand):
             # Ensure the output directory exists
             Path(output_file).parent.mkdir(parents=True, exist_ok=True)
 
+
+
             # Write to file using custom encoder
             with open(output_file, 'w') as f:
                 json.dump(
@@ -136,6 +138,16 @@ class Command(BaseCommand):
                     indent=2,
                     cls=DateTimeEncoder
                 )
+
+            with gzip.open(output_file,'wt',encoding="utf-8") as g:
+                json.dump(
+                    export_data,
+                    g,
+                    indent=2,
+                    cls=DateTimeEncoder
+                )
+
+
 
             self.stdout.write(
                 self.style.SUCCESS(f'Successfully exported log {log_id} to {output_file}')
