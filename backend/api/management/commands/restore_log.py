@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
 import json
-import gzip
+import gzip,time
 from pathlib import Path
 from datetime import datetime
 from ...models import (
@@ -32,10 +32,12 @@ class Command(BaseCommand):
         input_file = options['input_file']
 
         try:
+            start_time = time.time()
             # Read the JSON file
             with gzip.open(input_file, 'rt') as f:
                 export_data = json.load(f)
 
+            print(f"file reading{time.time() - start_time}")
             # Restore Event
             event_data = export_data.get('event', {})
             event_id = event_data.pop('id', None)
@@ -61,7 +63,7 @@ class Command(BaseCommand):
                 id=log_id,
                 defaults=log_data
             )
-
+            
             # Restore LogStatus
             log_status_data = export_data.get('log_status', {})
             if log_status_data:
@@ -89,17 +91,32 @@ class Command(BaseCommand):
                         image=img,
                         defaults=ann_data
                     )
+            print(f"image {time.time() - start_time}")
+            
 
-            # Restore Cognition Representations
+                        # Restore Cognition Representations
             cog_repr_data = export_data.get('cognition_representations', [])
+
+            # Collect cognition representations for bulk update
+            cog_reprs_to_create = []
             for repr_data in cog_repr_data:
                 repr_data['log_id'] = log
                 repr_id = repr_data.pop('id', None)
-                CognitionRepresentation.objects.update_or_create(
+                
+                cog_repr = CognitionRepresentation(
                     id=repr_id,
-                    defaults=repr_data
+                    **repr_data
                 )
+                cog_reprs_to_create.append(cog_repr)
 
+            # Use bulk_create for improved performance
+            CognitionRepresentation.objects.bulk_create(
+            cog_reprs_to_create, 
+            batch_size=1000  # Adjust batch size as needed
+            )
+
+
+            print(f"cognition {time.time() - start_time}")
             # Restore Motion Representations
             motion_repr_data = export_data.get('motion_representations', [])
             for repr_data in motion_repr_data:
@@ -109,7 +126,7 @@ class Command(BaseCommand):
                     id=repr_id,
                     defaults=repr_data
                 )
-
+            print(f"motion {time.time() - start_time}")
             # Restore Behavior Options
             behavior_options_data = export_data.get('behavior_options', [])
             behavior_options = []
@@ -132,8 +149,8 @@ class Command(BaseCommand):
                             defaults=state_data
                         )
 
-
-                # Restore Xabsl Symbol Complete
+            
+            # Restore Xabsl Symbol Complete
             xabsl_symbol_complete_data = export_data.get('xabsl_symbol_complete', {})
             if xabsl_symbol_complete_data:
                 xabsl_symbol_complete_data['log_id'] = log
@@ -151,26 +168,48 @@ class Command(BaseCommand):
                     id=symbol_id,
                     defaults=symbol_data
                 )
-
-            # Restore Behavior Frame Options
+            print(f"xabsl {time.time() - start_time}")
+             # Restore Behavior Frame Options
             behavior_frame_opts_data = export_data.get('behavior_frame_options', [])
             print(len(behavior_frame_opts_data))
+
+            # Collect unique option and state IDs first
+            unique_option_ids = set(frame_opt_data.get('options_id') for frame_opt_data in behavior_frame_opts_data)
+            unique_state_ids = set(frame_opt_data.get('active_state') for frame_opt_data in behavior_frame_opts_data)
+
+            # Bulk fetch options and states to reduce database queries
+            options_map = {opt.id: opt for opt in BehaviorOption.objects.filter(id__in=unique_option_ids)}
+            states_map = {state.id: state for state in BehaviorOptionState.objects.filter(id__in=unique_state_ids)}
+
+            # Prepare frame options for bulk creation
+            frame_options_to_create = []
             for frame_opt_data in behavior_frame_opts_data:
-                frame_opt_data['log_id'] = log
                 frame_opt_id = frame_opt_data.pop('id', None)
                 
-                # Find the corresponding option and active state
-                option = BehaviorOption.objects.get(id=frame_opt_data.get('options_id'))
+                # Use the preloaded maps to avoid individual queries
+                option = options_map.get(frame_opt_data.get('options_id'))
+                active_state = states_map.get(frame_opt_data.get('active_state'))
                 
-                active_state = BehaviorOptionState.objects.get(id=frame_opt_data['active_state'])
+                if not option or not active_state:
+                    continue
                 
+                frame_opt_data['log_id'] = log
                 frame_opt_data['options_id'] = option
                 frame_opt_data['active_state'] = active_state
-                BehaviorFrameOption.objects.update_or_create(
+                
+                frame_option = BehaviorFrameOption(
                     id=frame_opt_id,
-                    defaults=frame_opt_data
+                    **frame_opt_data
                 )
+                frame_options_to_create.append(frame_option)
 
+            # Use bulk_create for improved performance
+            BehaviorFrameOption.objects.bulk_create(
+                frame_options_to_create, 
+                batch_size=1000  # Adjust batch size based on your system's memory and database capabilities
+            )
+
+            print(f"be frame options {time.time() - start_time}")
         
 
             self.stdout.write(
