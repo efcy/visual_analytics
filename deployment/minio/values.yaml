@@ -1,0 +1,37 @@
+minio:
+  replicas: 2
+  pools: 1
+
+  resources:
+    requests:
+      memory: 2Gi
+
+  persistence:
+    size: 10Gi
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    path: /
+    hosts:
+      - "minio.berlin-united.com"
+    tls:
+      - secretName: tls-cert-minio
+        hosts:
+          - minio.berlin-united.com
+    annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "4096m"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+  
+  consoleIngress:
+    enabled: true
+    ingressClassName: nginx
+    path: /
+    hosts:
+      - console.berlin-united.com
+    tls:
+      - secretName: tls-cert-minio-console
+        hosts:
+          - console.berlin-united.com
+
+  existingSecret: "minio-secret"

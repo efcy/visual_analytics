@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-minio
+  namespace: {{ .Values.namespace }}
+spec:
+  secretName: tls-cert-minio
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  commonName: minio.berlin-united.com
+  dnsNames:
+  - minio.berlin-united.com
+  issuerRef:
+    name: letsencrypt-prod-minio
+    kind: Issuer
