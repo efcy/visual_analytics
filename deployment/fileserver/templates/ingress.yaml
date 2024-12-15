@@ -5,6 +5,11 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: log-filesystem
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      if ($http_user_agent ~* (Googlebot|Google-InspectionTool|AdsBot-Google|Mediapartners-Google|Googlebot-Mobile|Googlebot-Image|Googlebot-Video|Googlebot-News)) {
+        return 403;
+      }
 spec:
   ingressClassName: nginx
   rules:
