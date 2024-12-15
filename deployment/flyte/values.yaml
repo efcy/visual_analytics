@@ -126,6 +126,9 @@ flyte-core:
       annotations:
         nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
         nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      tls:
+        enabled: true
+        secretName: tls-cert-flyte
     databaseSecret:
       name: db-pass
       secretManifest:
