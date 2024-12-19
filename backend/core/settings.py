@@ -34,7 +34,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+        "user.permission.IsBerlinUnitedOrReadOnly",
     ],
     #generates API documentation based on the OpenAPI 3.0 standard.
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
