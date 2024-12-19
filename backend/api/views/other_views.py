@@ -17,7 +17,6 @@ import json
 from django.db import connection
 from psycopg2.extras import execute_values
 from django.db.models import Count
-from user.permission import IsBerlinUnited
 
 
 User = get_user_model()
@@ -34,18 +33,8 @@ class CreateUserView(generics.CreateAPIView):
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
-    permission_classes = [IsBerlinUnited]
     queryset = models.Event.objects.all()
 
-    #overwrite get_permission function
-    def get_permissions(self):
-        #allow get requests to authenticated user but all other methods only to members of berlin united
-        method = self.request.method
-        if method == 'GET':
-            self.permission_classes = [IsAuthenticated,]
-        else:
-            self.permission_classes = [IsBerlinUnited,]
-        return super(EventViewSet, self).get_permissions()
 
     def get_queryset(self):
         return models.Event.objects.all()
@@ -113,7 +102,6 @@ class EventViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
-    permission_classes = [IsAuthenticated]
    
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
@@ -163,7 +151,6 @@ class GameViewSet(viewsets.ModelViewSet):
 
         
 class LogViewSet(viewsets.ModelViewSet):
-    permission_classes = []
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
 
@@ -251,7 +238,6 @@ class LogViewSet(viewsets.ModelViewSet):
 
 
 class CognitionRepresentationViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = models.CognitionRepresentation.objects.all()
     serializer_class = serializers.CognitionRepresentationSerializer
 
@@ -316,7 +302,6 @@ class CognitionReprCountView(APIView):
     
 class MotionRepresentationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MotionRepresentationSerializer
-    permission_classes = [IsAuthenticated]
     queryset = models.MotionRepresentation.objects.all()
 
     def get_queryset(self):
@@ -387,7 +372,6 @@ class MotionReprCountView(APIView):
 
 class LogStatusViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogStatusSerializer
-    permission_classes = [IsAuthenticated]
     queryset = models.LogStatus.objects.all()
 
     def get_queryset(self):
@@ -423,7 +407,6 @@ class LogStatusViewSet(viewsets.ModelViewSet):
 
 class FrameFilterView(viewsets.ModelViewSet):
     serializer_class = serializers.FrameFilterSerializer
-    permission_classes = [IsAuthenticated]
     queryset = models.FrameFilter.objects.all()
 
     def get_serializer_context(self):

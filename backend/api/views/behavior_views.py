@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework import viewsets
 
@@ -52,7 +52,7 @@ class BehaviorSymbolCountView(APIView):
 
 class BehaviorOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionSerializer
-    permission_classes = [IsAuthenticated]
+    
     queryset = models.BehaviorOption.objects.all()
 
     def get_queryset(self):
@@ -137,7 +137,7 @@ class BehaviorOptionViewSet(viewsets.ModelViewSet):
 
 class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionsStateSerializer
-    permission_classes = [IsAuthenticated]
+    
     queryset = models.BehaviorOptionState.objects.all()
 
     def get_queryset(self):
@@ -213,7 +213,7 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
 
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorFrameOptionSerializer
-    permission_classes = [IsAuthenticated]
+    
     queryset = models.BehaviorFrameOption.objects.all()
 
     def get_queryset(self):
@@ -253,7 +253,6 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
 
 
 class BehaviorFrameOptionAPIView(APIView):
-    permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
         # Get the log_id from the query parameters
         log_id = request.query_params.get('log_id')
@@ -282,7 +281,6 @@ class BehaviorFrameOptionAPIView(APIView):
 
 class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
-    permission_classes = [IsAuthenticated]
     queryset = models.XabslSymbolSparse.objects.all()
 
     def get_queryset(self):
@@ -326,7 +324,7 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
 
 class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
-    permission_classes = [IsAuthenticated]
+    
     queryset = models.XabslSymbolComplete.objects.all()
 
     def get_queryset(self):
