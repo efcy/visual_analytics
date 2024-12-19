@@ -8,9 +8,11 @@ from .serializers import VATUserSerializer
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         user = self.request.user
 
@@ -91,6 +93,7 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         try:
             auth.logout(request)
@@ -107,6 +110,7 @@ class GetCSRFToken(APIView):
     
 
 class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
     def delete(self, request, format=None):
         user = self.request.user
 
@@ -118,6 +122,7 @@ class DeleteAccountView(APIView):
             return Response({ 'error': 'Something went wrong when trying to delete user' })
         
 class GetUserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         try:
             user = self.request.user
@@ -137,6 +142,7 @@ class GetUserProfileView(APIView):
             return Response({ 'error': 'Something went wrong when retrieving profile' })
 
 class GetUserToken(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self,request,format=None):
         user = self.request.user
 
@@ -145,6 +151,7 @@ class GetUserToken(APIView):
         return Response({"token":token.key})
 
 class RegenerateUserToken(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self,request,format=None):
         user = self.request.user
         t = Token.objects.get(user=user) 
@@ -153,6 +160,7 @@ class RegenerateUserToken(APIView):
         return Response({"token":t.key})
 
 class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, format=None):
         try:
             user = self.request.user
