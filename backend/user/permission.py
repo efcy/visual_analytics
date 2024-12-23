@@ -16,15 +16,29 @@ class IsBerlinUnited(BasePermission):
 class IsBerlinUnitedOrReadOnly(BasePermission):
     """
     Allows authenticated users to retrieve data and BU Users to modify data
+    Returns:
+        True -> Request is allowed
+        False -> Request is not allowed
     """
-    def has_permission(self, request, view):
-        # Ensure the user is authenticated
-        if not request.user or not request.user.is_authenticated:
+    def has_permission(self, request,view):
+        
+        # request.user is the user django could authenticate with by provided
+        # authentication methods
+        # if no authentication method is provided the user is AnonymousUser   
+
+        # user.is_authenticated is always true if user is VAT_User and false if user is AnonymousUser
+        # this only happens if user provides no authentication, invalid authentication like wrong passwords or tokens are blocked somewhere else
+        if not request.user.is_authenticated:
             return False
         
-        # Allows request if it's a GET HEAD or OPTIONS Request
+        # for authenticated users we allow methods that don't change data
         if request.method in SAFE_METHODS:
             return True
 
         # check if user is member of berlin_united
-        return request.user.organization and request.user.organization.name == "berlin_united"
+        # would throw an error if user has no organization attribute
+        if request.user.organization.name == "berlin_united":
+            return True
+        
+        return False
+ 
