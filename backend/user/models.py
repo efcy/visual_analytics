@@ -46,7 +46,6 @@ class VATUser(AbstractUser):
 
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=254,blank=True)
-    token = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization,on_delete=models.SET_NULL,related_name='organizations',blank=True,null=True)
     
     objects = CustomUserManager()
