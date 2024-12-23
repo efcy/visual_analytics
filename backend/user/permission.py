@@ -37,8 +37,10 @@ class IsBerlinUnitedOrReadOnly(BasePermission):
 
         # check if user is member of berlin_united
         # would throw an error if user has no organization attribute
-        if request.user.organization.name == "berlin_united":
-            return True
         
-        return False
+        if request.user.organization is None:
+            return False
+        return request.user.organization.name == "berlin_united"
+        
+    
  
