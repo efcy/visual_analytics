@@ -16,7 +16,7 @@ import json
 from django.db import connection
 from psycopg2.extras import execute_values
 from django.db.models import Count
-from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiTypes
+from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiExample
 from rest_framework import serializers as s
 User = get_user_model()
 
@@ -43,17 +43,59 @@ class CreateUserView(generics.CreateAPIView):
    create=extend_schema(
        description='Create single or multiple events',
        request=serializers.EventSerializer(many=True),
+        examples=[
+            OpenApiExample(
+                'Single Event Creation',
+                value={'name': 'Conference 2024', 'date': '2024-12-25'},
+                request_only=True,
+                summary='Create one event',
+                description='curl -X POST http://api/events/ -H "Content-Type: application/json" -d \'{"name": "Conference 2024", "date": "2024-12-25"}\''
+            ),
+            OpenApiExample(
+                'Bulk Event Creation',
+                value=[
+                    {'name': 'Conference 2024', 'date': '2024-12-25'},
+                    {'name': 'Workshop 2024', 'date': '2024-12-26'}
+                ],
+                request_only=True,
+                summary='Create multiple events',
+                description='''```bash
+curl --request POST \
+  --url http://api/events/ \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer YOUR_TOKEN' \
+  --data '{
+    "name": "Conference 2024",
+    "date": "2024-12-25"
+  }'
+```'''
+                )
+        ],
        responses={
            200: OpenApiResponse(
                response=inline_serializer(
                    name='BulkEventResponse',
                    fields={
-                       'created': s.IntegerField(default=1),
+                       'created': s.IntegerField(),
                        'existing': s.IntegerField(),
                        'events': serializers.EventSerializer(many=True)
                    }
+                  
                ),
-               description='Response for bulk create'
+               description='Response for bulk create',
+                examples=[
+                    OpenApiExample(
+                    name="BulkCreateExample",
+                    value={
+                        "created": 2,
+                        "existing": 0,
+                        "events": [
+                            {"id": 1, "name": "Event 1", "date": "2024-12-23"},
+                            {"id": 2, "name": "Event 2", "date": "2024-12-24"}
+                        ]
+                    }
+                ),
+            ]
            ),
            201: OpenApiResponse(response=serializers.EventSerializer,description='Response for single create')
        }
