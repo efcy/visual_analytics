@@ -177,6 +177,7 @@ CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'https://vat.berlin-uni
 #we only want tokenauth in the swagger view
 SPECTACULAR_SETTINGS = {
     'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
+    'TAGS' : [{'name':"Events"},{'name':'api'},{'name':'accounts'}]
 }
 
 #registers our custom user model
