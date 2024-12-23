@@ -16,8 +16,8 @@ import json
 from django.db import connection
 from psycopg2.extras import execute_values
 from django.db.models import Count
-
-
+from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiTypes
+from rest_framework import serializers as s
 User = get_user_model()
 
 @require_GET
@@ -30,10 +30,49 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
     permission_classes = [AllowAny]
 
+@extend_schema( tags = ['Events'])
+@extend_schema_view(
+   list=extend_schema(
+       description='List all events',
+       responses={200: serializers.EventSerializer(many=True)}
+   ),
+   retrieve=extend_schema(
+       description='Get single event by ID',
+       responses={200: serializers.EventSerializer}
+   ),
+   create=extend_schema(
+       description='Create single or multiple events',
+       request=serializers.EventSerializer(many=True),
+       responses={
+           200: OpenApiResponse(
+               response=inline_serializer(
+                   name='BulkEventResponse',
+                   fields={
+                       'created': s.IntegerField(default=1),
+                       'existing': s.IntegerField(),
+                       'events': serializers.EventSerializer(many=True)
+                   }
+               ),
+               description='Response for bulk create'
+           ),
+           201: OpenApiResponse(response=serializers.EventSerializer,description='Response for single create')
+       }
+   ),
+   update=extend_schema(
+       description='Full update of an event',
+       responses={200: serializers.EventSerializer}
+   ),
+   destroy=extend_schema(
+       description='Delete an event',
+       responses={204: None}
+   )
+)
 class EventViewSet(viewsets.ModelViewSet):
+    
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
 
+    @extend_schema(description='retrieve all events')
     def get_queryset(self):
         return models.Event.objects.all()
     
