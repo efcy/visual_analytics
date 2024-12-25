@@ -1,7 +1,6 @@
 
 from rest_framework import generics,viewsets
 from . import serializers
-from django.db.models import F
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from . import models
@@ -11,13 +10,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q,F,functions, Value, CharField,Count
 import time
 import json
 from django.db import connection
 from psycopg2.extras import execute_values
-from django.db.models import Count
-
 
 User = get_user_model()
 
@@ -106,10 +103,13 @@ class GameViewSet(viewsets.ModelViewSet):
    
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
+
+        queryset = models.Game.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
+        print(queryset.first().event_name)
         if event_id is not None:
-            return models.Game.objects.filter(event_id=event_id)
-        else:
-            return models.Game.objects.all()
+            queryset = queryset.filter(event_id=event_id)
+        
+        return queryset
         
     def create(self, request, *args, **kwargs):
         row_tuple = [(
@@ -157,7 +157,12 @@ class LogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
-        queryset = models.Log.objects.all()
+        queryset = models.Log.objects.select_related('game_id').annotate(game_name=functions.Concat(
+       'game_id__event_id__name', Value('_'), 'game_id', Value('_'), 
+       'game_id__team1', Value('_'), 'game_id__team2', Value('_'),
+       'game_id__half', Value('_'), 'game_id__is_testgame',
+       output_field=CharField()
+   ))
         query_params = self.request.query_params
 
         filters = Q()
@@ -166,6 +171,7 @@ class LogViewSet(viewsets.ModelViewSet):
             if param_value:
                 filters &= Q(**{field.name: param_value})
 
+        list_display = ('event_id', 'get_id', 'team1', 'team2', 'half', 'is_testgame')
         return queryset.filter(filters)
         
     def create(self, request, *args, **kwargs):

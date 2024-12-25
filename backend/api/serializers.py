@@ -27,6 +27,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
+    game_name = serializers.CharField(read_only=True)
     class Meta:
         model = models.Log
         fields = '__all__'
@@ -39,6 +40,7 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class GameSerializer(serializers.ModelSerializer):
+    event_name = serializers.CharField(read_only=True)
     class Meta:
         model = models.Game
         fields = '__all__'
