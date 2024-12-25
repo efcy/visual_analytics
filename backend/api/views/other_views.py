@@ -30,6 +30,7 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
     permission_classes = [AllowAny]
 
+# we use tags to group endpoints and sort them by order in settings.py
 @extend_schema( tags = ['Events'])
 @extend_schema_view(
    list=extend_schema(
@@ -43,7 +44,8 @@ class CreateUserView(generics.CreateAPIView):
    create=extend_schema(
        description='Create single or multiple events',
        request=serializers.EventSerializer(many=True),
-        examples=[
+       # I tried to add curl examples
+       examples=[
             OpenApiExample(
                 'Single Event Creation',
                 value={'name': 'Conference 2024', 'date': '2024-12-25'},
@@ -71,6 +73,7 @@ curl --request POST \
 ```'''
                 )
         ],
+       #correctly displaying the responses for single create and bulk create operations
        responses={
            200: OpenApiResponse(
                response=inline_serializer(
