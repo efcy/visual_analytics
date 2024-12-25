@@ -157,12 +157,16 @@ class LogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
+
+        #TODO: add event name and only display minutes and hours
         queryset = models.Log.objects.select_related('game_id').annotate(game_name=functions.Concat(
-       'game_id__event_id__name', Value('_'), 'game_id', Value('_'), 
-       'game_id__team1', Value('_'), 'game_id__team2', Value('_'),
-       'game_id__half', Value('_'), 'game_id__is_testgame',
-       output_field=CharField()
-   ))
+        'game_id__start_time', Value(': '),
+        'game_id__team1', Value(' vs '),
+        'game_id__team2', Value(' '),
+        'game_id__half',
+        output_field=CharField()
+    ))
+
         query_params = self.request.query_params
 
         filters = Q()
@@ -171,7 +175,6 @@ class LogViewSet(viewsets.ModelViewSet):
             if param_value:
                 filters &= Q(**{field.name: param_value})
 
-        list_display = ('event_id', 'get_id', 'team1', 'team2', 'half', 'is_testgame')
         return queryset.filter(filters)
         
     def create(self, request, *args, **kwargs):

@@ -27,6 +27,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
+    # TODO: check if this breaks log creation
     game_name = serializers.CharField(read_only=True)
     class Meta:
         model = models.Log
