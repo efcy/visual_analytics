@@ -3,7 +3,6 @@ import "@/styles/login.css"
 import logo from "../assets/logo.svg";
 
 const LoginPage = ({ login, isAuthenticated }) => {
-  // old: <LoginForm route="/api/token/" method="login" />
   return (
     <div className="container-fluid">
       <div className="left-container">
