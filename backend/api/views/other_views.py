@@ -15,7 +15,6 @@ import time
 import json
 from django.db import connection
 from psycopg2.extras import execute_values
-from datetime import datetime
 User = get_user_model()
 
 @require_GET
