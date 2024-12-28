@@ -1,6 +1,7 @@
 import React from "react";
 import "@/styles/new.css";
 import DatePicker from "../Datepicker/DatePicker";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 import MapComponent from "../MapView/MapComponent";
 import event_image from "@/assets/robocup.jpeg";
 import {
@@ -15,16 +16,12 @@ import TimezonePicker from "@/components/custom/TimezonePicker/TimezonePicker.js
 import CountryPicker from "@/components/custom/CountryPicker/CountryPicker.jsx";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FaEllipsisV } from "react-icons/fa";
-import { Progress } from "@/components/ui/progress";
 import classes from "./EventCard.module.css";
 import { cn } from "@/lib/utils";
 
@@ -116,7 +113,7 @@ function EventCard({ event, event_nav_func }) {
         </p>
       </CardContent>
       <CardFooter className="px-6">
-        <Progress value={33} />
+        <ProgressBar value={40} />
       </CardFooter>
     </Card>
   );

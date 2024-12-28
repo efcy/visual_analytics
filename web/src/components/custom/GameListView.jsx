@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css";
 import { useParams, Link } from "react-router-dom";
 import api from "@/api";
-import GameCard from "./GameCard";
+import GameCard from "./GameCard/GameCard";
 import useDebounce from "@/hooks/use_debounce";
 import { useDispatch } from "react-redux";
 import { set_game, reset_game } from "@/reducers/breadcrumbSlice";

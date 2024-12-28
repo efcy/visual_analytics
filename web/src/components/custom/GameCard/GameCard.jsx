@@ -5,12 +5,11 @@ import event_image from "@/assets/robocup.jpeg";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 // TODO this should be a shadcn ui card component
 function GameCard({ game }) {
@@ -28,7 +27,7 @@ function GameCard({ game }) {
         <p>Time: {game ? game.start_time : ""}</p>
       </CardContent>
       <CardFooter className="px-6">
-        <Progress value={33} />
+        <ProgressBar value={33} />
       </CardFooter>
     </Card>
   );

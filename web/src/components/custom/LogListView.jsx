@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css";
 import { useParams, Link } from "react-router-dom";
-import LogCard from "./LogCard";
+import LogCard from "./LogCard/LogCard";
 import api from "@/api";
 import useDebounce from "@/hooks/use_debounce";
 
