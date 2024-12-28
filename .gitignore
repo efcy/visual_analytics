@@ -6,8 +6,5 @@ venv/
 # django
 *.sqlite3
 
-# ignore config settings
-.vscode/
-
 # ignore secrets
 .envrc
