@@ -1,43 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Login Page Example</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="page">
-        <div class="left-container">
-            <div class="logo-big">
-                <img src="logo.svg" height="93" alt="Berlin United Logo" />
-            </div>
-            <div class="credits">
-                <p>developed by Berlin United</p>
-            </div>
+      <div class="left-container">
+        <div class="logo-big">
+          <img src="logo.svg" alt="Berlin United Logo" />
         </div>
-        <div class="right-container">
-            <form class="form-container">
-                <h1>Login</h1>
-                <input
-                    class="form-input"
-                    type="text"
-                    name='username'
-                    value={username}    
-                    placeholder="Username"
-                />
-                <input
-                    class="form-input"
-                    type="password"
-                    name='password' 
-                    value={password}
-                    placeholder="Password"
-                />
-                <button class="form-button" type="submit">
-                    Login
-                </button>
-            </form>
+        <div class="credits">
+          <p>developed by Berlin United</p>
         </div>
+      </div>
+      <div class="right-container">
+        <form class="form-container">
+          <h1>Login</h1>
+          <input
+            class="form-input"
+            type="text"
+            name="username"
+            value="{username}"
+            placeholder="Username"
+          />
+          <input
+            class="form-input"
+            type="password"
+            name="password"
+            value="{password}"
+            placeholder="Password"
+          />
+          <button class="form-button" type="submit">Login</button>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
 </html>
