@@ -14,11 +14,11 @@ const api = axios.create({
 
 const refreshToken = async () => {
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  
+
   try {
-    const baseURL = import.meta.env.VITE_API_URL || apiUrl
-    console.log("base url: ",baseURL)
-    const refreshUrl = new URL('api/token/refresh/', api.defaults.baseURL);
+    const baseURL = import.meta.env.VITE_API_URL || apiUrl;
+    console.log("base url: ", baseURL);
+    const refreshUrl = new URL("api/token/refresh/", api.defaults.baseURL);
     const res = await axios.post(refreshUrl.toString(), {
       refresh: refreshToken,
     });
@@ -36,7 +36,7 @@ const refreshToken = async () => {
 
 // Request interceptor
 api.interceptors.request.use(
- async (config) => {
+  async (config) => {
     //check for token validity and get a new token if not valid
     let token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
@@ -45,14 +45,14 @@ api.interceptors.request.use(
       const now = Date.now() / 1000;
 
       if (tokenExpiration < now) {
-          console.log("get new refresh token")
-          token = await refreshToken();
+        console.log("get new refresh token");
+        token = await refreshToken();
       }
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor
@@ -76,7 +76,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

@@ -1,11 +1,11 @@
 import React from "react";
-import { Link, } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MdEvent } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 
 // icon list: https://www.radix-ui.com/icons
-import { GearIcon, ExitIcon } from "@radix-ui/react-icons"
-import classes from './Sidebar.module.css'
+import { GearIcon, ExitIcon } from "@radix-ui/react-icons";
+import classes from "./Sidebar.module.css";
 
 function Sidebar() {
   return (

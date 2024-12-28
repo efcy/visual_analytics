@@ -12,10 +12,10 @@ import "@/styles/new.css";
 
 const EventBreadcrumb = () => {
   const current_event = useSelector(
-    (state) => state.breadcrumbReducer.current_event
+    (state) => state.breadcrumbReducer.current_event,
   );
   const current_game = useSelector(
-    (state) => state.breadcrumbReducer.current_game
+    (state) => state.breadcrumbReducer.current_game,
   );
   return (
     <Breadcrumb className="ps-8">

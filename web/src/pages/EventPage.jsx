@@ -1,10 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 
-import Header from "../components/custom/Header/Header.jsx"
-import Sidebar from "../components/custom/Sidebar/Sidebar.jsx"
+import Header from "../components/custom/Header/Header.jsx";
+import Sidebar from "../components/custom/Sidebar/Sidebar.jsx";
 
 function EventPage() {
-  console.log("EventPage called")
+  console.log("EventPage called");
   return (
     <div className="app-container">
       <Header />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EventBreadcrumb from "../EventBreadcrumb.jsx";
 
-import classes from './Header.module.css'
+import classes from "./Header.module.css";
 
 function Header() {
   // State to track if the 'dark' class should be added

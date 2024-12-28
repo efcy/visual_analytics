@@ -1,6 +1,6 @@
-import { CopyIcon } from "@radix-ui/react-icons"
- 
-import { Button } from "@/components/ui/button"
+import { CopyIcon } from "@radix-ui/react-icons";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
- 
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 function DialogDemo() {
   return (
     <Dialog>
@@ -52,6 +52,6 @@ function DialogDemo() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 export default DialogDemo;

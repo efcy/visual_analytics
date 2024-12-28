@@ -14,7 +14,7 @@
 :root {
   --app-container: #f3f6fd;
   --main-color: #1f1c2e;
-  --secondary-color: #4A4A4A;
+  --secondary-color: #4a4a4a;
   --link-color: #1f1c2e;
   --link-color-hover: #c3cff4;
   --link-color-active: #fff;
@@ -38,25 +38,25 @@
   --app-container: #1f1d2b;
   --app-container: #111827;
   --main-color: #fff;
-  --secondary-color: rgba(255,255,255,.8);
+  --secondary-color: rgba(255, 255, 255, 0.8);
   --projects-section: #1f2937;
-  --link-color: rgba(255,255,255,.8);
+  --link-color: rgba(255, 255, 255, 0.8);
   --link-color-hover: rgba(195, 207, 244, 0.1);
   --link-color-active-bg: rgba(195, 207, 244, 0.2);
   --button-bg: #1f2937;
   --search-area-bg: #1f2937;
   --message-box-hover: #243244;
-  --message-box-border: rgba(255,255,255,.1);
+  --message-box-border: rgba(255, 255, 255, 0.1);
   --star: #ffd92c;
-  --light-font: rgba(255,255,255,.8);
+  --light-font: rgba(255, 255, 255, 0.8);
   --more-list-bg: #2f3142;
   --more-list-bg-hover: rgba(195, 207, 244, 0.1);
   --more-list-shadow: rgba(195, 207, 244, 0.1);
   --message-btn: rgba(195, 207, 244, 0.1);
 }
 
-
-html, body {
+html,
+body {
   width: 100%;
   height: 100vh;
   margin: 0;
@@ -71,7 +71,8 @@ html, body {
   height: 100vh;
 }
 
-button, a {
+button,
+a {
   cursor: pointer;
 }
 
@@ -81,26 +82,33 @@ button, a {
   flex-direction: column;
   height: 100%;
   background-color: var(--app-container);
-  background:  radial-gradient(circle at 50% 50%,rgb(159, 232, 253) 20%,transparent 80%),conic-gradient(from 45deg at 50% 50%,
-    rgb(255, 129, 170) 0%,
-    rgb(159, 232, 253) 25%,
-    rgb(255, 129, 170) 50%,
-    rgb(159, 232, 253) 75%,
-    rgb(255, 129, 170) 100%
-  );
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgb(159, 232, 253) 20%,
+      transparent 80%
+    ),
+    conic-gradient(
+      from 45deg at 50% 50%,
+      rgb(255, 129, 170) 0%,
+      rgb(159, 232, 253) 25%,
+      rgb(255, 129, 170) 50%,
+      rgb(159, 232, 253) 75%,
+      rgb(255, 129, 170) 100%
+    );
   transition: 0.2s;
 }
-.app-container button, .app-container input, .app-container optgroup, .app-container select, .app-container textarea {
+.app-container button,
+.app-container input,
+.app-container optgroup,
+.app-container select,
+.app-container textarea {
   font-family: "DM Sans", sans-serif;
 }
 .app-content {
   display: flex;
   height: 100%;
   overflow: hidden;
-  
 }
-
-
 
 .search-wrapper {
   border-radius: 20px;
@@ -113,7 +121,9 @@ button, a {
   width: 100%;
   max-width: 480px;
   color: var(--light-font);
-  box-shadow: 0 2px 6px 0 rgba(136, 148, 171, 0.2), 0 24px 20px -24px rgba(71, 82, 107, 0.1);
+  box-shadow:
+    0 2px 6px 0 rgba(136, 148, 171, 0.2),
+    0 24px 20px -24px rgba(71, 82, 107, 0.1);
   overflow: hidden;
 }
 .dark .search-wrapper {
@@ -135,8 +145,6 @@ button, a {
   opacity: 0.6;
 }
 
-
-
 .projects-section {
   flex: 2;
   background-color: var(--projects-section);
@@ -154,7 +162,6 @@ button, a {
   padding-bottom: 32px;
 }
 
-
 .project-boxes {
   margin: 0 -8px;
   overflow-y: auto;
@@ -168,30 +175,24 @@ button, a {
   grid-template-columns: repeat(auto-fit, var(--min));
 }
 
-
-
-
-
-
-.project-boxes::-webkit-scrollbar{
+.project-boxes::-webkit-scrollbar {
   width: 8px;
   height: 1em;
 }
 
-.project-boxes::-webkit-scrollbar-track{
+.project-boxes::-webkit-scrollbar-track {
   background-color: #e7e7e7;
   border: 1px solid #cacaca;
   border-radius: 8px;
   margin-block: 0.5em;
 }
 
-.project-boxes::-webkit-scrollbar-thumb{
+.project-boxes::-webkit-scrollbar-thumb {
   border-radius: 8px;
   background-color: #d55959;
-  
 }
 
-.project-box-wrapper{
+.project-box-wrapper {
   text-decoration: none;
   width: 300px;
 }

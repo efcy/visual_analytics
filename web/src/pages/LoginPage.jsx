@@ -1,5 +1,5 @@
 import LoginForm from "../components/custom/LoginForm";
-import "@/styles/login.css"
+import "@/styles/login.css";
 import logo from "../assets/logo.svg";
 
 const LoginPage = ({ login, isAuthenticated }) => {
@@ -12,10 +12,10 @@ const LoginPage = ({ login, isAuthenticated }) => {
         </div>
       </div>
       <div className="right-container">
-        <LoginForm route="/api/token/" method="login"/>
+        <LoginForm route="/api/token/" method="login" />
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;

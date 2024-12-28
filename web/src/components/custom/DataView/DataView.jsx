@@ -6,9 +6,18 @@ const DataView = () => {
     <div className={classes.representationSelector}>
       <Tabs defaultValue="Annotations" className={classes.tabsContainer}>
         <TabsList className={`grid h-full grid-rows`}>
-          <TabsTrigger value="Annotations" className={classes.verticalButton}>Annotations</TabsTrigger>
-          <TabsTrigger value="Representations" className={classes.verticalButton}>Representations</TabsTrigger>
-          <TabsTrigger value="Comments" className={classes.verticalButton}>Comments</TabsTrigger>
+          <TabsTrigger value="Annotations" className={classes.verticalButton}>
+            Annotations
+          </TabsTrigger>
+          <TabsTrigger
+            value="Representations"
+            className={classes.verticalButton}
+          >
+            Representations
+          </TabsTrigger>
+          <TabsTrigger value="Comments" className={classes.verticalButton}>
+            Comments
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="Annotations" className={classes.tabsContent}>
           Annotations

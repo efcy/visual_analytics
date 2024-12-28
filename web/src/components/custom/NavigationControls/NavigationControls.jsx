@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "@/reducers/canvasSlice";
-import classes from './NavigationControls.module.css'
-import { Button } from "@/components/ui/button"
+import classes from "./NavigationControls.module.css";
+import { Button } from "@/components/ui/button";
 
-const NavigationControls = ( { imageIndex, totalImages, id } ) => {
+const NavigationControls = ({ imageIndex, totalImages, id }) => {
   const navigate = useNavigate();
 
   const [sliderValue, setSliderValue] = useState(0);
@@ -33,39 +33,43 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
     setGradientStyle(newStyle);
   }, [stepSize]);
 
-
   useEffect(() => {
     updateGradientStyle();
   }, [stepSize, updateGradientStyle]);
 
-  const previous_frame = ( step = 1 ) => {
+  const previous_frame = (step = 1) => {
     const stepValue = step === undefined ? 1 : Number(step);
-    setSliderValue(prevValue => prevValue - stepValue);
-    navigate(`/data/${id}/image/${Math.max(0, parseInt(imageIndex) - 1)}`)
-  }
-  const next_frame = ( step = 1 ) => {
+    setSliderValue((prevValue) => prevValue - stepValue);
+    navigate(`/data/${id}/image/${Math.max(0, parseInt(imageIndex) - 1)}`);
+  };
+  const next_frame = (step = 1) => {
     const stepValue = step === undefined ? 1 : Number(step);
-    setSliderValue(prevValue => prevValue + stepValue);
-    navigate(`/data/${id}/image/${Math.min(totalImages - 1, parseInt(imageIndex) + 1)}`)
-  }
+    setSliderValue((prevValue) => prevValue + stepValue);
+    navigate(
+      `/data/${id}/image/${Math.min(totalImages - 1, parseInt(imageIndex) + 1)}`,
+    );
+  };
 
-  const handleKeyPress = useCallback((event) => {
-    switch(event.key) {
-      // FIXME make step configurable
-      case 'ArrowRight':
-        if (store_idx < totalImages - 1) {
-          next_frame(1);
-        }
-        break;
-      case 'ArrowLeft':
-        if (store_idx > 0) {
-          previous_frame(1);
-        }
-        break;
-      default:
-        console.log(`Key pressed: ${event.key}`);
-    }
-  }, [store_idx, totalImages, next_frame, previous_frame]);
+  const handleKeyPress = useCallback(
+    (event) => {
+      switch (event.key) {
+        // FIXME make step configurable
+        case "ArrowRight":
+          if (store_idx < totalImages - 1) {
+            next_frame(1);
+          }
+          break;
+        case "ArrowLeft":
+          if (store_idx > 0) {
+            previous_frame(1);
+          }
+          break;
+        default:
+          console.log(`Key pressed: ${event.key}`);
+      }
+    },
+    [store_idx, totalImages, next_frame, previous_frame],
+  );
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -99,10 +103,10 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
 
   useEffect(() => {
     // attach the event listener
-    document.addEventListener('keydown', handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
     // remove the event listener
     return () => {
-      document.removeEventListener('keydown', handleKeyPress);
+      document.removeEventListener("keydown", handleKeyPress);
     };
   }, [handleKeyPress]);
 
@@ -121,7 +125,7 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
         container.scrollLeft = data.x;
       }
     }
-    navigate(`/data/${id}/image/${newValue}`)
+    navigate(`/data/${id}/image/${newValue}`);
   };
 
   const getHandlePosition = () => {
@@ -150,44 +154,52 @@ const NavigationControls = ( { imageIndex, totalImages, id } ) => {
         containerRef.current.scrollLeft =
           clickPosition - containerRef.current.clientWidth / 2;
       }
-      navigate(`/data/${id}/image/${newValue}`)
+      navigate(`/data/${id}/image/${newValue}`);
     }
   };
 
-
   return (
     <>
-      <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>Previous</Button>
-      <Button disabled={store_idx === totalImages -1} onClick={() => next_frame(1)}>Next</Button>
-      <p>{store_idx} / {totalImages}</p>
+      <Button disabled={store_idx === 0} onClick={() => previous_frame(1)}>
+        Previous
+      </Button>
+      <Button
+        disabled={store_idx === totalImages - 1}
+        onClick={() => next_frame(1)}
+      >
+        Next
+      </Button>
+      <p>
+        {store_idx} / {totalImages}
+      </p>
 
       <div className={classes.multi_row_range_slider} ref={containerRef}>
+        <div
+          className={classes.range_slider_container}
+          style={{ width: `${stepSize * totalBars}px` }}
+        >
           <div
-            className={classes.range_slider_container}
-            style={{ width: `${stepSize * totalBars}px` }}
+            className={classes.customRange}
+            style={gradientStyle}
+            onClick={handleSliderClick}
           >
-              <div
-                className={classes.customRange}
-                style={gradientStyle}
-                onClick={handleSliderClick}
-              >
-                <Draggable
-                  axis="x"
-                  bounds="parent"
-                  grid={[stepSize, 0]}
-                  onDrag={handleSliderDrag}
-                  position={{ x: getHandlePosition(), y: 0 }}
-                  nodeRef={draggableRef}
-                >
-                  <div className={classes.rangeHandle} ref={draggableRef}>
-                    <span className={classes.rsValue}>{sliderValue}</span>
-                  </div>
-                </Draggable>
+            <Draggable
+              axis="x"
+              bounds="parent"
+              grid={[stepSize, 0]}
+              onDrag={handleSliderDrag}
+              position={{ x: getHandlePosition(), y: 0 }}
+              nodeRef={draggableRef}
+            >
+              <div className={classes.rangeHandle} ref={draggableRef}>
+                <span className={classes.rsValue}>{sliderValue}</span>
               </div>
+            </Draggable>
           </div>
+        </div>
       </div>
     </>
   );
 };
 
-export default NavigationControls ;
+export default NavigationControls;

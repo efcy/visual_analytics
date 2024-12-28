@@ -44,53 +44,62 @@ function EventCard({ event, event_nav_func }) {
             </DialogTrigger>
             <DialogContent className={cn(classes.dialog)}>
               <div className={classes.dialog_wrapper}>
-              <div className={classes.dialog_event_data}>
-                <DialogHeader>
-                  <DialogTitle>Update Event {event.name}</DialogTitle>
-                </DialogHeader>
-                <div className="p-0">
-                  <div className="flex items-center mb-4">
-                    <Label
-                      htmlFor="event_name"
-                      className="w-24 mr-4 text-right"
-                    >
-                      Name
-                    </Label>
-                    <Input placeholder="event_name" id="event_name" />
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Label htmlFor="start_day" className="w-24 mr-4 text-right">
-                      Start Day
-                    </Label>
-                    <DatePicker />
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Label htmlFor="end_day" className="w-24 mr-4 text-right">
-                      End Day
-                    </Label>
-                    <DatePicker />
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Label htmlFor="timezone" className="w-24 mr-4 text-right">
-                      Timezone
-                    </Label>
-                    <TimezonePicker />
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Label htmlFor="country" className="w-24 mr-4 text-right">
-                      Country
-                    </Label>
-                    <CountryPicker />
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Label htmlFor="location" className="w-24 mr-4 text-right">
-                      Location
-                    </Label>
-                    <Input placeholder="Location" id="location" />
+                <div className={classes.dialog_event_data}>
+                  <DialogHeader>
+                    <DialogTitle>Update Event {event.name}</DialogTitle>
+                  </DialogHeader>
+                  <div className="p-0">
+                    <div className="flex items-center mb-4">
+                      <Label
+                        htmlFor="event_name"
+                        className="w-24 mr-4 text-right"
+                      >
+                        Name
+                      </Label>
+                      <Input placeholder="event_name" id="event_name" />
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <Label
+                        htmlFor="start_day"
+                        className="w-24 mr-4 text-right"
+                      >
+                        Start Day
+                      </Label>
+                      <DatePicker />
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <Label htmlFor="end_day" className="w-24 mr-4 text-right">
+                        End Day
+                      </Label>
+                      <DatePicker />
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <Label
+                        htmlFor="timezone"
+                        className="w-24 mr-4 text-right"
+                      >
+                        Timezone
+                      </Label>
+                      <TimezonePicker />
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <Label htmlFor="country" className="w-24 mr-4 text-right">
+                        Country
+                      </Label>
+                      <CountryPicker />
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <Label
+                        htmlFor="location"
+                        className="w-24 mr-4 text-right"
+                      >
+                        Location
+                      </Label>
+                      <Input placeholder="Location" id="location" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <MapComponent />
+                <MapComponent />
               </div>
             </DialogContent>
           </Dialog>

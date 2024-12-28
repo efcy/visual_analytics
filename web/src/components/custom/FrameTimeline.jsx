@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const FrameTimeline = ({ frames, width = 500 }) => {
   const [sliderValue, setSliderValue] = useState(0);
@@ -7,7 +7,7 @@ const FrameTimeline = ({ frames, width = 500 }) => {
     const seconds = milliseconds / 1000;
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toFixed(0).padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toFixed(0).padStart(2, "0")}`;
   };
 
   const totalDuration = frames[frames.length - 1].time;
@@ -27,7 +27,9 @@ const FrameTimeline = ({ frames, width = 500 }) => {
     const newValue = parseFloat(e.target.value);
     setSliderValue(newValue);
     const selectedFrame = frames[Math.round(newValue)];
-    console.log(`Selected frame: ${selectedFrame.framenumber}, Time: ${formatTime(selectedFrame.time)}, Data: ${selectedFrame.data}`);
+    console.log(
+      `Selected frame: ${selectedFrame.framenumber}, Time: ${formatTime(selectedFrame.time)}, Data: ${selectedFrame.data}`,
+    );
   };
 
   const getCurrentFrameInfo = () => {
@@ -36,17 +38,19 @@ const FrameTimeline = ({ frames, width = 500 }) => {
   };
 
   useEffect(() => {
-    console.log(`Initial frame: ${frames[0].framenumber}, Time: ${formatTime(frames[0].time)}, Data: ${frames[0].data}`);
+    console.log(
+      `Initial frame: ${frames[0].framenumber}, Time: ${formatTime(frames[0].time)}, Data: ${frames[0].data}`,
+    );
   }, [frames]);
 
   return (
-    <div className="relative" style={{ width: `${width}px`, height: '100px' }}>
+    <div className="relative" style={{ width: `${width}px`, height: "100px" }}>
       <div className="absolute w-full h-1 bg-gray-300 top-8"></div>
       {minuteTicks.map(({ time, position }, index) => (
         <div
           key={index}
           className="absolute transform"
-          style={{ left: `${position}%`, top: '28px' }}
+          style={{ left: `${position}%`, top: "28px" }}
         >
           <div className="w-0.5 h-4 bg-gray-500"></div>
           <div className="mt-1 text-xs text-center whitespace-nowrap">
@@ -66,10 +70,10 @@ const FrameTimeline = ({ frames, width = 500 }) => {
           [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-1 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:cursor-pointer
           [&::-ms-thumb]:appearance-none [&::-ms-thumb]:w-1 [&::-ms-thumb]:h-6 [&::-ms-thumb]:bg-blue-500 [&::-ms-thumb]:cursor-pointer"
         style={{
-          left: '0',
-          right: '0',
-          margin: '0 auto',
-          width: '100%',
+          left: "0",
+          right: "0",
+          margin: "0 auto",
+          width: "100%",
         }}
       />
       <div className="absolute top-16 left-0 right-0 text-center text-sm font-semibold">

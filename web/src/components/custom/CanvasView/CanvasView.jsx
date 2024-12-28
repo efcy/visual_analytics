@@ -4,9 +4,9 @@ import uuid4 from "uuid4";
 import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
+const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -34,7 +34,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
     console.log("boundingBoxes: ", boundingBoxes);
   }, [boundingBoxes]);
 
-  
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
     const clickedOnEmpty =
@@ -49,7 +48,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
       const aspectRatio = image.width / image.height;
       const initialScale = Math.min(
         canvasWidth / image.width,
-        canvasHeight / image.height
+        canvasHeight / image.height,
       );
       setScale(initialScale);
     }
@@ -79,7 +78,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
     const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
     const minScale = Math.min(
       canvasWidth / image.width,
-      canvasHeight / image.height
+      canvasHeight / image.height,
     );
     const finalScale = Math.max(newScale, minScale);
 
@@ -110,7 +109,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
       const pos = stage.getRelativePointerPosition();
       // check if we actually click on the image
       const shape = stage.getIntersection(pos);
-      if (shape instanceof Konva.Image){
+      if (shape instanceof Konva.Image) {
         setIsDrawing(true);
         const newBox = {
           x: pos.x,
@@ -123,7 +122,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
           opacity: 0.5,
           id: uuid4(),
         };
-        console.log("handleMouseDown")
+        console.log("handleMouseDown");
         setBoundingBoxes([...boundingBoxes, newBox]);
       }
     }
@@ -185,15 +184,14 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter}) => {
 
   const deleteSelectedRect = () => {
     setBoundingBoxes((prevBoxes) =>
-      prevBoxes.filter((box) => box.id !== selectedId)
+      prevBoxes.filter((box) => box.id !== selectedId),
     );
     setSelectedId(null);
   };
-  
 
-  const toggle_frame_filter = ( ) => {
-    setFrameFilter(prevValue => prevValue === 0 ? 1 : 0);
-  }
+  const toggle_frame_filter = () => {
+    setFrameFilter((prevValue) => (prevValue === 0 ? 1 : 0));
+  };
 
   return (
     <div className={classes.canvasView}>
