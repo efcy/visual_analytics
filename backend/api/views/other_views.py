@@ -1,9 +1,8 @@
 
 from rest_framework import generics,viewsets
 from . import serializers
-from django.db.models import F
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from . import models
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
@@ -34,7 +33,6 @@ class CreateUserView(generics.CreateAPIView):
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
-
 
     def get_queryset(self):
         return models.Event.objects.all()

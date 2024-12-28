@@ -1,7 +1,6 @@
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework import viewsets
 
@@ -52,7 +51,6 @@ class BehaviorSymbolCountView(APIView):
 
 class BehaviorOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionSerializer
-    
     queryset = models.BehaviorOption.objects.all()
 
     def get_queryset(self):
@@ -137,7 +135,6 @@ class BehaviorOptionViewSet(viewsets.ModelViewSet):
 
 class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionsStateSerializer
-    
     queryset = models.BehaviorOptionState.objects.all()
 
     def get_queryset(self):
@@ -213,7 +210,6 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
 
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorFrameOptionSerializer
-    
     queryset = models.BehaviorFrameOption.objects.all()
 
     def get_queryset(self):
@@ -324,7 +320,6 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
 
 class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
-    
     queryset = models.XabslSymbolComplete.objects.all()
 
     def get_queryset(self):
