@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework import viewsets
 
@@ -94,7 +93,6 @@ class ImageUpdateView(APIView):
         
 
 class ImageViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
     queryset = models.Image.objects.all()
     serializer_class = serializers.ImageSerializer
 

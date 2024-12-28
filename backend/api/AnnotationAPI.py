@@ -5,7 +5,6 @@ from .models import Annotation
 from .serializers import AnnotationSerializer
 
 class AnnotationAPI(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
     queryset = Annotation.objects.all()
     serializer_class = AnnotationSerializer
 

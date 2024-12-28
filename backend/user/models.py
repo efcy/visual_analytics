@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from rest_framework.authtoken.models import Token
 
+
 class Organization(models.Model):
     name = models.CharField(max_length=100)
 
@@ -11,7 +12,6 @@ class Organization(models.Model):
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
-        #
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
@@ -29,10 +29,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         # Add any additional fields or modifications here
-        admin_organization, created = Organization.objects.get_or_create(name='admin')
+        admin_organization, created = Organization.objects.get_or_create(name='berlin_united')
         extra_fields['organization'] = admin_organization
-
-
 
         return self.create_user(username, email, password, **extra_fields)
 
@@ -42,12 +40,9 @@ class VATUser(AbstractUser):
     # deactivate them by setting them to None
     first_name = models.EmailField(max_length=254,blank=True)
     last_name = models.EmailField(max_length=254,blank=True)
-
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=254,blank=True)
-    token = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization,on_delete=models.SET_NULL,related_name='organizations',blank=True,null=True)
-    
     objects = CustomUserManager()
 
     def __str__(self):
