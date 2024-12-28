@@ -33,6 +33,9 @@ if [ "$mode" == "renew" ]; then
     sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE $VAT_POSTGRES_DB TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "ALTER DATABASE $VAT_POSTGRES_DB OWNER TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
+    # needed for creating test databases
+    sudo -u postgres psql -c  "ALTER USER $VAT_POSTGRES_USER CREATEDB;"
+    
 
     popd
     python3 -m venv venv
@@ -59,7 +62,8 @@ elif [ "$mode" == "create" ]; then
     sudo -u postgres psql -c  "GRANT ALL PRIVILEGES ON DATABASE $VAT_POSTGRES_DB TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "ALTER DATABASE $VAT_POSTGRES_DB OWNER TO $VAT_POSTGRES_USER;"
     sudo -u postgres psql -c  "GRANT ALL ON SCHEMA PUBLIC TO $VAT_POSTGRES_USER;"
-
+    # needed for creating test databases
+    sudo -u postgres psql -c  "ALTER USER $VAT_POSTGRES_USER CREATEDB;"
 
     # Check if the command was successful
     if [ $? -eq 0 ]; then
