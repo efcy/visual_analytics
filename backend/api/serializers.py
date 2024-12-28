@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from . import models
+import re
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,12 +28,19 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
-    # TODO: check if this breaks log creation
+    event_name = serializers.CharField(read_only=True)
     game_name = serializers.CharField(read_only=True)
     class Meta:
         model = models.Log
         fields = '__all__'
 
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
+        formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
+        representation['game_name'] = formatted_str
+        return representation
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:

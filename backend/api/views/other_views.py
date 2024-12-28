@@ -15,7 +15,7 @@ import time
 import json
 from django.db import connection
 from psycopg2.extras import execute_values
-
+from datetime import datetime
 User = get_user_model()
 
 @require_GET
@@ -158,15 +158,16 @@ class LogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        #TODO: add event name and only display minutes and hours
-        queryset = models.Log.objects.select_related('game_id').annotate(game_name=functions.Concat(
-        'game_id__start_time', Value(': '),
+        queryset = models.Log.objects.select_related('game_id').annotate(event_name=F('game_id__event_id__name'))
+
+        queryset = queryset.select_related('game_id').annotate(game_name=functions.Concat(
+        'game_id__start_time', Value(' '),
         'game_id__team1', Value(' vs '),
         'game_id__team2', Value(' '),
         'game_id__half',
         output_field=CharField()
     ))
-
+         
         query_params = self.request.query_params
 
         filters = Q()
@@ -174,6 +175,7 @@ class LogViewSet(viewsets.ModelViewSet):
             param_value = query_params.get(field.name)
             if param_value:
                 filters &= Q(**{field.name: param_value})
+
 
         return queryset.filter(filters)
         
