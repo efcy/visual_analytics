@@ -51,7 +51,7 @@ class CreateUserView(generics.CreateAPIView):
                 value={'name': 'Conference 2024', 'date': '2024-12-25'},
                 request_only=True,
                 summary='Create one event',
-                description='curl -X POST http://api/events/ -H "Content-Type: application/json" -d \'{"name": "Conference 2024", "date": "2024-12-25"}\''
+                description=''
             ),
             OpenApiExample(
                 'Bulk Event Creation',
@@ -61,16 +61,6 @@ class CreateUserView(generics.CreateAPIView):
                 ],
                 request_only=True,
                 summary='Create multiple events',
-                description='''```bash
-curl --request POST \
-  --url http://api/events/ \
-  --header 'Content-Type: application/json' \
-  --header 'Authorization: Bearer YOUR_TOKEN' \
-  --data '{
-    "name": "Conference 2024",
-    "date": "2024-12-25"
-  }'
-```'''
                 )
         ],
        #correctly displaying the responses for single create and bulk create operations
