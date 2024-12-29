@@ -12,7 +12,7 @@ _api_annotations_urlpatterns = [
 ]
 
 urlpatterns = [
-    
+    path('',views.scalar_doc,name="scalar_doc"),
     path('health/',views.health_check,name="health_check"),
     path('image-count/', views.ImageCountView.as_view(), name='image-count'),
     path('annotations/', include((_api_annotations_urlpatterns, app_name), namespace='api-annotations')),

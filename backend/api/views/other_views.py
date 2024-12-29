@@ -4,7 +4,7 @@ from . import serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from . import models
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,9 +16,16 @@ import json
 from django.db import connection
 from psycopg2.extras import execute_values
 from django.db.models import Count
-
-
+from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiExample
+from rest_framework import serializers as s
+from django.template import loader
 User = get_user_model()
+
+
+@require_GET
+def scalar_doc(request):
+    template = loader.get_template("api/api_scalar.html")
+    return HttpResponse(template.render())
 
 @require_GET
 def health_check(request):
@@ -30,13 +37,82 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
     permission_classes = [AllowAny]
 
+# we use tags to group endpoints and sort them by order in settings.py
+@extend_schema( tags = ['Events'])
+@extend_schema_view(
+    list= extend_schema(
+       description='List all events',
+       responses={200: serializers.EventSerializer(many=True)}
+   )
+)
 class EventViewSet(viewsets.ModelViewSet):
+    
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
 
-    def get_queryset(self):
-        return models.Event.objects.all()
-    
+   
+    @extend_schema(
+       description='Create single or multiple events',
+       request=serializers.EventSerializer(many=True),
+       # Example data for test requests 
+       examples=[
+            OpenApiExample(
+                'Single Event Creation',
+                value={'name': 'Conference 2024', 'date': '2024-12-25'},
+                request_only=True,
+                summary='Create one event',
+                description=''
+            ),
+            OpenApiExample(
+                'Bulk Event Creation',
+                value=[
+                    {'name': 'Conference 2024', 'date': '2024-12-25'},
+                    {'name': 'Workshop 2024', 'date': '2024-12-26'}
+                ],
+                request_only=True,
+                summary='Create multiple events',
+                )
+        ],
+       #displaying responses for single and bulk create but only response schema for single create 
+       responses={
+    201: OpenApiResponse(
+        # response=[
+        #     inline_serializer(
+        #         name='BulkEventResponse',
+        #         fields={
+        #             'created': s.IntegerField(),
+        #             'existing': s.IntegerField(),
+        #             'events': serializers.EventSerializer(many=True)
+        #         }
+        #     ),
+        #     serializers.EventSerializer],
+        response = serializers.EventSerializer,
+        
+        description='Response for single or bulk create',
+        examples=[
+            OpenApiExample(
+                name="Response for bulk create",
+                value={
+                    "created": 2,
+                    "existing": 0,
+                    "events": [
+                        {"id": 1, "name": "Event 1", "date": "2024-12-23"},
+                        {"id": 2, "name": "Event 2", "date": "2024-12-24"}
+                    ]
+                }
+            ),
+            OpenApiExample(
+                name="Response for single create",
+                value={
+                    "id": 1,
+                    "name": "Event 1",
+                    "date": "2024-12-23"
+                }
+            )
+        ]
+    )
+}
+   )
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
         is_many = isinstance(request.data, list)
@@ -90,11 +166,13 @@ class EventViewSet(viewsets.ModelViewSet):
         # Serialize the results
         result_serializer = self.get_serializer(all_events, many=True)
 
+        status_code = status.HTTP_201_CREATED if existing ==0 else status.HTTP_200_OK
+
         return Response({
             'created': len(created_events),
             'existing': len(existing_events),
             'events': result_serializer.data
-        }, status=status.HTTP_200_OK)
+        }, status=status_code)
 
 
 class GameViewSet(viewsets.ModelViewSet):
