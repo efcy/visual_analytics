@@ -9,7 +9,7 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import EventListView from "./components/custom/EventListView.jsx";
 import GameListView from "./components/custom/GameListView.jsx";
 import LogListView from "./components/custom/LogListView.jsx";
-import EventPage from "./pages/EventPage.jsx";
+import MainPage from "./pages/MainPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";
 import AnnotationView from "./components/custom/AnnotationView/AnnotationView.jsx";
@@ -38,7 +38,7 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <EventPage />
+                  <MainPage />
                 </ProtectedRoute>
               }
             >

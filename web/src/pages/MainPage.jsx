@@ -3,8 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/custom/Header/Header.jsx";
 import Sidebar from "../components/custom/Sidebar/Sidebar.jsx";
 
-function EventPage() {
-  console.log("EventPage called");
+function MainPage() {
   return (
     <div className="app-container">
       <Header />
@@ -16,4 +15,4 @@ function EventPage() {
   );
 }
 
-export default EventPage;
+export default MainPage;
