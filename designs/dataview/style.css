@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  max-width: 950px;
+  height: 100vh;
+  width: 100%;
+  padding: 20px;
+  background: #22272c;
+}
+
+.content input {
+  display: none;
+}
+
+.content {
+  display: flex;
+  align-items: top;
+}
+
+.content .list {
+  display: flex;
+  flex-direction: column;
+  margin-right: 25px;
+}
+
+.content .list label {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 25px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+
+#annotations:checked ~ .list label.annotations,
+#representations:checked ~ .list label.representations,
+#comments:checked ~ .list label.comments {
+  color: #22272c;
+  background: white;
+}
+
+.content .text-content {
+  width: 80%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.content .text {
+  display: none;
+}
+
+.content .text .title {
+  font-size: 25px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.container .text p {
+  text-align: justify;
+}
+
+.content .text-content .annotations {
+  display: block;
+}
+
+#annotations:checked ~ .text-content .annotations,
+#representations:checked ~ .text-content .representations,
+#comments:checked ~ .text-content .comments {
+  display: block;
+}
+
+#representations:checked ~ .text-content .annotations,
+#comments:checked ~ .text-content .annotations {
+  display: none;
+}
+
+.content .list label:hover {
+  color: #bb86fc;
+}

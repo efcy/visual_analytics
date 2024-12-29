@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav main_container";
+  grid-template-rows: 50px auto;
+  grid-template-columns: 150px auto;
+}
+
+.header {
+  grid-area: header;
+  background: #333;
+  color: white;
+  padding: 1rem;
+}
+
+.nav {
+  grid-area: nav;
+  background: #f0f0f0;
+  padding: 1rem;
+}
+
+.main_container {
+  grid-area: main_container;
+  display: grid;
+  grid-template-rows: 90% 10%;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  gap: 5px;
+}
+
+.sliding_panel {
+  position: absolute;
+  right: -300px;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: #22272c;
+  transition: right 0.3s ease;
+  margin-left: 10px;
+}
+
+#panel_toggle {
+  display: none;
+}
+
+/* Fixed selector */
+#panel_toggle:checked + .page .sliding_panel {
+  right: 0;
+}
+
+#panel_toggle:checked + .page .main_container {
+  /* TODO eventually do that with javascript and add the margin here */
+  padding-right: calc(300px + 10px);
+}
+
+.toggle_button {
+  cursor: pointer;
+  padding: 8px 16px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+/* Everything inside the side toggle content*/
+.content input {
+  display: none;
+}
+
+.content {
+  display: flex;
+  align-items: top;
+}
+
+.content .list {
+  display: flex;
+  flex-direction: column;
+  margin-right: 25px;
+}
+
+.content .list label {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 25px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+
+#annotations:checked ~ .list label.annotations,
+#representations:checked ~ .list label.representations,
+#comments:checked ~ .list label.comments {
+  color: #22272c;
+  background: white;
+}
+
+.content .text-content {
+  width: 80%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.content .text {
+  display: none;
+}
+
+.content .text .title {
+  font-size: 25px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.container .text p {
+  text-align: justify;
+}
+
+.content .text-content .annotations {
+  display: block;
+}
+
+#annotations:checked ~ .text-content .annotations,
+#representations:checked ~ .text-content .representations,
+#comments:checked ~ .text-content .comments {
+  display: block;
+}
+
+#representations:checked ~ .text-content .annotations,
+#comments:checked ~ .text-content .annotations {
+  display: none;
+}
+
+.content .list label:hover {
+  color: #bb86fc;
+}
+
+/* Camera images */
+.content_grid {
+  display: flex;
+  gap: 4px 8px;
+  height: 100%;
+  max-height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grid_item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 4 / 3;
+  max-height: 100%;
+}
+
+.grid_item img {
+  aspect-ratio: 4 / 3; /* Maintain the 4:3 aspect ratio */
+  object-fit: contain; /* Scale the image while preserving the aspect ratio */
+  height: 100%; /* Prevent the image from exceeding the container's height */
+  max-width: 100%;
+}
+
+/* Timeline */
+.timeline {
+  background-color: aqua;
+  border: 1px solid black;
+  margin: 5px;
+}
