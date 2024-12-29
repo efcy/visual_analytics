@@ -6,7 +6,9 @@ const LoginPage = ({ login, isAuthenticated }) => {
   return (
     <div className={classes.container_fluid}>
       <div className={classes.left_container}>
-        <img src={logo} height="93" alt="Berlin United Logo" />
+        <div className={classes.logo_big}>
+          <img src={logo} alt="Berlin United Logo" />
+        </div>
         <div className={classes.credits}>
           <p>developed by Berlin United</p>
         </div>
