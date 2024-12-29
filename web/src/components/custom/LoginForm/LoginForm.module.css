@@ -1,3 +1,9 @@
+.login_header {
+  font-size: 26px;
+  font-weight: bolder;
+  text-align: center;
+}
+
 .form_container {
   grid-row: 2; /* Center vertically within the first row */
   margin: 50px auto;

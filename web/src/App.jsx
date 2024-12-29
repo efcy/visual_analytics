@@ -5,7 +5,8 @@ import {
   Navigate,
   useParams,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import LoginPage from "./components/custom/LoginPage/LoginPage.jsx";
+import RegisterPage from "./components/custom/RegisterPage/RegisterPage.jsx";
 import EventListView from "./components/custom/EventListView.jsx";
 import GameListView from "./components/custom/GameListView.jsx";
 import LogListView from "./components/custom/LogListView.jsx";
@@ -94,6 +95,7 @@ function App() {
               />
             </Route>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<RegisterPage />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>

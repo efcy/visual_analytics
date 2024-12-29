@@ -1,5 +1,5 @@
-import LoginForm from "../../components/custom/LoginForm/LoginForm";
-import logo from "../../assets/logo.svg";
+import LoginForm from "../LoginForm/LoginForm";
+import logo from "@/assets/logo.svg"; // @ is an alias configured in vite.config.ts
 import classes from "./LoginPage.module.css";
 
 const LoginPage = ({ login, isAuthenticated }) => {

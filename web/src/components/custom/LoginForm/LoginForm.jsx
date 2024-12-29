@@ -30,7 +30,7 @@ const LoginForm = ({ route, method }) => {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)} className={classes.form_container}>
-      <h1>Login</h1>
+      <h1 className={classes.login_header}>Login</h1>
       <input
         className={classes.form_input}
         type="text"
@@ -52,7 +52,7 @@ const LoginForm = ({ route, method }) => {
       </button>
       <p className={classes.signup_text}>
         Don't have an account?{" "}
-        <Link to="/register" className={classes.signup_link}>
+        <Link to="/signup" className={classes.signup_link}>
           Sign Up
         </Link>
       </p>
