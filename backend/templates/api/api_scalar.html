@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Scalar API Reference</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <!-- Need a Custom Header? Check out this example: https://codepen.io/scalarorg/pen/VwOXqam -->
+    <!-- Note: We’re using our public proxy to avoid CORS issues. You can remove the `data-proxy-url` attribute if you don’t need it. -->
+    <script
+      id="api-reference"
+      data-url="{% url 'schema' %}"
+      data-proxy-url="https://proxy.scalar.com">  
+    </script>
+    <script>
+      var configuration = {
+        theme: 'purple',
+        isEditable: false,
+
+        hiddenClients: {
+          php: true, // Example: Exclude all PHP clients
+          python: ['python3'], // Example: Exclude all Python clients
+          c: true,
+          node: true, // We expect the (browser) javascript fetch client to still be available
+          javascript: true, // Exclude specific JavaScript clients
+          java: true,
+          go: true,
+          http: true,
+          r: true,
+          ruby: true,
+          swift: true,
+          powershell: true,
+          ocaml: true,
+          kotlin: true,
+          csharp: true,
+          clojure: true,
+          objc: true,
+          shell: ['httpie']
+        },
+      }
+
+      document.getElementById('api-reference').dataset.configuration =
+        JSON.stringify(configuration)
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  </body>
+</html>

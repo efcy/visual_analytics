@@ -4,7 +4,7 @@ from . import serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from . import models
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,7 +18,14 @@ from psycopg2.extras import execute_values
 from django.db.models import Count
 from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiExample
 from rest_framework import serializers as s
+from django.template import loader
 User = get_user_model()
+
+
+@require_GET
+def scalar_doc(request):
+    template = loader.get_template("api/api_scalar.html")
+    return HttpResponse(template.render())
 
 @require_GET
 def health_check(request):
