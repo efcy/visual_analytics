@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants";
 import classes from "./LoginForm.module.css";
 import api from "@/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginForm = ({ route, method }) => {
   const [username, setUsername] = useState("");
@@ -50,6 +50,12 @@ const LoginForm = ({ route, method }) => {
       <button className={classes.form_button} type="submit">
         Login
       </button>
+      <p className={classes.signup_text}>
+        Don't have an account?{" "}
+        <Link to="/register" className={classes.signup_link}>
+          Sign Up
+        </Link>
+      </p>
     </form>
   );
 };

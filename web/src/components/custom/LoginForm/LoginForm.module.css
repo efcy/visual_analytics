@@ -46,3 +46,11 @@
 .form_button:hover::before {
   opacity: 1;
 }
+
+.signup_text {
+  text-align: center;
+}
+
+.signup_link {
+  color: blue;
+}
