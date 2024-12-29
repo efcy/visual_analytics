@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants";
-import "@/styles/login.css";
+import classes from "./LoginForm.module.css";
 import api from "@/api";
 import { useNavigate } from "react-router-dom";
 
@@ -29,10 +29,10 @@ const LoginForm = ({ route, method }) => {
   };
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)} className="form-container">
+    <form onSubmit={(e) => handleSubmit(e)} className={classes.form_container}>
       <h1>Login</h1>
       <input
-        className="form-input"
+        className={classes.form_input}
         type="text"
         name="username"
         value={username}
@@ -40,14 +40,14 @@ const LoginForm = ({ route, method }) => {
         placeholder="Username"
       />
       <input
-        className="form-input"
+        className={classes.form_input}
         type="password"
         name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <button className="form-button" type="submit">
+      <button className={classes.form_button} type="submit">
         Login
       </button>
     </form>
