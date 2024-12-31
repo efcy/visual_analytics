@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css";
 import api from "@/api";
 import EventCard from "./EventCard/EventCard";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { set_event, reset_event, reset_game } from "@/reducers/breadcrumbSlice";
 import useDebounce from "@/hooks/use_debounce";
 
 function EventListView() {
@@ -12,7 +10,6 @@ function EventListView() {
   const [searchtxt, setsearchtxt] = useState([]);
 
   const debounce = useDebounce(searchtxt, 300);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,12 +25,9 @@ function EventListView() {
         console.log("Event List: ", data);
       })
       .catch((err) => alert(err));
-    dispatch(reset_event());
-    dispatch(reset_game());
   };
 
   const event_nav_func = (event) => {
-    dispatch(set_event(event.name));
     navigate(`/events/${event.id}`);
   };
 
