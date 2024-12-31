@@ -163,7 +163,6 @@ a {
 }
 
 .project-boxes {
-  margin: 0 -8px;
   overflow-y: auto;
 }
 .project-boxes.jsGridView {
