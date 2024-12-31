@@ -1,27 +1,16 @@
-import { useState, useEffect } from "react";
 import "@/styles/new.css";
-import api from "@/api";
+
+import { useEvents } from "@/hooks/useEvents";
 import EventCard from "./EventCard/EventCard";
 import { useNavigate } from "react-router-dom";
 
 function EventListView() {
-  const [events, setEvents] = useState([]);
-
   const navigate = useNavigate();
+  const events = useEvents();
 
-  useEffect(() => {
-    getEvents();
-  }, []); // this list is called dependency array
-
-  const getEvents = () => {
-    api
-      .get(`${import.meta.env.VITE_API_URL}/api/events`)
-      .then((res) => res.data)
-      .then((data) => {
-        setEvents(data);
-      })
-      .catch((err) => alert(err));
-  };
+  if (!events) {
+    return <div>Loading...</div>;
+  }
 
   const event_nav_func = (event) => {
     navigate(`/events/${event.id}`);
