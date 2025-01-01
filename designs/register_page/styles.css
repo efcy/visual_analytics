@@ -79,3 +79,8 @@ form label {
 .form_button:hover::before {
   opacity: 1;
 }
+
+.login_link {
+  text-decoration: none;
+  color: blue;
+}
