@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import EventBreadcrumb from "../EventBreadcrumb.jsx";
+import { useState, useEffect } from "react";
+import BreadCrumbNavigation from "../BreadCrumbNavigation/BreadCrumbNavigation.jsx";
 
 import classes from "./Header.module.css";
 
@@ -22,8 +22,7 @@ function Header() {
   return (
     <div className={classes.header}>
       <div className={classes.header_left}>
-        <span className={classes.app_icon}></span>
-        <EventBreadcrumb />
+        <BreadCrumbNavigation />
       </div>
       <div className={classes.header_right}>
         <button
