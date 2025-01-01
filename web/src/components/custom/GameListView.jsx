@@ -3,13 +3,13 @@ import "@/styles/new.css";
 import { useParams, Link } from "react-router-dom";
 import api from "@/api";
 import GameCard from "./GameCard/GameCard";
-import { useDispatch } from "react-redux";
-import { set_game, reset_game } from "@/reducers/breadcrumbSlice";
 
 function LogListView() {
   const [games, setGames] = useState([]);
-  const dispatch = useDispatch();
+
+  // get the event id from the url
   const { id } = useParams();
+
   useEffect(() => {
     getGames();
   }, []); // this list is called dependency array
@@ -24,12 +24,6 @@ function LogListView() {
         console.log("Game List", data);
       })
       .catch((err) => alert(err));
-    dispatch(reset_game());
-  };
-
-  const set_current_game = (game) => {
-    var game_str = `${game.team1} vs ${game.team2} - ${game.half}`;
-    dispatch(set_game(game_str));
   };
 
   return (
@@ -40,7 +34,6 @@ function LogListView() {
             to={`/games/${game.id}`}
             className="project-box-wrapper"
             key={game.id}
-            onClick={() => set_current_game(game)}
           >
             <GameCard game={game} key={game.name}></GameCard>
           </Link>
