@@ -1,36 +1,25 @@
-import { useState, useEffect } from "react";
-import "@/styles/new.css";
+import { useLogs } from "@/hooks/useLogs";
 import { useParams, Link } from "react-router-dom";
+
 import LogCard from "../LogCard/LogCard.jsx";
 import GridView from "../GridView/GridView.jsx";
-import api from "@/api";
 
 function LogListView() {
-  const [logs, setLogs] = useState([]);
+  // get the game id from the url
   const { id } = useParams();
-  useEffect(() => {
-    getLogs();
-  }, []); // this list is called dependency array
 
-  const getLogs = () => {
-    api
-      .get(`${import.meta.env.VITE_API_URL}/api/logs?game_id=${id}`)
-      .then((res) => res.data)
-      .then((data) => {
-        setLogs(data);
-        console.log("Log List", data);
-      })
-      .catch((err) => alert(err));
-  };
+  // get the list of games for an event from the backend
+  const logs = useLogs(id);
+
+  if (!logs) {
+    // TODO make a better loading animation here
+    return <div>Loading...</div>;
+  }
 
   return (
     <GridView>
       {logs.map((log) => (
-        <Link
-          to={`/data/${log.id}`}
-          className="project-box-wrapper"
-          key={log.id}
-        >
+        <Link to={`/data/${log.id}`} key={log.id}>
           <LogCard log={log} key={log.name}></LogCard>
         </Link>
       ))}

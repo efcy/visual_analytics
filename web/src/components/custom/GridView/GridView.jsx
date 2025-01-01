@@ -1,7 +1,11 @@
+import classes from "./GridView.module.css";
+
 function GridView({ children }) {
   return (
-    <div className="projects-section">
-      <div className="project-boxes jsGridView">{children}</div>
+    <div className={classes.projects_section}>
+      <div className={`${classes.project_boxes} ${classes.jsGridView}`}>
+        {children}
+      </div>
     </div>
   );
 }

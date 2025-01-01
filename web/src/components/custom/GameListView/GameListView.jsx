@@ -1,40 +1,24 @@
-import { useState, useEffect } from "react";
-import "@/styles/new.css";
+import { useGames } from "@/hooks/useGames";
 import { useParams, Link } from "react-router-dom";
-import api from "@/api";
+
 import GameCard from "../GameCard/GameCard.jsx";
 import GridView from "../GridView/GridView.jsx";
 
 function LogListView() {
-  const [games, setGames] = useState([]);
-
   // get the event id from the url
   const { id } = useParams();
+  // get the list of games for an event from the backend
+  const games = useGames(id);
 
-  useEffect(() => {
-    getGames();
-  }, []); // this list is called dependency array
-
-  const getGames = () => {
-    //TODO enforce csrf in the backend and then add cockies here
-    api
-      .get(`${import.meta.env.VITE_API_URL}/api/games?event=${id}`)
-      .then((res) => res.data)
-      .then((data) => {
-        setGames(data);
-        console.log("Game List", data);
-      })
-      .catch((err) => alert(err));
-  };
+  if (!games) {
+    // TODO make a better loading animation here
+    return <div>Loading...</div>;
+  }
 
   return (
     <GridView>
       {games.map((game) => (
-        <Link
-          to={`/games/${game.id}`}
-          className="project-box-wrapper"
-          key={game.id}
-        >
+        <Link to={`/games/${game.id}`} key={game.id}>
           <GameCard game={game} key={game.name}></GameCard>
         </Link>
       ))}

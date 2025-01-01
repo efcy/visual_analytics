@@ -1,14 +1,14 @@
-import "@/styles/new.css";
-
 import { useEvents } from "@/hooks/useEvents";
 import EventCard from "../EventCard/EventCard.jsx";
 import { useNavigate } from "react-router-dom";
 import GridView from "../GridView/GridView.jsx";
+
 function EventListView() {
   const navigate = useNavigate();
   const events = useEvents();
 
   if (!events) {
+    // TODO make a better loading animation here
     return <div>Loading...</div>;
   }
 
