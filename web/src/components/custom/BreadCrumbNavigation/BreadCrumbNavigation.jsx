@@ -1,4 +1,4 @@
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useGames } from "@/hooks/useGames";
 import { useLog, useLogs } from "@/hooks/useLogs";
 
