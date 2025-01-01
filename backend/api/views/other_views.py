@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q,F,functions, Value, CharField,Count
 import time
 import json
 from django.db import connection
@@ -19,6 +19,7 @@ from django.db.models import Count
 from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiExample
 from rest_framework import serializers as s
 from django.template import loader
+
 User = get_user_model()
 
 
@@ -181,10 +182,13 @@ class GameViewSet(viewsets.ModelViewSet):
    
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
+
+        queryset = models.Game.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
+        print(queryset.first().event_name)
         if event_id is not None:
-            return models.Game.objects.filter(event_id=event_id)
-        else:
-            return models.Game.objects.all()
+            queryset = queryset.filter(event_id=event_id)
+        
+        return queryset
         
     def create(self, request, *args, **kwargs):
         row_tuple = [(
@@ -231,7 +235,17 @@ class LogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
-        queryset = models.Log.objects.all()
+
+        queryset = models.Log.objects.select_related('game_id').annotate(event_name=F('game_id__event_id__name'))
+
+        queryset = queryset.select_related('game_id').annotate(game_name=functions.Concat(
+        'game_id__start_time', Value(' '),
+        'game_id__team1', Value(' vs '),
+        'game_id__team2', Value(' '),
+        'game_id__half',
+        output_field=CharField()
+    ))
+         
         query_params = self.request.query_params
 
         filters = Q()
@@ -239,6 +253,7 @@ class LogViewSet(viewsets.ModelViewSet):
             param_value = query_params.get(field.name)
             if param_value:
                 filters &= Q(**{field.name: param_value})
+
 
         return queryset.filter(filters)
         
