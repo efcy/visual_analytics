@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import "@/styles/new.css";
 import { useParams, Link } from "react-router-dom";
 import api from "@/api";
-import GameCard from "./GameCard/GameCard";
+import GameCard from "../GameCard/GameCard.jsx";
+import GridView from "../GridView/GridView.jsx";
 
 function LogListView() {
   const [games, setGames] = useState([]);
@@ -27,19 +28,17 @@ function LogListView() {
   };
 
   return (
-    <div className="projects-section">
-      <div className="project-boxes jsGridView">
-        {games.map((game) => (
-          <Link
-            to={`/games/${game.id}`}
-            className="project-box-wrapper"
-            key={game.id}
-          >
-            <GameCard game={game} key={game.name}></GameCard>
-          </Link>
-        ))}
-      </div>
-    </div>
+    <GridView>
+      {games.map((game) => (
+        <Link
+          to={`/games/${game.id}`}
+          className="project-box-wrapper"
+          key={game.id}
+        >
+          <GameCard game={game} key={game.name}></GameCard>
+        </Link>
+      ))}
+    </GridView>
   );
 }
 

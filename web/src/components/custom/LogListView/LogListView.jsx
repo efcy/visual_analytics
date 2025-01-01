@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "@/styles/new.css";
 import { useParams, Link } from "react-router-dom";
-import LogCard from "./LogCard/LogCard";
+import LogCard from "../LogCard/LogCard.jsx";
+import GridView from "../GridView/GridView.jsx";
 import api from "@/api";
 
 function LogListView() {
@@ -23,19 +24,17 @@ function LogListView() {
   };
 
   return (
-    <div className="projects-section">
-      <div className="project-boxes jsGridView">
-        {logs.map((log) => (
-          <Link
-            to={`/data/${log.id}`}
-            className="project-box-wrapper"
-            key={log.id}
-          >
-            <LogCard log={log} key={log.name}></LogCard>
-          </Link>
-        ))}
-      </div>
-    </div>
+    <GridView>
+      {logs.map((log) => (
+        <Link
+          to={`/data/${log.id}`}
+          className="project-box-wrapper"
+          key={log.id}
+        >
+          <LogCard log={log} key={log.name}></LogCard>
+        </Link>
+      ))}
+    </GridView>
   );
 }
 
