@@ -44,18 +44,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
     }
   };
 
-  useEffect(() => {
-    // TODO what should this even be?
-    if (image) {
-      const aspectRatio = image.width / image.height;
-      const initialScale = Math.min(
-        canvasWidth / image.width,
-        canvasHeight / image.height,
-      );
-      setScale(initialScale);
-    }
-  }, [image]);
-
   const getBoundedPosition = (newX, newY, newScale) => {
     const stage = stageRef.current;
     const minX = Math.min(0, canvasWidth - image.width * newScale);
