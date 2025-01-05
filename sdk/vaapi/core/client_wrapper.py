@@ -12,11 +12,7 @@ class BaseClientWrapper:
         self._timeout = timeout
 
     def get_headers(self) -> typing.Dict[str, str]:
-        headers: typing.Dict[str, str] = {
-            "X-Fern-Language": "Python",
-            "X-Fern-SDK-Name": "label-studio-sdk",
-            "X-Fern-SDK-Version": "1.0.6",
-        }
+        headers: typing.Dict[str, str] = {}        
         headers["Authorization"] = f"Token  {self.api_key}"
         return headers
 
