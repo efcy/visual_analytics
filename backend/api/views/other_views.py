@@ -183,7 +183,7 @@ class GameViewSet(viewsets.ModelViewSet):
         event_id = self.request.query_params.get("event")
 
         queryset = models.Game.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
-        print(queryset.first().event_name)
+
         if event_id is not None:
             queryset = queryset.filter(event_id=event_id)
         
@@ -330,10 +330,43 @@ class LogViewSet(viewsets.ModelViewSet):
 class AnnotationViewSet(viewsets.ModelViewSet):
     queryset = models.Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
+    
+    def get_queryset(self):
+        queryset = models.Annotation.objects.all()
+        return queryset
+        #image_id = self.request.query_params.get("image")
+        #if image_id is not None:
+        #    return queryset.filter(image=image_id).get()
+        
+        
+
+    def retrieve(self, request, *args, **kwargs):
+        # FIXME return empty response if no annotation is present
+        # do your customization here
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
+        # FIXME remove the copied code and write a test for the sdk for generating annotations for a given image
         # Check if the data is a list (bulk create) or dict (single create)
         print(request.data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        instance, created = models.Log.objects.get_or_create(
+            game_id=validated_data.get('game_id'),
+            player_number=validated_data.get('player_number'),
+            head_number=validated_data.get('head_number'),
+            log_path=validated_data.get('log_path'),
+            defaults=validated_data
+        )
+        
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status_code)
 
 class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     queryset = models.CognitionRepresentation.objects.all()

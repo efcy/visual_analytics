@@ -6,9 +6,14 @@ import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
-import api from "@/api";
 
-const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
+const CanvasView = ({
+  image,
+  currentCamera,
+  setCamera,
+  setFrameFilter,
+  annotations,
+}) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -29,8 +34,33 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
 
   useEffect(() => {
     //TODO eventually load the existing annotations here
-    setBoundingBoxes([]);
-  }, [image]); // this list is called dependency array
+
+    if (annotations) {
+      console.log(annotations);
+      console.log(annotations.annotation.bbox);
+
+      console.log("load bounding boxes from annotations from db");
+      const db_boxes = [];
+      annotations.annotation.bbox.map((db_box, i) => {
+        console.log(i, db_box);
+        const newBox = {
+          x: db_box.x,
+          y: db_box.y,
+          width: db_box.width,
+          height: db_box.height,
+          fill: "rgba(0, 255, 0, 0.5)",
+          stroke: "rgba(0, 255, 0, 1)",
+          strokeWidth: 2,
+          opacity: 0.5,
+          id: uuid4(),
+        };
+        db_boxes.push(newBox);
+      });
+      setBoundingBoxes([...boundingBoxes, ...db_boxes]);
+    } else {
+      setBoundingBoxes([]);
+    }
+  }, [image, annotations]); // this list is called dependency array
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
@@ -54,8 +84,8 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
 
   const updateBoundingBoxes = () => {
     try {
-      // TODO why to call the token endpoint here?
-      const res = api.post("/api/annotations/", { a: "asd" });
+      console.log("updateBoundingBoxes");
+      //const res = api.post("/api/annotations/", { a: "asd" });
     } catch (error) {
       alert(error);
     }
@@ -103,7 +133,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
       // Left mouse button
       const pos = stage.getRelativePointerPosition();
       // check if we actually click on the image
-      // FIXME fails on first render, not sure how to solve that here
       const shape = stage.getIntersection(pos);
       if (shape instanceof Konva.Image) {
         setIsDrawing(true);

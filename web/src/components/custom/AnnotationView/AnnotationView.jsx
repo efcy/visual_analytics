@@ -16,6 +16,7 @@ const AnnotationView = () => {
   const [error, setError] = useState(null);
   const { id, imageIndex } = useParams();
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [annotations, setAnnotations] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,10 +82,29 @@ const AnnotationView = () => {
     });
   };
 
+  const loadAnnotation = (imageIndex) => {
+    console.log("load annotation for image idx: ", imageIndex);
+    const currentImageIdx = parseInt(imageIndex);
+    if (!imageList[currentImageIdx]) {
+      setError("Image not found");
+      setIsLoading(false);
+      return;
+    }
+    const imagedbID = imageList[currentImageIdx].id;
+    console.log("Image id in db: ", imagedbID);
+    api
+      .get(`${import.meta.env.VITE_API_URL}/api/annotations/${imagedbID}`)
+      .then((res) => res.data)
+      .then((data) => {
+        setAnnotations(data);
+      })
+      .catch((err) => alert(err));
+  };
   // Load new image when imageIndex changes
   useEffect(() => {
     if (imageList.length > 0) {
       loadImage(imageIndex);
+      loadAnnotation(imageIndex);
     }
   }, [imageIndex, imageList]);
 
@@ -97,6 +117,7 @@ const AnnotationView = () => {
             currentCamera={camera}
             setCamera={setCamera}
             setFrameFilter={setFrameFilter}
+            annotations={annotations}
           />
         ) : (
           <div>Image not loaded yet</div>
