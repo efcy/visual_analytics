@@ -7,7 +7,7 @@ metadata:
     app: log-filesystem
   annotations:
     nginx.ingress.kubernetes.io/server-snippet: |
-      if ($http_user_agent ~* (Googlebot|Google-InspectionTool|AdsBot-Google|Mediapartners-Google|Googlebot-Mobile|Googlebot-Image|Googlebot-Video|Googlebot-News)) {
+      if ($http_user_agent ~* (Googlebot|Google-InspectionTool|AdsBot-Google|Mediapartners-Google|Googlebot-Mobile|Googlebot-Image|Googlebot-Video|Googlebot-News|SemrushBot)) {
         return 403;
       }
 spec:
