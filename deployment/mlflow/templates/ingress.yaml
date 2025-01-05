@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mlflow
+  namespace: mlflow
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "2000m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "mlflow.berlin-united.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: mlflow-tracking
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - "mlflow.berlin-united.com"
+      secretName: tls-cert-mlflow

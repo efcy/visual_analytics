@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlflow
+spec:
+  project: default
+  source:
+    repoURL: "git@github.com:efcy/visual_analytics.git"
+    path: deployment/mlflow
+    targetRevision: HEAD
+    helm:
+      releaseName: mlflow
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlflow # has to be there because thats where the base application is
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

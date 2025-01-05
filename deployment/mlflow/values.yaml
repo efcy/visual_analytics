@@ -1,0 +1,55 @@
+mlflow:
+  global:
+    storageClass: local-path
+
+  image:
+    registry: "docker.io"
+    repository: "bitnami/mlflow"
+    tag: "2.13.2-debian-12-r0"
+
+  tracking:
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 1Gi
+      limits:
+        cpu: 2
+        memory: 2Gi
+
+    auth:
+      enabled: false
+      existingSecret: mlflow-secret
+      existingSecretUserKey: mlflowuser
+      existingSecretPasswordKey: password
+
+    service:
+      type: ClusterIP
+
+    ingress:
+      enabled: false
+
+    metrics:
+      enabled: false
+      serviceMonitor:
+        enabled: false
+
+  run:
+    enabled: false
+
+  postgresql:
+    enabled: true
+    primary:
+      service:
+        ports:
+          postgresql: 5333
+    auth:
+      existingSecret: mlflow-postgresql
+
+  minio:
+    enabled: false
+
+  externalS3:
+    host: minio.berlin-united.com
+    existingSecret: "minio-secret-mlflow"
+    existingSecretAccessKeyIDKey: "accessKeyID"
+    existingSecretKeySecretKey: "accessKeySecret"
