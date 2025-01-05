@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import Konva from "konva";
+import { useState, useRef, useEffect } from "react";
 import { Stage, Layer, Image } from "react-konva";
 import uuid4 from "uuid4";
 import Rectangle from "../Rectangle/Rectangle";
@@ -44,6 +45,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
   };
 
   useEffect(() => {
+    // TODO what should this even be?
     if (image) {
       const aspectRatio = image.width / image.height;
       const initialScale = Math.min(
@@ -108,6 +110,7 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
       // Left mouse button
       const pos = stage.getRelativePointerPosition();
       // check if we actually click on the image
+      // FIXME fails on first render, not sure how to solve that here
       const shape = stage.getIntersection(pos);
       if (shape instanceof Konva.Image) {
         setIsDrawing(true);
