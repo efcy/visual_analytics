@@ -2,11 +2,6 @@ mlflow:
   global:
     storageClass: local-path
 
-  image:
-    registry: "docker.io"
-    repository: "bitnami/mlflow"
-    tag: "2.13.2-debian-12-r0"
-
   tracking:
     resources:
       requests:
