@@ -1,5 +1,6 @@
 
 from rest_framework import generics,viewsets
+from rest_framework import permissions
 from . import serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -47,11 +48,9 @@ class CreateUserView(generics.CreateAPIView):
    )
 )
 class EventViewSet(viewsets.ModelViewSet):
-    
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
 
-   
     @extend_schema(
        description='Create single or multiple events',
        request=serializers.EventSerializer(many=True),
@@ -229,7 +228,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-        
+
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
@@ -328,6 +327,14 @@ class LogViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
 
 
+class AnnotationViewSet(viewsets.ModelViewSet):
+    queryset = models.Annotation.objects.all()
+    serializer_class = serializers.AnnotationSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        print(request.data)
+
 class CognitionRepresentationViewSet(viewsets.ModelViewSet):
     queryset = models.CognitionRepresentation.objects.all()
     serializer_class = serializers.CognitionRepresentationSerializer
@@ -390,7 +397,7 @@ class CognitionReprCountView(APIView):
         
         return Response(result, status=status.HTTP_200_OK)
 
-    
+
 class MotionRepresentationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MotionRepresentationSerializer
     queryset = models.MotionRepresentation.objects.all()

@@ -6,6 +6,7 @@ import Rectangle from "../Rectangle/Rectangle";
 import classes from "./CanvasView.module.css";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
+import api from "@/api";
 
 const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
   const [scale, setScale] = useState(1);
@@ -31,10 +32,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
     setBoundingBoxes([]);
   }, [image]); // this list is called dependency array
 
-  useEffect(() => {
-    console.log("boundingBoxes: ", boundingBoxes);
-  }, [boundingBoxes]);
-
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
     const clickedOnEmpty =
@@ -45,7 +42,6 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
   };
 
   const getBoundedPosition = (newX, newY, newScale) => {
-    const stage = stageRef.current;
     const minX = Math.min(0, canvasWidth - image.width * newScale);
     const maxX = 0;
     const minY = Math.min(0, canvasHeight - image.height * newScale);
@@ -54,6 +50,15 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
     const x = Math.max(minX, Math.min(newX, maxX));
     const y = Math.max(minY, Math.min(newY, maxY));
     return { x, y };
+  };
+
+  const updateBoundingBoxes = () => {
+    try {
+      // TODO why to call the token endpoint here?
+      const res = api.post("/api/annotations/", { a: "asd" });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleWheel = (e) => {
@@ -154,7 +159,9 @@ const CanvasView = ({ image, currentCamera, setCamera, setFrameFilter }) => {
     } else if (e.evt.button === 0) {
       // Left mouse button
       setIsDrawing(false);
+      console.log("boundingBoxes: ", boundingBoxes);
       //TODO add post request here for annotation
+      updateBoundingBoxes();
     }
   };
 
