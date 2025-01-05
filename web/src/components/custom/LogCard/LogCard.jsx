@@ -1,4 +1,3 @@
-import React from "react";
 import "@/styles/new.css";
 
 import event_image from "@/assets/robocup.jpeg";

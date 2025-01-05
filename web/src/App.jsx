@@ -7,9 +7,9 @@ import {
 } from "react-router-dom";
 import LoginPage from "./components/custom/LoginPage/LoginPage.jsx";
 import RegisterPage from "./components/custom/RegisterPage/RegisterPage.jsx";
-import EventListView from "./components/custom/EventListView.jsx";
-import GameListView from "./components/custom/GameListView.jsx";
-import LogListView from "./components/custom/LogListView.jsx";
+import EventListView from "./components/custom/EventListView/EventListView.jsx";
+import GameListView from "./components/custom/GameListView/GameListView.jsx";
+import LogListView from "./components/custom/LogListView/LogListView.jsx";
 import MainPage from "./pages/MainPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Dashboard from "./pages/Settings.jsx";

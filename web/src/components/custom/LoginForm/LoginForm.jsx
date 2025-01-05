@@ -4,7 +4,7 @@ import classes from "./LoginForm.module.css";
 import api from "@/api";
 import { useNavigate, Link } from "react-router-dom";
 
-const LoginForm = ({ route, method }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,14 +13,11 @@ const LoginForm = ({ route, method }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post(route, { username, password });
-      if (method === "login") {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        navigate("/");
-      } else {
-        navigate("/login");
-      }
+      // TODO why to call the token endpoint here?
+      const res = await api.post("/api/token/", { username, password });
+      localStorage.setItem(ACCESS_TOKEN, res.data.access);
+      localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+      navigate("/");
     } catch (error) {
       alert(error);
     } finally {

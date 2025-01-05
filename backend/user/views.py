@@ -27,11 +27,12 @@ class CheckAuthenticatedView(APIView):
             return Response({ 'error': 'Something went wrong when checking authentication status' })
 
 
-
-@method_decorator(csrf_protect, name='dispatch')
 class SignupView(APIView):
     permission_classes = (permissions.AllowAny, )
     def post(self, request, format=None):
+        print()
+        print(self.request.data)
+        print()
         data = self.request.data
         username = data['username']
         password = data['password']
