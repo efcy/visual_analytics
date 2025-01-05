@@ -66,7 +66,7 @@ const RegisterPage = () => {
           </button>
           <p className={classes.signup_text}>
             Already have an account?{" "}
-            <Link to="/signup" className={classes.login_link}>
+            <Link to="/login" className={classes.login_link}>
               Login
             </Link>
           </p>
