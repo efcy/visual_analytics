@@ -10,17 +10,9 @@ const useSpeculationRules = () => {
         {
           source: "list",
           urls: [
-            "http://localhost:5173/data/1/image/1",
-            "http://localhost:5173/data/1/image/2",
-            "http://localhost:5173/data/1/image/3",
-            "https://logs.berlin-united.com/2024-07-15_RC24/2024-07-15_20-00-00_BerlinUnited_vs_SPQR_half1-test/extracted/2_16_Nao0017_240715-1830/log_bottom/0005623.png",
-          ],
-        },
-      ],
-      prefetch: [
-        {
-          source: "list",
-          urls: [
+            "https://vat.berlin-united.com//data/1/image/1",
+            "https://vat.berlin-united.com//data/1/image/2",
+            "https://vat.berlin-united.com//data/1/image/3",
             "https://logs.berlin-united.com/2024-07-15_RC24/2024-07-15_20-00-00_BerlinUnited_vs_SPQR_half1-test/extracted/2_16_Nao0017_240715-1830/log_bottom/0005623.png",
             "https://logs.berlin-united.com/2024-07-15_RC24/2024-07-15_20-00-00_BerlinUnited_vs_SPQR_half1-test/extracted/2_16_Nao0017_240715-1830/log_bottom/0007601.png",
           ],

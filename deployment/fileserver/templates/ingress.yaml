@@ -10,6 +10,9 @@ metadata:
       if ($http_user_agent ~* (Googlebot|Google-InspectionTool|AdsBot-Google|Mediapartners-Google|Googlebot-Mobile|Googlebot-Image|Googlebot-Video|Googlebot-News|SemrushBot)) {
         return 403;
       }
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header Supports-Loading-Mode "credentialed-prerender";
+      add_header Cache-Control "public";
 spec:
   ingressClassName: nginx
   rules:

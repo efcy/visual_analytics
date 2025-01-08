@@ -24,5 +24,8 @@ data:
             add_header Content-Type "video/mp4";
             add_header Accept-Ranges bytes;
         }
+        location ~* \.png$ {
+            add_header Content-Type "image/png";
+        }
       }
     }
