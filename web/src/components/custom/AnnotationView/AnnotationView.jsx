@@ -5,9 +5,9 @@ import NavigationControls from "../NavigationControls/NavigationControls.jsx";
 import DataView from "../DataView/DataView.jsx";
 import CanvasView from "../CanvasView/CanvasView.jsx";
 import classes from "./AnnotationView.module.css";
+import useSpeculationRules from "@/hooks/useSpeculationRules";
 
 const AnnotationView = () => {
-  console.log("AnnotationView called");
   const [imageList, setImageList] = useState([]);
   const [frameFilter, setFrameFilter] = useState(0);
   const [currentImage, setCurrentImage] = useState(null);
@@ -18,6 +18,7 @@ const AnnotationView = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [annotations, setAnnotations] = useState(null);
   const navigate = useNavigate();
+  useSpeculationRules();
 
   useEffect(() => {
     setIsInitialLoading(true);
@@ -98,13 +99,13 @@ const AnnotationView = () => {
       .then((data) => {
         setAnnotations(data);
       })
-      .catch((err) => alert(err));
+      .catch((err) => alert(err)); // TODO maybe i can set annotation data to empty array here or null
   };
   // Load new image when imageIndex changes
   useEffect(() => {
     if (imageList.length > 0) {
       loadImage(imageIndex);
-      loadAnnotation(imageIndex);
+      //loadAnnotation(imageIndex);
     }
   }, [imageIndex, imageList]);
 

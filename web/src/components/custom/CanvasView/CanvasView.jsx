@@ -56,7 +56,7 @@ const CanvasView = ({
         };
         db_boxes.push(newBox);
       });
-      setBoundingBoxes([...boundingBoxes, ...db_boxes]);
+      //setBoundingBoxes([...boundingBoxes, ...db_boxes]);
     } else {
       setBoundingBoxes([]);
     }
