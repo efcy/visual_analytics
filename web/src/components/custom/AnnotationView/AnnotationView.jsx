@@ -80,6 +80,18 @@ const AnnotationView = () => {
 
       img.src = imageUrl;
       setCurrentImage(img);
+
+      // really dumb preloading
+      const nextImg = new Image();
+      nextImg.src =
+        "https://logs.berlin-united.com/" +
+        imageList[currentImageIdx + 1].image_url;
+      resolve(nextImg);
+      const nextImg2 = new Image();
+      nextImg2.src =
+        "https://logs.berlin-united.com/" +
+        imageList[currentImageIdx + 2].image_url;
+      resolve(nextImg2);
     });
   };
 
