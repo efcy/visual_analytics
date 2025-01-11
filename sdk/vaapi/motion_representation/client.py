@@ -225,9 +225,7 @@ class MotionRepresentationClient:
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/motionrepr/?{query_string}" if query_string else "api/motionrepr/"
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        _response = self._client_wrapper.httpx_client.request("api/motionrepr/", method="GET", request_options=request_options,params=query_params)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[MotionRepresentation], _response.json())  # type: ignore
@@ -401,9 +399,7 @@ class MotionRepresentationClient:
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/motionrepr/count/?{query_string}" if query_string else "api/motionrepr/count/"
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        _response = self._client_wrapper.httpx_client.request("api/motionrepr/", method="GET", request_options=request_options,params=query_params)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.Dict[str, typing.Any], _response.json())  # type: ignore

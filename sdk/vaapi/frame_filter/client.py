@@ -277,9 +277,9 @@ class FrameFilterClient:
         ```
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/log-status/?{query_string}" if query_string else "api/log-status/"
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        #FIXME: This must be the wrong url
+        url = "api/log-status/"
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options,params=query_params)
         #_response = self._client_wrapper.httpx_client.request(
         #    f"api/cognitionrepr/?log={jsonable_encoder(log_id)}", method="GET", request_options=request_options
         #)
