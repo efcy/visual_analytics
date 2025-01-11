@@ -22,8 +22,8 @@ dynamic = ["version"]
 dependencies = [
     "protobuf==3.20.3",
     "numpy >= 1.23.5, < 2.0.0",
-    "httpx",
-    "pydantic",
+    "httpx==0.28.1",
+    "pydantic==2.10.5",
 ]
 
 [tool.setuptools.dynamic]
