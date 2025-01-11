@@ -99,6 +99,7 @@ class Image(models.Model):
         raw = "RAW", _("raw")
         jpeg = "JPEG", _("jpeg")
     # FIXME playernumber, robotnumber and serial must be part of the foreign key, we can change robots midgame when one robot breaks
+    # FIXME it should be log_id instead of log to have consistency
     log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
