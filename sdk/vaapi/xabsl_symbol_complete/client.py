@@ -226,9 +226,7 @@ class XabslSymbolClientComplete:
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        query_string = "&".join(f"{k}={jsonable_encoder(v)}" for k, v in query_params.items())
-        url = f"api/xabsl-symbol/?{query_string}" if query_string else "api/xabsl-symbol/"
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        _response = self._client_wrapper.httpx_client.request("api/xabsl-symbol/", method="GET", request_options=request_options,params=query_params)
 
         try:
             if 200 <= _response.status_code < 300:
