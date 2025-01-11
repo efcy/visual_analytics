@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+    <title>Visual Analytics</title>
+  </head>
+  <body>
+    <div class="page">
+      <div class="left-container">
+        <div class="logo-big">
+          <img src="{% static 'images/logo.svg' %}" alt="Berlin United Logo" />
+        </div>
+        <div class="credits">
+          <p>developed by Berlin United</p>
+        </div>
+      </div>
+      <div class="right-container">
+        <form class="form-container" method="POST">
+          {% csrf_token %}
+          <h1 class="login_header">Login</h1>
+          <input
+            class="form-input"
+            type="text"
+            name="username"
+            placeholder="Username"
+          />
+          <input
+            class="form-input"
+            type="password"
+            name="password"
+            placeholder="Password"
+          />
+          {% for message in messages %}
+          <p id="messages">{{message}}</p>
+          {% endfor %}
+          <button class="form-button" type="submit">Login</button>
+          <p class="signup_text">
+            Don't have an account
+            <a href="{% url 'signup' %}" class="signup_link">Sign Up</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

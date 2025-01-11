@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import include, path
-from api.views import CreateUserView
 from drf_spectacular.views import SpectacularAPIView
 
 urlpatterns = [
@@ -13,4 +12,5 @@ urlpatterns = [
     #path('profile/', include('user_profile.urls')),
     path("api/", include("api.urls")),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path("", include("frontend.urls")),
 ]

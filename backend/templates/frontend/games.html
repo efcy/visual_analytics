@@ -1,0 +1,33 @@
+
+{% extends "frontend/base.html" %} 
+
+{% block header %}
+{% include "frontend/header.html" %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "frontend/sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class=projects_section>
+    <div class="project_boxes jsGridView">
+        {% for game in games %}
+        <div class="event_card">
+            <div class="event_header">
+                <a href="{% url 'game_detail' game.id %}">
+                <img src="{% static 'images/robocup.jpeg' %}" alt="RoboCup Image" />
+                </a>
+            </div>
+            <div class="event_content">
+                <p class="event_title">Game: {{ game.team1 }} vs {{game.team2}}</p>
+            </div>
+            <div class="event_footer">
+                <progress class="event_progressbar" value="40" max="100">40%</progress>
+            </div>
+        </div>
+        {% endfor %}
+  </div>
+
+{% endblock %}

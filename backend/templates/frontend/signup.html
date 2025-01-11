@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Analytics</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+  </head>
+  <body>
+    <div class="background">
+      <div class="form-container">
+        <form method="POST">
+          {% csrf_token %}
+          <h1 class="signup_header">Signup</h1>
+          <input
+            class="form_input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            required
+          />
+          <input
+            class="form_input"
+            type="password"
+            id="password1"
+            name="password1"
+            placeholder="Create Password"
+            required
+          />
+          <input
+            class="form_input"
+            type="password"
+            id="password2"
+            name="password2"
+            placeholder="Confirm Password"
+            required
+          />
+          {% for field in form %} {{ field.errors }} {% endfor %}
+          <button class="form_button" type="submit">Sign Up</button>
+          <p class="signup_text">
+            Already have an account?
+            <a href="{% url 'login' %}" class="login_link">Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
