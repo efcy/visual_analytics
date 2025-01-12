@@ -1,9 +1,5 @@
-const stages = new Map();
-
-function test(){
-    elem = document.getElementById("konva-container1")
-    console.log(elem.offsetWidth)
-}
+let isDrawing = false;
+let rect = null
 
 function setUpCanvas(image_url, container_id){
     console.log(image_url, container_id)
@@ -15,43 +11,11 @@ function setUpCanvas(image_url, container_id){
     });
     const layer = new Konva.Layer();
     stage.add(layer);
-
-    // Update stage size to match container
-    const container = stage.container();
-
-    // Store stage reference
-    stages.set(container_id, { stage, layer });
     
     const imageObj = new Image();
     imageObj.src = image_url;
 
-    imageObj.onload = function() {
-        
-        const imageAspectRatio = imageObj.width / imageObj.height;
-        console.log(imageAspectRatio)
-        const targetAspectRatio = 4/3;
-
-        // Get container dimensions
-        const container = stage.container();
-        const containerWidth = container.offsetWidth;
-        const containerHeight = container.offsetHeight;
-
-        // Update stage size to match container
-        //stage.width(containerWidth);
-        //stage.height(containerHeight);
-
-        // Calculate dimensions to maintain aspect ratio
-        let imageWidth, imageHeight;
-        if (imageAspectRatio > targetAspectRatio) {
-            // Image is wider than target ratio
-            imageWidth = containerWidth;
-            imageHeight = containerWidth / imageAspectRatio;
-        } else {
-            // Image is taller than target ratio
-            imageHeight = containerHeight;
-            imageWidth = containerHeight * imageAspectRatio;
-        }
-
+    imageObj.onload = function() {        
         // Create Konva image
         const konvaImage = new Konva.Image({
             image: imageObj,
@@ -81,54 +45,84 @@ function draw_annotation(stage){
         strokeScaleEnabled: false,
         opacity: 0.5,
         draggable: true,
-      });
-      drawingLayer.add(rect);
+    });
+    drawingLayer.add(rect);
 
-      // create new transformer
-      var tr = new Konva.Transformer();
-      tr.rotateEnabled(false);
-      tr.flipEnabled(false);
-      tr.anchorStroke("green");
-      tr.anchorFill('white');
-      tr.keepRatio(false);
-      tr.ignoreStroke(true);
-      tr.borderStrokeWidth(0);
-      tr.enabledAnchors([
-        "top-left",
-        "top-right",
-        "bottom-left",
-        "bottom-right",
-      ]);
-      tr.anchorCornerRadius(10);
-      drawingLayer.add(tr);
-      //tr.nodes([rect]);
+    // create new transformer
+    var tr = new Konva.Transformer();
+    tr.rotateEnabled(false);
+    tr.flipEnabled(false);
+    tr.anchorStroke("green");
+    tr.anchorFill('white');
+    tr.keepRatio(false);
+    tr.ignoreStroke(true);
+    tr.borderStrokeWidth(0);
+    tr.enabledAnchors([
+    "top-left",
+    "top-right",
+    "bottom-left",
+    "bottom-right",
+    ]);
+    tr.anchorCornerRadius(10);
+    drawingLayer.add(tr);
+    //tr.nodes([rect]);
 
-      rect.on('transformstart', function () {
-        console.log('transform start');
-      });
+    rect.on('transformstart', function () {
+    console.log('transform start');
+    });
 
-      rect.on('dragmove', function () {
+    rect.on('dragmove', function () {
 
-      });
-      rect.on('transform', function () {
+    });
+    rect.on('transform', function () {
 
-        console.log('transform');
-      });
+    console.log('transform');
+    });
 
-      rect.on('transformend', function () {
-        console.log('transform end');
-      });
+    rect.on('transformend', function () {
+    console.log('transform end');
+    });
 
-      stage.on("click tap", (e) => {
-        // If we click on nothing clear the transformer and update the layer
-        if (e.target === stage) {
-          tr.nodes([]);
-          layer.batchDraw();
-          return;
+    stage.on("click tap", (e) => {
+    // If we click on nothing clear the transformer and update the layer
+    if (e.target === stage) {
+        tr.nodes([]);
+        layer.batchDraw();
+        return;
+    }
+    
+    // Add the selected element to the transformer and update the layer
+    tr.nodes([e.target]);
+    drawingLayer.batchDraw();
+    });
+
+    function mousedownhandler(){
+        isDrawing = true;
+        rect = new Konva.Rect({
+            x: stage.getPointerPosition().x,
+            y: stage.getPointerPosition().y,
+            width: 0,
+            height: 0,
+            fill: "rgba(0, 255, 0, 0.5)",
+            stroke: "rgba(0, 255, 0, 1)",
+            strokeWidth: 2,
+        });
+        drawingLayer.add(rect).batchDraw();
+    }
+    function mousemovehandler(){
+        if(!isDrawing){
+            return false;
         }
-        
-        // Add the selected element to the transformer and update the layer
-        tr.nodes([e.target]);
-        drawingLayer.batchDraw();
-      });
+        const newWidth = stage.getPointerPosition().x - rect.x();
+        const newHeight = stage.getPointerPosition().y - rect.y();
+        rect.width(newWidth).height(newHeight);
+    }
+    
+    function mouseuphandler(){
+        isDrawing = false;
+    }
+
+    stage.on("mousedown", mousedownhandler);
+    stage.on("mousemove", mousemovehandler)
+    stage.on("mouseup", mouseuphandler)
 }
