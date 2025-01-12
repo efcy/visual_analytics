@@ -160,12 +160,14 @@
 
 .grid_item_annotation {
   flex: 1;
-  display: grid;
+  display: flex;
+ 
 
   justify-content: center;
   align-items: center;
   aspect-ratio: 4 / 3;
   max-height: 100%;
+  background-color: #f0f0f0;
 }
 
 .grid_item_annotation img {
@@ -174,6 +176,8 @@
   height: 100%; /* Prevent the image from exceeding the container's height */
   max-width: 100%;
 }
+
+
 
 /* Timeline */
 .timeline-container {

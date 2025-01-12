@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equal Width Divs</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Center content vertically */
+      background-color: #f0f0f0; /* Light background for contrast */
+    }
+
+    .container {
+      display: flex;
+      width: 100%; /* Full width of the parent container */
+      max-width: 1200px; /* Optional max width for large screens */
+      height: 200px; /* Fixed height */
+    }
+
+    .container div {
+      flex: 1; /* Equal width for all children */
+      height: 100%; /* Inherit height from parent container */
+      background-color: lightblue;
+      border: 2px solid #333;
+    }
+
+    .container div:first-child {
+      background-color: lightcoral; /* Different color for demonstration */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>Div 1</div>
+    <div>Div 2</div>
+  </div>
+</body>
+</html>
