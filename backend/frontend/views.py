@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, DetailView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
+import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, CognitionRepresentation
+from api.models import Event, Game, Log, Image, Annotation
 
 def LoginView(request):
     if request.method == 'POST':
@@ -102,5 +102,9 @@ class ImageDetailView(DetailView):
         context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
         context['log_id'] = log_id
         context['frame_numbers'] = Image.objects.filter(log=log_id, camera="TOP").order_by('frame_number').values_list('frame_number', flat=True)
-
+        print(context['bottom_image'].id)
+        annotation = Annotation.objects.filter(image=context['bottom_image'].id).values_list('annotation', flat=True).first()
+        
+        context['bb'] = json.dumps(annotation) 
+        print(annotation["bbox"])
         return context

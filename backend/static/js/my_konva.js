@@ -33,20 +33,26 @@ function setUpCanvas(image_url, container_id){
 function draw_annotation(stage){
     const drawingLayer = new Konva.Layer();
     stage.add(drawingLayer);
-    var rect = new Konva.Rect({
-        x: 160,
-        y: 60,
-        width: 100,
-        height: 90,
-        fill: "rgba(0, 255, 0, 0.5)",
-        stroke: "rgba(0, 255, 0, 1)",
-        strokeWidth: 2,
-        name: 'rect',
-        strokeScaleEnabled: false,
-        opacity: 0.5,
-        draggable: true,
+
+    annotation_list.bbox.map((db_box, i) => {
+        console.log(db_box)
+        var rect = new Konva.Rect({
+            x: db_box.x,
+            y: db_box.y,
+            width: db_box.width,
+            height: db_box.height,
+            fill: "rgba(0, 255, 0, 0.5)",
+            stroke: "rgba(0, 255, 0, 1)",
+            strokeWidth: 2,
+            name: 'rect',
+            strokeScaleEnabled: false,
+            opacity: 0.5,
+            draggable: true,
+        });
+        drawingLayer.add(rect);
     });
-    drawingLayer.add(rect);
+
+    
 
     // create new transformer
     var tr = new Konva.Transformer();
@@ -66,22 +72,6 @@ function draw_annotation(stage){
     tr.anchorCornerRadius(10);
     drawingLayer.add(tr);
     //tr.nodes([rect]);
-
-    rect.on('transformstart', function () {
-    console.log('transform start');
-    });
-
-    rect.on('dragmove', function () {
-
-    });
-    rect.on('transform', function () {
-
-    console.log('transform');
-    });
-
-    rect.on('transformend', function () {
-    console.log('transform end');
-    });
 
     stage.on("click tap", (e) => {
     // If we click on nothing clear the transformer and update the layer
