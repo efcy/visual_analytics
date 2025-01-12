@@ -355,11 +355,9 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
-        instance, created = models.Log.objects.get_or_create(
-            game_id=validated_data.get('game_id'),
-            player_number=validated_data.get('player_number'),
-            head_number=validated_data.get('head_number'),
-            log_path=validated_data.get('log_path'),
+        instance, created = models.Annotation.objects.get_or_create(
+            image=validated_data.get('image_id'),
+            annotation=validated_data.get('annotation'),
             defaults=validated_data
         )
         
