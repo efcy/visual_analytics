@@ -1,0 +1,64 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+ .timeline-container {
+    overflow-x: auto; /* Enables horizontal scrolling */
+    white-space: nowrap; /* Prevents wrapping of boxes */
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 0;
+    background-color: #ffffff;
+}
+
+.timeline {
+    display: flex;
+}
+  
+.timeline-box {
+    flex-shrink: 0;
+    width: 40px;
+    height: 80px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    background-color: #ffcccb;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+  
+.timeline-box:hover {
+    background-color: #ff69b4;
+}
+  
+/* Add smooth scrolling for aesthetics */
+.timeline-container::-webkit-scrollbar {
+    height: 8px;
+}
+  
+.timeline-container::-webkit-scrollbar-thumb {
+    background: #ffcccb;
+    border-radius: 4px;
+}
+  
+.timeline-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}

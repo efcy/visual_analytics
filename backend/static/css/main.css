@@ -141,7 +141,7 @@
 .main_container_annotation {
   grid-area: main_container;
   display: grid;
-  grid-template-rows: 90% 10%;
+  grid-template-rows: 80% 20%;
   background: #fff;
   position: relative;
   overflow: hidden;
@@ -173,4 +173,50 @@
   object-fit: contain; /* Scale the image while preserving the aspect ratio */
   height: 100%; /* Prevent the image from exceeding the container's height */
   max-width: 100%;
+}
+
+/* Timeline */
+.timeline-container {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  white-space: nowrap; /* Prevents wrapping of boxes */
+  background-color: #ffffff;
+}
+
+.timeline {
+  display: flex;
+}
+
+.timeline-box {
+  flex-shrink: 0;
+  width: 40px;
+  height: 80px;
+  display: flex;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  background-color: #ffcccb;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.timeline-box:hover {
+  background-color: #ff69b4;
+}
+
+/* Add smooth scrolling for aesthetics */
+.timeline-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.timeline-container::-webkit-scrollbar-thumb {
+  background: #ffcccb;
+  border-radius: 4px;
+}
+
+.timeline-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }

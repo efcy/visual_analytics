@@ -14,20 +14,24 @@
     <div class="content_grid_annotation">
         <div class="grid_item_annotation">
             <img
-              src="https://logs.berlin-united.com/2024-07-15_RC24/2024-07-15_20-00-00_BerlinUnited_vs_SPQR_half1-test/extracted/5_25_Nao0006_240715-1830/log_top/0011662.png"
+              src="https://logs.berlin-united.com/{{top_image.image_url}}"
               alt="placeholder"
             />
         </div>
         <div class="grid_item_annotation">
             <img
-              src="https://logs.berlin-united.com/2024-07-15_RC24/2024-07-15_20-00-00_BerlinUnited_vs_SPQR_half1-test/extracted/5_25_Nao0006_240715-1830/log_bottom/0011662.png"
+              src="https://logs.berlin-united.com/{{bottom_image.image_url}}"
               alt="placeholder"
             />
         </div>
     </div>
-    <div class="timeline">
-        <p>TODO</p>
-        <p>Put a timeline here</p>
-    </div>
+    <div class="timeline-container">
+        <p>blablabla: {{bottom_image.image_url}}</p>
+        <div class="timeline">
+            {% for frame in frame_numbers %}
+                <a href="{% url 'image_detail' log_id frame %}" class="timeline-box"></a>
+            {% endfor %}
+        </div>
+      </div>
 </main>
 {% endblock %}

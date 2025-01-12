@@ -38,7 +38,9 @@
             placeholder="Confirm Password"
             required
           />
-          {% for field in form %} {{ field.errors }} {% endfor %}
+          {% for field in form %} 
+            {{ field.errors }}
+          {% endfor %}
           <button class="form_button" type="submit">Sign Up</button>
           <p class="signup_text">
             Already have an account?

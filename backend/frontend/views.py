@@ -10,14 +10,13 @@ def LoginView(request):
     if request.method == 'POST':
         username = request.POST.get("username")
         password = request.POST.get("password")
-        print(username, password)
+
         user = authenticate(request, username=username, password=password)
-        print(user)
+
         if user is not None:
             login(request, user)
             return redirect("events")
         else:
-            print("error")
             messages.info(request, "Username or password is incorrect")
 
     context = {}
@@ -29,7 +28,7 @@ def SignupView(request):
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
-        print("valid? ",form.is_valid())
+
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get("username")
@@ -55,7 +54,6 @@ class GameListView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(context)
         context['games'] = Game.objects.filter(event_id=context['event'])
         
         return context
@@ -67,7 +65,6 @@ class LogListView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(context)
         context['logs'] = Log.objects.filter(game_id=context['game'])
         
         return context
@@ -83,12 +80,12 @@ class ImageListView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        top_images = Image.objects.filter(log_id=self.object, camera="TOP")
-        top_images.order_by('frame_number')
+        top_images = Image.objects.filter(log_id=self.object, camera="TOP").order_by('frame_number')
         if top_images.exists():
             first_image = top_images.first()
-            print(first_image)
+
             return redirect('image_detail', pk=self.object.id, bla=first_image.frame_number)
+        # TODO what if no images exist for a log -> redirect somewhere else
         return super().get(request, *args, **kwargs)  # Handle cases where no images exist
 
 
@@ -101,7 +98,9 @@ class ImageDetailView(DetailView):
 
         log_id = self.kwargs.get('pk')
         current_frame = self.kwargs.get('bla')
-        context['bottom_image'] = Image.objects.filter(log_id=log_id, camera="BOTTOM").order_by('frame_number').first()
-        context['top_image'] = Image.objects.filter(log=log_id, camera="TOP").order_by('frame_number').first()
+        context['bottom_image'] = Image.objects.filter(log_id=log_id, camera="BOTTOM", frame_number=current_frame).first()
+        context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
+        context['log_id'] = log_id
+        context['frame_numbers'] = Image.objects.filter(log=log_id, camera="TOP").order_by('frame_number').values_list('frame_number', flat=True)
 
         return context
