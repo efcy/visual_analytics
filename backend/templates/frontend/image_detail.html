@@ -10,13 +10,11 @@
 
 {% block content %}
 {% load static %}
+
 <main class="main_container_annotation">
     <div class="content_grid_annotation">
-        <div class="grid_item_annotation">
-            <img
-              src="https://logs.berlin-united.com/{{top_image.image_url}}"
-              alt="placeholder"
-            />
+        <div class="grid_item_annotation" id="konva-container">
+
         </div>
         <div class="grid_item_annotation">
             <img
@@ -34,4 +32,106 @@
         </div>
       </div>
 </main>
+<script>
+    const stage = new Konva.Stage({
+    container: 'konva-container',
+    // We'll update these dimensions based on container size
+    width: 800,
+    height: 600
+});
+
+const layer = new Konva.Layer();
+stage.add(layer);
+
+// Create and load the image
+const imageObj = new Image();
+imageObj.src = 'https://logs.berlin-united.com/{{top_image.image_url}}';
+
+
+imageObj.onload = function() {
+    const imageAspectRatio = imageObj.width / imageObj.height;
+    const targetAspectRatio = 4/3;
+    
+    // Get container dimensions
+    const container = stage.container();
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+    
+    // Update stage size to match container
+    stage.width(containerWidth);
+    stage.height(containerHeight);
+    
+    // Calculate dimensions to maintain aspect ratio
+    let imageWidth, imageHeight;
+    if (imageAspectRatio > targetAspectRatio) {
+        // Image is wider than target ratio
+        imageWidth = containerWidth;
+        imageHeight = containerWidth / imageAspectRatio;
+    } else {
+        // Image is taller than target ratio
+        imageHeight = containerHeight;
+        imageWidth = containerHeight * imageAspectRatio;
+    }
+    
+    // Create Konva image
+    const konvaImage = new Konva.Image({
+        image: imageObj,
+        width: imageWidth,
+        height: imageHeight,
+        // Center the image in the container
+        x: (containerWidth - imageWidth) / 2,
+        y: (containerHeight - imageHeight) / 2
+    });
+    
+    layer.add(konvaImage);
+    layer.draw();
+    const drawingLayer = new Konva.Layer();
+    stage.add(drawingLayer);
+    var rect = new Konva.Rect({
+        x: 160,
+        y: 60,
+        width: 100,
+        height: 90,
+        fill: 'red',
+        name: 'rect',
+        stroke: 'black',
+        draggable: true,
+      });
+      layer.add(rect);
+
+      // create new transformer
+      var tr = new Konva.Transformer();
+      layer.add(tr);
+      tr.nodes([rect]);
+
+      rect.on('transformstart', function () {
+        console.log('transform start');
+      });
+
+      rect.on('dragmove', function () {
+
+      });
+      rect.on('transform', function () {
+
+        console.log('transform');
+      });
+
+      rect.on('transformend', function () {
+        console.log('transform end');
+      });
+
+      function updateText() {
+        var lines = [
+          'x: ' + rect.x(),
+          'y: ' + rect.y(),
+          'rotation: ' + rect.rotation(),
+          'width: ' + rect.width(),
+          'height: ' + rect.height(),
+          'scaleX: ' + rect.scaleX(),
+          'scaleY: ' + rect.scaleY(),
+        ];
+        text.text(lines.join('\n'));
+      }
+};
+</script>
 {% endblock %}
