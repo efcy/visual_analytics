@@ -98,17 +98,24 @@ function draw_annotation(stage, annotation_list){
     });
 
     function mousedownhandler(){
-        isDrawing = true;
-        rect = new Konva.Rect({
-            x: stage.getPointerPosition().x,
-            y: stage.getPointerPosition().y,
-            width: 0,
-            height: 0,
-            fill: "rgba(0, 255, 0, 0.5)",
-            stroke: "rgba(0, 255, 0, 1)",
-            strokeWidth: 2,
-        });
-        drawingLayer.add(rect).batchDraw();
+        const pos = stage.getRelativePointerPosition();
+        const shape = stage.getIntersection(pos);
+        if (shape instanceof Konva.Image) {
+            isDrawing = true;
+            rect = new Konva.Rect({
+                x: stage.getPointerPosition().x,
+                y: stage.getPointerPosition().y,
+                width: 0,
+                height: 0,
+                fill: "rgba(0, 255, 0, 0.5)",
+                stroke: "rgba(0, 255, 0, 1)",
+                strokeWidth: 2,
+                strokeScaleEnabled: false,
+                opacity: 0.5,
+                draggable: true,
+            });
+            drawingLayer.add(rect).batchDraw();
+        }
     }
     function mousemovehandler(){
         if(!isDrawing){
