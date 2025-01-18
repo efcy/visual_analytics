@@ -10,7 +10,7 @@
 
 {% block content %}
 {% load static %}
-
+{% csrf_token %}
 <main class="main_container_annotation">
     <div class="content_grid_annotation">
         <div class="grid_item_annotation" id="konva-container1">
@@ -31,11 +31,23 @@
 </main>
 <script src="{% static 'js/my_konva.js' %}"></script>
 <script>
+    // ugly hack since we can't use templates directly in external javascript files we have to create objects here based on values from the context passed from the view function
+    // TODO: research how to make it cleaner and easier to understand
+    const top_image = {
+        image_url: "{{top_image.image_url}}",
+        id: {{top_image.id}}
+    }
+    const bottom_image = {
+        image_url: "{{bottom_image.image_url}}",
+        id: {{bottom_image.id}}
+    }
     const annotation_list_bottom = {{ bottom_annotation | safe }};
     const annotation_list_top = {{ top_annotation | safe }};
     //console.log(annotation_list_bottom)
-
-    setUpCanvas("{{top_image.image_url}}", annotation_list_top, "konva-container1");
-    setUpCanvas("{{bottom_image.image_url}}", annotation_list_bottom, "konva-container2");
+    //const api_url = "{{ request.scheme }}://{{ request.get_host }}/api/annotations/"
+    const api_url = "{% url 'process_canvas_data' %}"
+    
+    setUpCanvas(top_image, annotation_list_top, "konva-container1");
+    setUpCanvas(bottom_image, annotation_list_bottom, "konva-container2");
 </script>
 {% endblock %}

@@ -11,9 +11,9 @@ const isObjectEmpty = (objectName) => {
     );
   };
 
-function setUpCanvas(image_url, annotation_list, container_id){
-    console.log(image_url, container_id)
-    
+function setUpCanvas(image_obj, annotation_list, container_id){
+    //console.log(image_url, container_id)
+    image_url = image_obj.image_url
     const stage = new Konva.Stage({
         container: container_id,
         width: 640,
@@ -34,20 +34,21 @@ function setUpCanvas(image_url, annotation_list, container_id){
         });
         
         layer.add(konvaImage);
-        console.log("konvaImage", konvaImage)
+        //console.log("konvaImage", konvaImage)
         layer.draw();
-        draw_annotation(stage, annotation_list)
+        draw_annotation(stage, image_obj, annotation_list)
     };
 }
 
-function draw_annotation(stage, annotation_list){
+function draw_annotation(stage, image_obj, annotation_list){
     const drawingLayer = new Konva.Layer();
     stage.add(drawingLayer);
 
     // load annotations if they exist
+    console.log(annotation_list)
     if(!isObjectEmpty(annotation_list)){
         annotation_list.bbox.map((db_box, i) => {
-            console.log(db_box)
+            //console.log(db_box)
             var rect = new Konva.Rect({
                 x: db_box.x,
                 y: db_box.y,
@@ -82,7 +83,6 @@ function draw_annotation(stage, annotation_list){
     ]);
     tr.anchorCornerRadius(10);
     drawingLayer.add(tr);
-    //tr.nodes([rect]);
 
     stage.on("click tap", (e) => {
     // If we click on nothing clear the transformer and update the layer
@@ -116,6 +116,7 @@ function draw_annotation(stage, annotation_list){
             });
             drawingLayer.add(rect).batchDraw();
         }
+        //TODO somehow check if you click on a rectangle and have this selected to be able to refer to that
     }
     function mousemovehandler(){
         if(!isDrawing){
@@ -128,6 +129,40 @@ function draw_annotation(stage, annotation_list){
     
     function mouseuphandler(){
         isDrawing = false;
+        bbox = {
+            height: rect.height(),
+            width: rect.width(),
+            id: crypto.randomUUID(),
+            x: rect.x(),
+            y: rect.y(),
+            label: "ball",
+        }
+        //TODO add bounding box to annotation list
+        annotation_list.bbox.push(bbox)
+        console.log("after:", annotation_list)
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        console.log("url:", api_url)
+        ///*
+        fetch(api_url, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ 
+                image: image_obj.id,
+                annotations: annotation_list 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Success:", data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+        //*/
     }
 
     stage.on("mousedown", mousedownhandler);

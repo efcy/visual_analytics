@@ -5,6 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 import json
 from .forms import SignupForm
 from api.models import Event, Game, Log, Image, Annotation
+from api.serializers import AnnotationSerializer
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
 
 def LoginView(request):
     if request.method == 'POST':
@@ -146,3 +150,32 @@ class ImageDetailView(DetailView):
             # add empty annotations when we don't have an image
             context['top_annotation'] = json.dumps({})
         return context
+    
+def process_canvas_data(request):
+    if request.method == "PATCH":
+        try:
+            json_data = json.loads(request.body)
+            print(json_data)
+            print(json_data["image"])
+
+            annotation_instance, created = Annotation.objects.get_or_create(
+                image=json_data["image"],
+                defaults={"annotation": json_data.get("annotations", {})},
+            )
+
+            if not created:
+                annotation_instance.annotation = json_data.get("annotations", {})
+                annotation_instance.save()
+
+            #return Response(
+            #    {"message": "Annotation updated successfully."},
+            #    status=status.HTTP_200_OK,
+            #)
+
+
+
+            return JsonResponse({"message": "Canvas data received and processed."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
