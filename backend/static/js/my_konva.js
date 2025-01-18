@@ -1,7 +1,17 @@
 let isDrawing = false;
 let rect = null
 
-function setUpCanvas(image_url, container_id){
+const isObjectEmpty = (objectName) => {
+    // generic function for checking if an javascript object is empty
+    // we use it for checking for an empty annotation json
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
+  };
+
+function setUpCanvas(image_url, annotation_list, container_id){
     console.log(image_url, container_id)
     
     const stage = new Konva.Stage({
@@ -26,33 +36,34 @@ function setUpCanvas(image_url, container_id){
         layer.add(konvaImage);
         console.log("konvaImage", konvaImage)
         layer.draw();
-        draw_annotation(stage)
+        draw_annotation(stage, annotation_list)
     };
 }
 
-function draw_annotation(stage){
+function draw_annotation(stage, annotation_list){
     const drawingLayer = new Konva.Layer();
     stage.add(drawingLayer);
 
-    annotation_list.bbox.map((db_box, i) => {
-        console.log(db_box)
-        var rect = new Konva.Rect({
-            x: db_box.x,
-            y: db_box.y,
-            width: db_box.width,
-            height: db_box.height,
-            fill: "rgba(0, 255, 0, 0.5)",
-            stroke: "rgba(0, 255, 0, 1)",
-            strokeWidth: 2,
-            name: 'rect',
-            strokeScaleEnabled: false,
-            opacity: 0.5,
-            draggable: true,
+    // load annotations if they exist
+    if(!isObjectEmpty(annotation_list)){
+        annotation_list.bbox.map((db_box, i) => {
+            console.log(db_box)
+            var rect = new Konva.Rect({
+                x: db_box.x,
+                y: db_box.y,
+                width: db_box.width,
+                height: db_box.height,
+                fill: "rgba(0, 255, 0, 0.5)",
+                stroke: "rgba(0, 255, 0, 1)",
+                strokeWidth: 2,
+                name: 'rect',
+                strokeScaleEnabled: false,
+                opacity: 0.5,
+                draggable: true,
+            });
+            drawingLayer.add(rect);
         });
-        drawingLayer.add(rect);
-    });
-
-    
+    }
 
     // create new transformer
     var tr = new Konva.Transformer();

@@ -31,9 +31,11 @@
 </main>
 <script src="{% static 'js/my_konva.js' %}"></script>
 <script>
-  const annotation_list = {{ bb | safe }};
-  console.log(annotation_list)
-  setUpCanvas("https://logs.berlin-united.com/{{top_image.image_url}}", "konva-container1");
-  setUpCanvas("https://logs.berlin-united.com/{{bottom_image.image_url}}", "konva-container2");
+    const annotation_list_bottom = {{ bottom_annotation | safe }};
+    const annotation_list_top = {{ top_annotation | safe }};
+    //console.log(annotation_list_bottom)
+
+    setUpCanvas("{{top_image.image_url}}", annotation_list_top, "konva-container1");
+    setUpCanvas("{{bottom_image.image_url}}", annotation_list_bottom, "konva-container2");
 </script>
 {% endblock %}
