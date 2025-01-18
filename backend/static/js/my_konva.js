@@ -1,9 +1,19 @@
 let isDrawing = false;
 let rect = null
 
-function setUpCanvas(image_url, container_id){
-    console.log(image_url, container_id)
-    
+const isObjectEmpty = (objectName) => {
+    // generic function for checking if an javascript object is empty
+    // we use it for checking for an empty annotation json
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
+  };
+
+function setUpCanvas(image_obj, annotation_list, container_id){
+    //console.log(image_url, container_id)
+    image_url = image_obj.image_url
     const stage = new Konva.Stage({
         container: container_id,
         width: 640,
@@ -24,35 +34,37 @@ function setUpCanvas(image_url, container_id){
         });
         
         layer.add(konvaImage);
-        console.log("konvaImage", konvaImage)
+        //console.log("konvaImage", konvaImage)
         layer.draw();
-        draw_annotation(stage)
+        draw_annotation(stage, image_obj, annotation_list)
     };
 }
 
-function draw_annotation(stage){
+function draw_annotation(stage, image_obj, annotation_list){
     const drawingLayer = new Konva.Layer();
     stage.add(drawingLayer);
 
-    annotation_list.bbox.map((db_box, i) => {
-        console.log(db_box)
-        var rect = new Konva.Rect({
-            x: db_box.x,
-            y: db_box.y,
-            width: db_box.width,
-            height: db_box.height,
-            fill: "rgba(0, 255, 0, 0.5)",
-            stroke: "rgba(0, 255, 0, 1)",
-            strokeWidth: 2,
-            name: 'rect',
-            strokeScaleEnabled: false,
-            opacity: 0.5,
-            draggable: true,
+    // load annotations if they exist
+    console.log(annotation_list)
+    if(!isObjectEmpty(annotation_list)){
+        annotation_list.bbox.map((db_box, i) => {
+            //console.log(db_box)
+            var rect = new Konva.Rect({
+                x: db_box.x,
+                y: db_box.y,
+                width: db_box.width,
+                height: db_box.height,
+                fill: "rgba(0, 255, 0, 0.5)",
+                stroke: "rgba(0, 255, 0, 1)",
+                strokeWidth: 2,
+                name: 'rect',
+                strokeScaleEnabled: false,
+                opacity: 0.5,
+                draggable: true,
+            });
+            drawingLayer.add(rect);
         });
-        drawingLayer.add(rect);
-    });
-
-    
+    }
 
     // create new transformer
     var tr = new Konva.Transformer();
@@ -71,7 +83,6 @@ function draw_annotation(stage){
     ]);
     tr.anchorCornerRadius(10);
     drawingLayer.add(tr);
-    //tr.nodes([rect]);
 
     stage.on("click tap", (e) => {
     // If we click on nothing clear the transformer and update the layer
@@ -87,17 +98,25 @@ function draw_annotation(stage){
     });
 
     function mousedownhandler(){
-        isDrawing = true;
-        rect = new Konva.Rect({
-            x: stage.getPointerPosition().x,
-            y: stage.getPointerPosition().y,
-            width: 0,
-            height: 0,
-            fill: "rgba(0, 255, 0, 0.5)",
-            stroke: "rgba(0, 255, 0, 1)",
-            strokeWidth: 2,
-        });
-        drawingLayer.add(rect).batchDraw();
+        const pos = stage.getRelativePointerPosition();
+        const shape = stage.getIntersection(pos);
+        if (shape instanceof Konva.Image) {
+            isDrawing = true;
+            rect = new Konva.Rect({
+                x: stage.getPointerPosition().x,
+                y: stage.getPointerPosition().y,
+                width: 0,
+                height: 0,
+                fill: "rgba(0, 255, 0, 0.5)",
+                stroke: "rgba(0, 255, 0, 1)",
+                strokeWidth: 2,
+                strokeScaleEnabled: false,
+                opacity: 0.5,
+                draggable: true,
+            });
+            drawingLayer.add(rect).batchDraw();
+        }
+        //TODO somehow check if you click on a rectangle and have this selected to be able to refer to that
     }
     function mousemovehandler(){
         if(!isDrawing){
@@ -110,6 +129,40 @@ function draw_annotation(stage){
     
     function mouseuphandler(){
         isDrawing = false;
+        bbox = {
+            height: rect.height(),
+            width: rect.width(),
+            id: crypto.randomUUID(),
+            x: rect.x(),
+            y: rect.y(),
+            label: "ball",
+        }
+        //TODO add bounding box to annotation list
+        annotation_list.bbox.push(bbox)
+        console.log("after:", annotation_list)
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        console.log("url:", api_url)
+        ///*
+        fetch(api_url, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ 
+                image: image_obj.id,
+                annotations: annotation_list 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Success:", data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+        //*/
     }
 
     stage.on("mousedown", mousedownhandler);
