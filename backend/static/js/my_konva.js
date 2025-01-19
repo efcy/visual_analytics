@@ -66,6 +66,22 @@ function draw_annotation(stage, is_top){
                 name: 'bb',
             });
             drawingLayer.add(rect);
+            rect.on('dragend', () => {
+                console.log('Updated position:', rect.x(), rect.y());
+            });
+            rect.on('transformend', () => {
+                // Get updated dimensions
+                const newWidth = rect.width() * rect.scaleX();
+                const newHeight = rect.height() * rect.scaleY();
+              
+                // Reset scale to 1 after applying
+                rect.width(newWidth);
+                rect.height(newHeight);
+                rect.scaleX(1);
+                rect.scaleY(1);
+              
+                console.log('Updated dimensions:', newWidth, newHeight);
+            });
         });
     }
 
@@ -77,7 +93,7 @@ function draw_annotation(stage, is_top){
         // If we click on nothing clear the transformer and update the layer
         if (e.target === stage) {
             tr.nodes([]);
-            layer.batchDraw();
+            drawingLayer.batchDraw();
             return;
         }
         // Add the selected element to the transformer and update the layer
@@ -118,12 +134,14 @@ function draw_annotation(stage, is_top){
             const newWidth = stage.getPointerPosition().x - rect.x();
             const newHeight = stage.getPointerPosition().y - rect.y();
             rect.width(newWidth).height(newHeight);
+            drawingLayer.batchDraw();
         }
        
     }
     
     function mouseuphandler(){
         isDrawing = false;
+        
     }
 
     window.addEventListener('keydown', (e) => {
