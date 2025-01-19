@@ -20,8 +20,10 @@
 
         </div>
     </div>
+    
     <div class="timeline-container">
         <p>blablabla: {{bottom_image.image_url}}</p>
+        <button id="button1" type="submit">Submit</button>
         <div class="timeline">
             {% for frame in frame_numbers %}
                 <a href="{% url 'image_detail' log_id frame %}" class="timeline-box"></a>
@@ -34,6 +36,8 @@
 <script>
     // ugly hack since we can't use templates directly in external javascript files we have to create objects here based on values from the context passed from the view function
     // TODO: research how to make it cleaner and easier to understand
+    generateUUID4();
+
     state = {
         api_url: null,
         top_image : {
@@ -82,8 +86,8 @@
     }
     //console.log("blabla: ", state)
     
-    setUpCanvas(is_top=true, annotation_list_top, "konva-container1");
-    setUpCanvas(is_top=false, annotation_list_bottom, "konva-container2");
+    setUpCanvas(is_top=true, "konva-container1");
+    setUpCanvas(is_top=false, "konva-container2");
 
     
 </script>

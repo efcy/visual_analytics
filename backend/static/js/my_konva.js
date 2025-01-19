@@ -2,7 +2,7 @@ let isDrawing = false;
 let rect = null
 
 
-function setUpCanvas(is_top, annotation_list, container_id){
+function setUpCanvas(is_top, container_id){
     
     if(is_top){
         image_url = state.top_image.url
@@ -30,7 +30,6 @@ function setUpCanvas(is_top, annotation_list, container_id){
         });
         
         layer.add(konvaImage);
-        //console.log("konvaImage", konvaImage)
         layer.draw();
         draw_annotation(stage, is_top)
     };
@@ -45,12 +44,10 @@ function draw_annotation(stage, is_top){
         image_id = state.bottom_image.id
         annotation_list = state.bottom_image.annotation
     }
-    const drawingLayer = new Konva.Layer();
+    const drawingLayer = new Konva.Layer({ name: 'drawingLayer' });
     stage.add(drawingLayer);
 
     // load annotations if they exist
-    console.log("annotation_list", annotation_list)
-    console.log("image_id", image_id)
     if(!isObjectEmpty(annotation_list)){
         annotation_list.bbox.map((db_box, i) => {
             //console.log(db_box)
@@ -66,40 +63,26 @@ function draw_annotation(stage, is_top){
                 strokeScaleEnabled: false,
                 opacity: 0.5,
                 draggable: true,
+                name: 'bb',
             });
             drawingLayer.add(rect);
         });
     }
 
     // create new transformer
-    var tr = new Konva.Transformer();
-    tr.rotateEnabled(false);
-    tr.flipEnabled(false);
-    tr.anchorStroke("green");
-    tr.anchorFill('white');
-    tr.keepRatio(false);
-    tr.ignoreStroke(true);
-    tr.borderStrokeWidth(0);
-    tr.enabledAnchors([
-    "top-left",
-    "top-right",
-    "bottom-left",
-    "bottom-right",
-    ]);
-    tr.anchorCornerRadius(10);
+    var tr = getBoundingBoxTransformer()
     drawingLayer.add(tr);
 
     stage.on("click tap", (e) => {
-    // If we click on nothing clear the transformer and update the layer
-    if (e.target === stage) {
-        tr.nodes([]);
-        layer.batchDraw();
-        return;
-    }
-    
-    // Add the selected element to the transformer and update the layer
-    tr.nodes([e.target]);
-    drawingLayer.batchDraw();
+        // If we click on nothing clear the transformer and update the layer
+        if (e.target === stage) {
+            tr.nodes([]);
+            layer.batchDraw();
+            return;
+        }
+        // Add the selected element to the transformer and update the layer
+        tr.nodes([e.target]);
+        drawingLayer.batchDraw();
     });
 
     function mousedownhandler(){
@@ -118,38 +101,72 @@ function draw_annotation(stage, is_top){
                 strokeScaleEnabled: false,
                 opacity: 0.5,
                 draggable: true,
+                name: 'bb',
             });
             drawingLayer.add(rect).batchDraw();
+        }
+        else{
+            console.log("clicked on", shape)
+            if(shape instanceof Konva.Rect){
+                console.log("clicked on rect", shape.x(), shape.y())
+            }
         }
         //TODO somehow check if you click on a rectangle and have this selected to be able to refer to that
     }
     function mousemovehandler(){
-        if(!isDrawing){
-            return false;
+        if(isDrawing){
+            const newWidth = stage.getPointerPosition().x - rect.x();
+            const newHeight = stage.getPointerPosition().y - rect.y();
+            rect.width(newWidth).height(newHeight);
         }
-        const newWidth = stage.getPointerPosition().x - rect.x();
-        const newHeight = stage.getPointerPosition().y - rect.y();
-        rect.width(newWidth).height(newHeight);
+       
     }
     
     function mouseuphandler(){
         isDrawing = false;
-        bbox = {
-            height: rect.height(),
-            width: rect.width(),
-            id: crypto.randomUUID(),
-            x: rect.x(),
-            y: rect.y(),
-            label: "ball",
-        }
-        //TODO add bounding box to annotation list
-        console.log("annotation_list: ", annotation_list)
-        annotation_list.bbox.push(bbox)
-        console.log("after:", annotation_list)
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
+    }
 
-        ///*
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Delete' || e.key === 'Del') {
+          const selectedRect = tr.nodes()[0]; // Get the selected rectangle
+          if (selectedRect) {
+            selectedRect.destroy(); // Remove the rectangle
+            tr.nodes([]); // Clear the transformer
+            drawingLayer.draw(); // Redraw the layer
+          }
+        }
+      });
+
+    stage.on("mousedown", mousedownhandler);
+    stage.on("mousemove", mousemovehandler);
+    stage.on("mouseup", mouseuphandler);
+}
+
+const button1 = document.getElementById("button1");
+button1.addEventListener("click", function() {
+    // FIXME: this would change uuid everytime you click submit
+    const stage = Konva.stages.find((s) => s.container().id === 'konva-container1');
+    const new_bbox_list = []
+    if (stage) {
+        const drawingLayer = stage.findOne('.drawingLayer'); // Retrieve the layer
+        const rects = drawingLayer.find('.bb'); // Find all Rect shapes
+        console.log(rects)
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        rects.forEach((rect) => {
+            console.log(rect.x(), rect.y());
+            bbox = {
+                height: rect.height(),
+                width: rect.width(),
+                id: generateUUID4(),
+                x: rect.x(),
+                y: rect.y(),
+                label: "ball",
+            }
+            new_bbox_list.push(bbox)
+          });
+        state.top_image.annotation.bbox = new_bbox_list;
+
         fetch(state.api_url, {
             method: "PATCH",
             headers: {
@@ -157,8 +174,8 @@ function draw_annotation(stage, is_top){
                 "X-CSRFToken": csrfToken,
             },
             body: JSON.stringify({ 
-                image: image_id,
-                annotations: annotation_list 
+                image: state.top_image.id,
+                annotations: state.top_image.annotation 
             }),
         })
         .then(response => response.json())
@@ -168,10 +185,5 @@ function draw_annotation(stage, is_top){
         .catch(error => {
             console.error("Error:", error);
         });
-        //*/
     }
-
-    stage.on("mousedown", mousedownhandler);
-    stage.on("mousemove", mousemovehandler)
-    stage.on("mouseup", mouseuphandler)
-}
+});
