@@ -1,19 +1,15 @@
 let isDrawing = false;
 let rect = null
 
-const isObjectEmpty = (objectName) => {
-    // generic function for checking if an javascript object is empty
-    // we use it for checking for an empty annotation json
-    return (
-      objectName &&
-      Object.keys(objectName).length === 0 &&
-      objectName.constructor === Object
-    );
-  };
 
-function setUpCanvas(image_obj, annotation_list, container_id){
-    //console.log(image_url, container_id)
-    image_url = image_obj.image_url
+function setUpCanvas(is_top, annotation_list, container_id){
+    
+    if(is_top){
+        image_url = state.top_image.url
+    }else{
+        image_url = state.bottom_image.url
+    }
+    
     const stage = new Konva.Stage({
         container: container_id,
         width: 640,
@@ -36,16 +32,25 @@ function setUpCanvas(image_obj, annotation_list, container_id){
         layer.add(konvaImage);
         //console.log("konvaImage", konvaImage)
         layer.draw();
-        draw_annotation(stage, image_obj, annotation_list)
+        draw_annotation(stage, is_top)
     };
 }
 
-function draw_annotation(stage, image_obj, annotation_list){
+function draw_annotation(stage, is_top){
+    console.log("drawing on top image: ", is_top)
+    if(is_top){
+        image_id = state.top_image.id
+        annotation_list = state.top_image.annotation
+    }else{
+        image_id = state.bottom_image.id
+        annotation_list = state.bottom_image.annotation
+    }
     const drawingLayer = new Konva.Layer();
     stage.add(drawingLayer);
 
     // load annotations if they exist
-    console.log(annotation_list)
+    console.log("annotation_list", annotation_list)
+    console.log("image_id", image_id)
     if(!isObjectEmpty(annotation_list)){
         annotation_list.bbox.map((db_box, i) => {
             //console.log(db_box)
@@ -138,20 +143,21 @@ function draw_annotation(stage, image_obj, annotation_list){
             label: "ball",
         }
         //TODO add bounding box to annotation list
+        console.log("annotation_list: ", annotation_list)
         annotation_list.bbox.push(bbox)
         console.log("after:", annotation_list)
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
-        console.log("url:", api_url)
+
         ///*
-        fetch(api_url, {
+        fetch(state.api_url, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfToken,
             },
             body: JSON.stringify({ 
-                image: image_obj.id,
+                image: image_id,
                 annotations: annotation_list 
             }),
         })

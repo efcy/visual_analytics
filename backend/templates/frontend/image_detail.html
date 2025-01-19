@@ -30,24 +30,61 @@
       </div>
 </main>
 <script src="{% static 'js/my_konva.js' %}"></script>
+<script src="{% static 'js/helper.js' %}"></script>
 <script>
     // ugly hack since we can't use templates directly in external javascript files we have to create objects here based on values from the context passed from the view function
     // TODO: research how to make it cleaner and easier to understand
-    const top_image = {
-        image_url: "{{top_image.image_url}}",
-        id: {{top_image.id}}
+    state = {
+        api_url: null,
+        top_image : {
+            url:null,
+            id:null,
+            annotation: {bbox:[]},
+        },
+        bottom_image : {
+            url:null,
+            id:null,
+            annotation: {bbox:[]},
+        }
     }
-    const bottom_image = {
-        image_url: "{{bottom_image.image_url}}",
-        id: {{bottom_image.id}}
-    }
-    const annotation_list_bottom = {{ bottom_annotation | safe }};
-    const annotation_list_top = {{ top_annotation | safe }};
-    //console.log(annotation_list_bottom)
-    //const api_url = "{{ request.scheme }}://{{ request.get_host }}/api/annotations/"
-    const api_url = "{% url 'process_canvas_data' %}"
+    state.api_url = "{% url 'process_canvas_data' %}"
+
+    const a = "{{ top_image.image_url|default_if_none:"" }}"
+    const b = "{{ top_image.id|default_if_none:"" }}"
     
-    setUpCanvas(top_image, annotation_list_top, "konva-container1");
-    setUpCanvas(bottom_image, annotation_list_bottom, "konva-container2");
+    const annotation_list_top = {{ top_annotation | safe }};
+    //console.log(annotation_list_top)
+    if(a){
+        state.top_image.url = a
+    }
+    if(b){
+        state.top_image.id = b
+    }
+    if(!isObjectEmpty(annotation_list_top)){
+        state.top_image.annotation = annotation_list_top
+    }
+
+    /*
+
+    */
+
+    const c = "{{ bottom_image.image_url|default_if_none:"" }}"
+    const d = "{{ bottom_image.id|default_if_none:"" }}"
+    const annotation_list_bottom = {{ bottom_annotation | safe }};
+    if(c){
+        state.bottom_image.url = c
+    }
+    if(d){
+        state.bottom_image.id = d
+    }
+    if(!isObjectEmpty(annotation_list_bottom)){
+        state.bottom_image.annotation = annotation_list_bottom
+    }
+    //console.log("blabla: ", state)
+    
+    setUpCanvas(is_top=true, annotation_list_top, "konva-container1");
+    setUpCanvas(is_top=false, annotation_list_bottom, "konva-container2");
+
+    
 </script>
 {% endblock %}

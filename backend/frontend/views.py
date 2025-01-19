@@ -101,7 +101,7 @@ class ImageDetailView(DetailView):
 
         log_id = self.kwargs.get('pk')
         current_frame = self.kwargs.get('bla')
-        context['bottom_image'] = Image.objects.filter(log_id=log_id, camera="BOTTOM", frame_number=current_frame).first()
+        context['bottom_image'] = Image.objects.filter(log=log_id, camera="BOTTOM", frame_number=current_frame).first()
         context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
         context['log_id'] = log_id
 
@@ -123,8 +123,10 @@ class ImageDetailView(DetailView):
                 context['bottom_annotation'] = json.dumps({}) 
         else:
             # add a dummy image if we don't have an image from the database
-            context['bottom_image'] = Image()
-            context['bottom_image'].image_url = "https://dummyimage.com/640x4:3/"
+            context['bottom_image'] = None
+            #context['bottom_image'] = Image()
+            #context['bottom_image'].image_url = "https://dummyimage.com/640x4:3/"
+            #context['bottom_image'].id = -1
 
             # add empty annotations when we don't have an image
             context['bottom_annotation'] = json.dumps({})
@@ -143,9 +145,12 @@ class ImageDetailView(DetailView):
                 # add empty annotations when we could not load annotations
                 context['top_annotation'] = json.dumps({}) 
         else:
+            print("set top image to none")
             # add a dummy image if we don't have an image from the database
-            context['top_image'] = Image()
-            context['top_image'].image_url = "https://dummyimage.com/640x4:3/"
+            context['top_image'] = None
+            #context['top_image'] = Image()
+            #context['top_image'].image_url = "https://dummyimage.com/640x4:3/"
+            #context['top_image'].id = -1
 
             # add empty annotations when we don't have an image
             context['top_annotation'] = json.dumps({})
@@ -155,8 +160,6 @@ def process_canvas_data(request):
     if request.method == "PATCH":
         try:
             json_data = json.loads(request.body)
-            print(json_data)
-            print(json_data["image"])
 
             annotation_instance, created = Annotation.objects.get_or_create(
                 image=json_data["image"],
@@ -166,12 +169,6 @@ def process_canvas_data(request):
             if not created:
                 annotation_instance.annotation = json_data.get("annotations", {})
                 annotation_instance.save()
-
-            #return Response(
-            #    {"message": "Annotation updated successfully."},
-            #    status=status.HTTP_200_OK,
-            #)
-
 
 
             return JsonResponse({"message": "Canvas data received and processed."})
