@@ -211,6 +211,10 @@
   background-color: #ff69b4;
 }
 
+.timeline-active {
+  background-color: #ff69b4;
+}
+
 /* Add smooth scrolling for aesthetics */
 .timeline-container::-webkit-scrollbar {
   height: 8px;

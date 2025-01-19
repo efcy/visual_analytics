@@ -104,7 +104,7 @@ class ImageDetailView(DetailView):
         context['bottom_image'] = Image.objects.filter(log=log_id, camera="BOTTOM", frame_number=current_frame).first()
         context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
         context['log_id'] = log_id
-
+        context['current_frame'] = current_frame
         # we have to get the frames for top and bottom image and then remove the duplicates here, because sometime we have only one image in the 
         # first frame
         context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()

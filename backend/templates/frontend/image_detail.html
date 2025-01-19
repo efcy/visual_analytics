@@ -26,7 +26,7 @@
         <button id="button1" type="submit">Submit</button>
         <div class="timeline">
             {% for frame in frame_numbers %}
-                <a href="{% url 'image_detail' log_id frame %}" class="timeline-box"></a>
+                <a href="{% url 'image_detail' log_id frame %}" class="timeline-box {% if frame == current_frame %}timeline-active{% endif %}"></a>
             {% endfor %}
         </div>
       </div>
