@@ -52,10 +52,10 @@ function draw_annotation(stage, is_top){
         annotation_list.bbox.map((db_box, i) => {
             //console.log(db_box)
             var rect = new Konva.Rect({
-                x: db_box.x,
-                y: db_box.y,
-                width: db_box.width,
-                height: db_box.height,
+                x: db_box.x * 640,
+                y: db_box.y * 480,
+                width: db_box.width * 640,
+                height: db_box.height * 480,
                 fill: "rgba(0, 255, 0, 0.5)",
                 stroke: "rgba(0, 255, 0, 1)",
                 strokeWidth: 2,
@@ -65,6 +65,7 @@ function draw_annotation(stage, is_top){
                 draggable: true,
                 name: 'bb',
             });
+            console.log(rect)
             drawingLayer.add(rect);
             rect.on('dragend', () => {
                 console.log('Updated position:', rect.x(), rect.y());
@@ -174,11 +175,11 @@ button1.addEventListener("click", function() {
         rects.forEach((rect) => {
             console.log(rect.x(), rect.y());
             bbox = {
-                height: rect.height(),
-                width: rect.width(),
+                height: rect.height() / 480,
+                width: rect.width() / 640,
                 id: generateUUID4(),
-                x: rect.x(),
-                y: rect.y(),
+                x: rect.x() / 640,
+                y: rect.y() / 480,
                 label: "ball",
             }
             new_bbox_list.push(bbox)
