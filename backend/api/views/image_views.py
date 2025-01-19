@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework import viewsets
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q,Count
 from django.db import connection
 from psycopg2.extras import execute_values
 
@@ -124,7 +124,11 @@ class ImageViewSet(viewsets.ModelViewSet):
 
             if frames:
                 qs = qs.filter(frame_number__in=frames.frames["frame_list"])
-
+        
+        #if the exclude_annotated parameter is set all images with an existing annotation are not included in the response
+        if "exclude_annotated" in query_params:
+            qs = qs.annotate(metadata_count=Count('Annotation')).filter(metadata_count=0)
+            
         #print(qs.order_by('frame_number').count())
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         return qs.order_by('frame_number')
