@@ -125,7 +125,8 @@ class ImageViewSet(viewsets.ModelViewSet):
             if frames:
                 qs = qs.filter(frame_number__in=frames.frames["frame_list"])
         
-        if "annotation" in query_params and query_params.get("annotation")=="0":
+        #if the exclude_annotated parameter is set all images with an existing annotation are not included in the response
+        if "exclude_annotated" in query_params:
             qs = qs.annotate(metadata_count=Count('Annotation')).filter(metadata_count=0)
             
         #print(qs.order_by('frame_number').count())
