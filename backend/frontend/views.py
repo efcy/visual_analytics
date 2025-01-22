@@ -155,7 +155,7 @@ class ImageDetailView(DetailView):
             # add empty annotations when we don't have an image
             context['top_annotation'] = json.dumps({})
         return context
-    
+
 def process_canvas_data(request):
     if request.method == "PATCH":
         try:
