@@ -1,6 +1,6 @@
 let isDrawing = false;
 let rect = null
-
+let currentClass = null;
 
 function setUpCanvas(is_top, container_id){
     
@@ -56,7 +56,7 @@ function draw_annotation(stage, is_top){
                 y: db_box.y * 480,
                 width: db_box.width * 640,
                 height: db_box.height * 480,
-                fill: "rgba(0, 255, 0, 0.5)",
+                fill: getCurrentClassColor(),
                 stroke: "rgba(0, 255, 0, 1)",
                 strokeWidth: 2,
                 name: 'rect',
@@ -112,7 +112,7 @@ function draw_annotation(stage, is_top){
                 y: stage.getPointerPosition().y,
                 width: 0,
                 height: 0,
-                fill: "rgba(0, 255, 0, 0.5)",
+                fill: getCurrentClassColor(),
                 stroke: "rgba(0, 255, 0, 1)",
                 strokeWidth: 2,
                 strokeScaleEnabled: false,

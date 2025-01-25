@@ -39,6 +39,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         scrollTimeline();
         arrow_navigation();
+        currentClassListener();
     });
     // ugly hack since we can't use templates directly in external javascript files we have to create objects here based on values from the context passed from the view function
     // TODO: research how to make it cleaner and easier to understand

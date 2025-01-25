@@ -60,3 +60,30 @@ const arrow_navigation = () => {
     }
   });
 }
+
+const currentClassListener = () => {
+  // TODO persist this across page loads
+  // TODO add number shortcuts
+
+  // Add an event listener to the radio button group
+  document.querySelectorAll('input[name="number-list"]').forEach((radio) => {
+    radio.addEventListener('input', (event) => {
+      console.log("Selected value:", event.target.value);
+      currentClass = event.target.value;
+      console.log(currentClass)
+    });
+  });
+}
+
+const getCurrentClassColor = () => {
+  console.log(currentClass)
+  if(currentClass == 1){
+    return "rgba(0, 255, 0, 0.5)"
+  }
+  if(currentClass == 2){
+    return "rgba(255, 0, 0, 0.5)"
+  }
+  if(currentClass == 3){
+    return "rgba(0, 0, 255, 0.5)"
+  }
+}
