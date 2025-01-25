@@ -14,26 +14,32 @@
 <main class="main_container_annotation">
     <div class="content_grid_annotation">
         <div class="grid_item_annotation" id="konva-container1">
-
         </div>
         <div class="grid_item_annotation" id="konva-container2">
-
         </div>
     </div>
-    
     <div class="timeline-container">
         <p>blablabla: {{bottom_image.image_url}}</p>
-        <button id="button1" type="submit">Submit</button>
+        <a href="{% if prev_frame %}{% url 'image_detail' log_id prev_frame %}{% else %}#{% endif %}" class="prev-button">Previous</a>
+<a href="{% if next_frame %}{% url 'image_detail' log_id next_frame %}{% else %}#{% endif %}" class="next-button">Next</a>
+    <button id="button1" type="submit">Submit</button>
+    <div class="test">
         <div class="timeline">
             {% for frame in frame_numbers %}
                 <a href="{% url 'image_detail' log_id frame %}" class="timeline-box {% if frame == current_frame %}timeline-active{% endif %}"></a>
             {% endfor %}
         </div>
-      </div>
+    </div>
+    </div>
+
 </main>
 <script src="{% static 'js/my_konva.js' %}"></script>
 <script src="{% static 'js/helper.js' %}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        scrollTimeline();
+        arrow_navigation();
+    });
     // ugly hack since we can't use templates directly in external javascript files we have to create objects here based on values from the context passed from the view function
     // TODO: research how to make it cleaner and easier to understand
     generateUUID4();

@@ -177,17 +177,21 @@
   max-width: 100%;
 }
 
-
-
 /* Timeline */
-.timeline-container {
-  overflow-x: auto; /* Enables horizontal scrolling */
-  white-space: nowrap; /* Prevents wrapping of boxes */
+.timeline-container { 
   background-color: #ffffff;
+  overflow: hidden;
+}
+
+.test {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  white-space: nowrap; /* Prevents wrapping of boxes   */
+  padding-bottom: 5px;
 }
 
 .timeline {
   display: flex;
+
 }
 
 .timeline-box {
@@ -216,16 +220,16 @@
 }
 
 /* Add smooth scrolling for aesthetics */
-.timeline-container::-webkit-scrollbar {
+.test::-webkit-scrollbar {
   height: 8px;
 }
 
-.timeline-container::-webkit-scrollbar-thumb {
+.test::-webkit-scrollbar-thumb {
   background: #ffcccb;
   border-radius: 4px;
 }
 
-.timeline-container::-webkit-scrollbar-track {
+.test::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 

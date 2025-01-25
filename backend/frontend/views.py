@@ -108,7 +108,9 @@ class ImageDetailView(DetailView):
         # we have to get the frames for top and bottom image and then remove the duplicates here, because sometime we have only one image in the 
         # first frame
         context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
-
+        current_index = list(context['frame_numbers']).index(current_frame)
+        context['prev_frame'] = list(context['frame_numbers'])[current_index - 1] if current_index > 0 else None
+        context['next_frame'] = list(context['frame_numbers'])[current_index + 1] if current_index < len(context['frame_numbers']) - 1 else None
         # handle the case that we do have a bottom image in the frame
         if context['bottom_image']:
             # update the image url
