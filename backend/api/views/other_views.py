@@ -538,6 +538,11 @@ class FrameFilterView(viewsets.ModelViewSet):
     serializer_class = serializers.FrameFilterSerializer
     queryset = models.FrameFilter.objects.all()
 
+    # only return frame filter belonging to the user who requests them
+    def get_queryset(self):
+        qs = self.queryset.filter(user=self.request.user)
+        return qs
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         # Make sure the request is available in the serializer context
