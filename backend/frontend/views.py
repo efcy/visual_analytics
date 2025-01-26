@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -84,7 +84,15 @@ class ImageListView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        first_image = Image.objects.filter(log_id=self.object).order_by('frame_number').first()
+        frames = FrameFilter.objects.filter(
+            log_id=self.object,
+            user=self.request.user,
+        ).first()
+
+        if frames:
+            first_image = Image.objects.filter(log_id=self.object, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').first()
+        else:
+            first_image = Image.objects.filter(log_id=self.object).order_by('frame_number').first()
         
         if first_image:        
             return redirect('image_detail', pk=self.object.id, bla=first_image.frame_number)
@@ -94,7 +102,6 @@ class ImageListView(DetailView):
 
 class ImageDetailView(View):
     def get(self, request, **kwargs):
-        #context = self.get_context_data(**kwargs)
         context = {}
         log_id = self.kwargs.get('pk')
 
@@ -105,7 +112,14 @@ class ImageDetailView(View):
         context['current_frame'] = current_frame
         # we have to get the frames for top and bottom image and then remove the duplicates here, because sometime we have only one image in the 
         # first frame
-        context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+        frames = FrameFilter.objects.filter(
+            log_id=log_id,
+            user=self.request.user,
+        ).first()
+        if frames:
+            context['frame_numbers'] = Image.objects.filter(log=log_id, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+        else:
+            context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
         current_index = list(context['frame_numbers']).index(current_frame)
         context['prev_frame'] = list(context['frame_numbers'])[current_index - 1] if current_index > 0 else None
         context['next_frame'] = list(context['frame_numbers'])[current_index + 1] if current_index < len(context['frame_numbers']) - 1 else None

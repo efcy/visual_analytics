@@ -20,8 +20,8 @@
     </div>
     <div class="timeline-container">
         <p>blablabla: {{bottom_image.image_url}}</p>
-        <a href="{% if prev_frame %}{% url 'image_detail' log_id prev_frame %}{% else %}#{% endif %}" class="prev-button">Previous</a>
-<a href="{% if next_frame %}{% url 'image_detail' log_id next_frame %}{% else %}#{% endif %}" class="next-button">Next</a>
+        <a href="{% if prev_frame %}{% url 'image_detail' log_id prev_frame %}{% else %}{% endif %}" class="prev-button">Previous</a>
+        <a href="{% if next_frame %}{% url 'image_detail' log_id next_frame %}{% else %}{% endif %}" class="next-button">Next</a>
     <button id="button1" type="submit">Submit Top</button>
     <button id="button2" type="submit">Submit Bottom</button>
     <div class="test">
