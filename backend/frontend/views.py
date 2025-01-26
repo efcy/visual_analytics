@@ -159,9 +159,11 @@ class ImageDetailView(View):
     def patch(self, request, **kwargs):
         try:
             json_data = json.loads(request.body)
+            print(json_data)
+            my_image = Image.objects.get(id=int(json_data["image"]))
 
             annotation_instance, created = Annotation.objects.get_or_create(
-                image=int(json_data["image"]),
+                image=my_image,
                 defaults={"annotation": json_data.get("annotations", {})},
             )
 

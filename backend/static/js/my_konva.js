@@ -162,6 +162,7 @@ function draw_annotation(stage, is_top){
 }
 
 const button1 = document.getElementById("button1");
+const button2 = document.getElementById("button2");
 button1.addEventListener("click", function() {
     // FIXME: this would change uuid everytime you click submit
     const stage = Konva.stages.find((s) => s.container().id === 'konva-container1');
@@ -180,7 +181,7 @@ button1.addEventListener("click", function() {
                 id: generateUUID4(),
                 x: rect.x() / 640,
                 y: rect.y() / 480,
-                label: "ball",
+                label: "ball", // FIXME 
             }
             new_bbox_list.push(bbox)
           });
@@ -195,6 +196,51 @@ button1.addEventListener("click", function() {
             body: JSON.stringify({ 
                 image: state.top_image.id,
                 annotations: state.top_image.annotation 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Success:", data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+});
+
+button2.addEventListener("click", function() {
+    // FIXME: this would change uuid everytime you click submit
+    const stage = Konva.stages.find((s) => s.container().id === 'konva-container2');
+    const new_bbox_list = []
+    if (stage) {
+        const drawingLayer = stage.findOne('.drawingLayer'); // Retrieve the layer
+        const rects = drawingLayer.find('.bb'); // Find all Rect shapes
+        console.log(rects)
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        rects.forEach((rect) => {
+            console.log(rect.x(), rect.y());
+            bbox = {
+                height: rect.height() / 480,
+                width: rect.width() / 640,
+                id: generateUUID4(),
+                x: rect.x() / 640,
+                y: rect.y() / 480,
+                label: "ball", // FIXME 
+            }
+            new_bbox_list.push(bbox)
+          });
+        state.bottom_image.annotation.bbox = new_bbox_list;
+
+        fetch(state.api_url, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ 
+                image: state.bottom_image.id,
+                annotations: state.bottom_image.annotation 
             }),
         })
         .then(response => response.json())
