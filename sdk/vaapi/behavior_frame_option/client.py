@@ -277,10 +277,8 @@ class BehaviorFrameOptionClient:
 
     def filter(
             self,
-            log_id: typing.Optional[int] = OMIT,
-            option_name: typing.Optional[int] = OMIT,
-            state_name: typing.Optional[int] = OMIT,
             request_options: typing.Optional[RequestOptions] = None,
+            **filters: typing.Any
         ) -> typing.List[int]:
         """
         Returns frame numbers where the given option and states are active for one log
@@ -318,9 +316,9 @@ class BehaviorFrameOptionClient:
             state_name=arms_synchronised_with_walk
         )
         """
-        url = f"api/behavior/filter/?log_id={jsonable_encoder(log_id)}&option_name={jsonable_encoder(option_name)}&state_name={jsonable_encoder(state_name)}"
-
-        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options)
+        url = f"api/behavior/filter/"
+        query_params = {k: v for k, v in filters.items()}
+        _response = self._client_wrapper.httpx_client.request(url, method="GET", request_options=request_options, params=query_params)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.List[int], _response.json())  # type: ignore
