@@ -58,7 +58,7 @@
             annotation: {bbox:[]},
         }
     }
-    state.api_url = "{% url 'process_canvas_data' %}"
+    state.api_url = "{% url 'image_detail' log_id  current_frame %}"
 
     const a = "{{ top_image.image_url|default_if_none:"" }}"
     const b = "{{ top_image.id|default_if_none:"" }}"

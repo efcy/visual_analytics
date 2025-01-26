@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import json
@@ -92,14 +92,12 @@ class ImageListView(DetailView):
         return super().get(request, *args, **kwargs)  # Handle cases where no images exist
 
 
-class ImageDetailView(DetailView):
-    model = Image
-    template_name = 'frontend/image_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
+class ImageDetailView(View):
+    def get(self, request, **kwargs):
+        #context = self.get_context_data(**kwargs)
+        context = {}
         log_id = self.kwargs.get('pk')
+
         current_frame = self.kwargs.get('bla')
         context['bottom_image'] = Image.objects.filter(log=log_id, camera="BOTTOM", frame_number=current_frame).first()
         context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
@@ -156,15 +154,14 @@ class ImageDetailView(DetailView):
 
             # add empty annotations when we don't have an image
             context['top_annotation'] = json.dumps({})
-        return context
+        return render(request, 'frontend/image_detail.html', context)
 
-def process_canvas_data(request):
-    if request.method == "PATCH":
+    def patch(self, request, **kwargs):
         try:
             json_data = json.loads(request.body)
 
             annotation_instance, created = Annotation.objects.get_or_create(
-                image=json_data["image"],
+                image=int(json_data["image"]),
                 defaults={"annotation": json_data.get("annotations", {})},
             )
 
@@ -176,5 +173,3 @@ def process_canvas_data(request):
             return JsonResponse({"message": "Canvas data received and processed."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
