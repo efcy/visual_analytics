@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -84,7 +84,15 @@ class ImageListView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        first_image = Image.objects.filter(log_id=self.object).order_by('frame_number').first()
+        frames = FrameFilter.objects.filter(
+            log_id=self.object,
+            user=self.request.user,
+        ).first()
+
+        if frames:
+            first_image = Image.objects.filter(log_id=self.object, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').first()
+        else:
+            first_image = Image.objects.filter(log_id=self.object).order_by('frame_number').first()
         
         if first_image:        
             return redirect('image_detail', pk=self.object.id, bla=first_image.frame_number)
@@ -92,23 +100,29 @@ class ImageListView(DetailView):
         return super().get(request, *args, **kwargs)  # Handle cases where no images exist
 
 
-class ImageDetailView(DetailView):
-    model = Image
-    template_name = 'frontend/image_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
+class ImageDetailView(View):
+    def get(self, request, **kwargs):
+        context = {}
         log_id = self.kwargs.get('pk')
+
         current_frame = self.kwargs.get('bla')
-        context['bottom_image'] = Image.objects.filter(log_id=log_id, camera="BOTTOM", frame_number=current_frame).first()
+        context['bottom_image'] = Image.objects.filter(log=log_id, camera="BOTTOM", frame_number=current_frame).first()
         context['top_image'] = Image.objects.filter(log=log_id, camera="TOP", frame_number=current_frame).first()
         context['log_id'] = log_id
-
+        context['current_frame'] = current_frame
         # we have to get the frames for top and bottom image and then remove the duplicates here, because sometime we have only one image in the 
         # first frame
-        context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
-
+        frames = FrameFilter.objects.filter(
+            log_id=log_id,
+            user=self.request.user,
+        ).first()
+        if frames:
+            context['frame_numbers'] = Image.objects.filter(log=log_id, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+        else:
+            context['frame_numbers'] = Image.objects.filter(log=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+        current_index = list(context['frame_numbers']).index(current_frame)
+        context['prev_frame'] = list(context['frame_numbers'])[current_index - 1] if current_index > 0 else None
+        context['next_frame'] = list(context['frame_numbers'])[current_index + 1] if current_index < len(context['frame_numbers']) - 1 else None
         # handle the case that we do have a bottom image in the frame
         if context['bottom_image']:
             # update the image url
@@ -123,8 +137,10 @@ class ImageDetailView(DetailView):
                 context['bottom_annotation'] = json.dumps({}) 
         else:
             # add a dummy image if we don't have an image from the database
-            context['bottom_image'] = Image()
-            context['bottom_image'].image_url = "https://dummyimage.com/640x4:3/"
+            context['bottom_image'] = None
+            #context['bottom_image'] = Image()
+            #context['bottom_image'].image_url = "https://dummyimage.com/640x4:3/"
+            #context['bottom_image'].id = -1
 
             # add empty annotations when we don't have an image
             context['bottom_annotation'] = json.dumps({})
@@ -143,23 +159,25 @@ class ImageDetailView(DetailView):
                 # add empty annotations when we could not load annotations
                 context['top_annotation'] = json.dumps({}) 
         else:
+            print("set top image to none")
             # add a dummy image if we don't have an image from the database
-            context['top_image'] = Image()
-            context['top_image'].image_url = "https://dummyimage.com/640x4:3/"
+            context['top_image'] = None
+            #context['top_image'] = Image()
+            #context['top_image'].image_url = "https://dummyimage.com/640x4:3/"
+            #context['top_image'].id = -1
 
             # add empty annotations when we don't have an image
             context['top_annotation'] = json.dumps({})
-        return context
-    
-def process_canvas_data(request):
-    if request.method == "PATCH":
+        return render(request, 'frontend/image_detail.html', context)
+
+    def patch(self, request, **kwargs):
         try:
             json_data = json.loads(request.body)
             print(json_data)
-            print(json_data["image"])
+            my_image = Image.objects.get(id=int(json_data["image"]))
 
             annotation_instance, created = Annotation.objects.get_or_create(
-                image=json_data["image"],
+                image=my_image,
                 defaults={"annotation": json_data.get("annotations", {})},
             )
 
@@ -167,15 +185,7 @@ def process_canvas_data(request):
                 annotation_instance.annotation = json_data.get("annotations", {})
                 annotation_instance.save()
 
-            #return Response(
-            #    {"message": "Annotation updated successfully."},
-            #    status=status.HTTP_200_OK,
-            #)
-
-
 
             return JsonResponse({"message": "Canvas data received and processed."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)

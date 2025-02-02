@@ -254,18 +254,21 @@ class BehaviorFrameOptionAPIView(APIView):
         log_id = request.query_params.get('log_id')
         option_name = request.query_params.get('option_name')
         state_name = request.query_params.get('state_name')
-
-        if not log_id or not option_name or not state_name:
-            return Response({"error": "not all required parameter were provided"}, status=status.HTTP_400_BAD_REQUEST)
+        print("state_name", state_name)
+        if not log_id or not option_name:
+            return Response({"error": "not all required parameter were provided. you need to provide log_id and option_name"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Filter the BehaviorFrameOption records by the log_id
-            behavior_frame_options =  models.BehaviorFrameOption.objects.select_related(
+            behavior_data_combined =  models.BehaviorFrameOption.objects.select_related(
                 'options_id',         # Joins BehaviorOption
                 'active_state',       # Joins BehaviorOptionState
                 'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
-            ).filter(log_id=log_id, options_id__option_name=option_name, active_state__name=state_name)
-
+            )
+            if not state_name:
+                behavior_frame_options = behavior_data_combined.filter(log_id=log_id, options_id__option_name=option_name)
+            else:
+                behavior_frame_options = behavior_data_combined.filter(log_id=log_id, options_id__option_name=option_name, active_state__name=state_name)
             # Serialize the data
             serializer = serializers.BehaviorFrameOptionCustomSerializer(behavior_frame_options, many=True)
 

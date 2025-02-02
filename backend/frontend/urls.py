@@ -9,6 +9,4 @@ urlpatterns = [
     path('games/<int:pk>', views.LogListView.as_view(), name='game_detail'),
     path('log/<int:pk>', views.ImageListView.as_view(), name='log_detail'),
     path('log/<int:pk>/frame/<int:bla>', views.ImageDetailView.as_view(), name='image_detail'),
-    path('process-canvas-data/', views.process_canvas_data, name='process_canvas_data'),
-    
 ]

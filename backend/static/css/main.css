@@ -177,17 +177,21 @@
   max-width: 100%;
 }
 
-
-
 /* Timeline */
-.timeline-container {
-  overflow-x: auto; /* Enables horizontal scrolling */
-  white-space: nowrap; /* Prevents wrapping of boxes */
+.timeline-container { 
   background-color: #ffffff;
+  overflow: hidden;
+}
+
+.test {
+  overflow-x: auto; /* Enables horizontal scrolling */
+  white-space: nowrap; /* Prevents wrapping of boxes   */
+  padding-bottom: 5px;
 }
 
 .timeline {
   display: flex;
+
 }
 
 .timeline-box {
@@ -211,16 +215,114 @@
   background-color: #ff69b4;
 }
 
+.timeline-active {
+  background-color: #ff69b4;
+}
+
 /* Add smooth scrolling for aesthetics */
-.timeline-container::-webkit-scrollbar {
+.test::-webkit-scrollbar {
   height: 8px;
 }
 
-.timeline-container::-webkit-scrollbar-thumb {
+.test::-webkit-scrollbar-thumb {
   background: #ffcccb;
   border-radius: 4px;
 }
 
-.timeline-container::-webkit-scrollbar-track {
+.test::-webkit-scrollbar-track {
   background: #f1f1f1;
+}
+
+/* Popover Menu for annotation class selection 
+  TODO remove annotation mode
+*/
+
+.nav_list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.nav_list li {
+  border: 1px solid black;
+}
+.nav_list a {
+  background-color: #eee; /* Grey background color */
+  color: black; /* Black text color */
+  display: block; /* Make the links appear below each other */
+  padding: 12px; /* Add some padding */
+  text-decoration: none; /* Remove underline from links */
+}
+
+.nav_list label {
+  background-color: #eee; /* Grey background color */
+  color: black; /* Black text color */
+  padding: 12px; /* Add some padding */
+  display: block;
+}
+
+.nav_list button {
+  background-color: #eee; /* Grey background color */
+  color: black; /* Black text color */
+  padding: 12px; /* Add some padding */
+  border: none;
+  display: block;
+  font: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+[popover] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#anchor_1 {
+  anchor-name: --anchor_1;
+}
+
+
+.pop1 {
+  border: 1px solid;
+  padding: 1rem;
+  position: absolute;
+  width: 10rem;
+  position-anchor: --anchor_1;
+  /*  top: anchor(--anchor_1 bottom); */
+  /*  left: anchor(--anchor_1 right); */
+
+  inset-block-start: anchor(--anchor_1 top);
+  inset-inline-start: anchor(--anchor_1 right);
+}
+
+.pop1 label {
+  display: block;
+  padding: 0.4em 1em;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.pop1 label > input {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.pop1 label:hover {
+  background: color-mix(in srgb, #007fff, transparent 90%);
+}
+
+.pop1 label:has(> input:checked) {
+  background: #007fff;
+  color: #ffffff;
+  --mad-test: "hello";
 }

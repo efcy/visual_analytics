@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 142.3 106.3">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #000;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M3.3,3.3h34v25H3.3V3.3Z"/>
+  <path class="cls-1" d="M37.3,3.3h34v25h-34V3.3Z"/>
+  <path class="cls-1" d="M3.3,28.3h34v25H3.3v-25Z"/>
+  <path class="cls-1" d="M37.3,28.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M71.3,3.3h34v25h-34V3.3Z"/>
+  <path class="cls-1" d="M105.3,3.3h34v25h-34V3.3Z"/>
+  <path class="cls-1" d="M71.3,28.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M105.3,28.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M71.3,53.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M105.3,53.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M71.3,78.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M105.3,78.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M3.3,53.3h34v25H3.3v-25Z"/>
+  <path class="cls-1" d="M37.3,53.3h34v25h-34v-25Z"/>
+  <path class="cls-1" d="M3.3,78.3h34v25H3.3v-25Z"/>
+  <path class="cls-1" d="M37.3,78.3h34v25h-34v-25Z"/>
+</svg>
