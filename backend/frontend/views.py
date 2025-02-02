@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation, FrameFilter
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter, BehaviorFrameOption
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -189,3 +189,53 @@ class ImageDetailView(View):
             return JsonResponse({"message": "Canvas data received and processed."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
+
+class CombinedView(View):
+    def get_first_standby_frame(self, log_id):
+        """
+        response = client.behavior_frame_option.filter(
+            log_id=168,
+            option_name="decide_game_state",
+            state_name="standby",
+        )
+        print(response)
+        """
+        behavior_data_combined =  BehaviorFrameOption.objects.select_related(
+                'options_id',         # Joins BehaviorOption
+                'active_state',       # Joins BehaviorOptionState
+                'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
+            )
+        behavior_frame_options = behavior_data_combined.filter(log_id=log_id, options_id__option_name="decide_game_state", active_state__name="standby").order_by('frame').first()
+        return behavior_frame_options.frame
+
+    def get(self, request, **kwargs):
+        """
+        TODO:
+        - get all the frame numbers from each log
+        - find the first standby frame for each log
+        - remove all the frames before the first standby frame for each log
+        - clamp the length of the frames to the shortest log
+
+        self.kwargs.get('bla') means the number that is added to the first standby frame -1, so /frame/1 is the first frame
+        """
+        context = {}
+        game_id = self.kwargs.get('pk')
+        current_frame = self.kwargs.get('bla')
+        print("game_id", game_id)
+        logs = Log.objects.filter(game_id=game_id).order_by('id')
+        print(logs)
+        top_images = list()
+        for idx, log in enumerate(logs):
+            print("log.id", log.id)
+            first_standby_frame = self.get_first_standby_frame(log.id)
+            
+            new_frame_number = first_standby_frame + current_frame
+            print(first_standby_frame, current_frame, new_frame_number)
+            a = Image.objects.filter(log=log.id, camera="TOP", frame_number=new_frame_number).first()
+            top_images.append(a)
+        
+        context['top_images'] = top_images
+        print(context['top_images'])
+
+        return render(request, 'frontend/combined.html', context)

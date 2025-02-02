@@ -1,0 +1,19 @@
+{% extends "frontend/base.html" %} 
+
+{% block header %}
+{% include "frontend/header.html" %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "frontend/sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% csrf_token %}
+
+{% for image in top_images %}
+    <p>{{image.image_url}}</p>
+{% endfor %}
+
+{% endblock %}

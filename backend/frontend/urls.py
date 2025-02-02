@@ -9,4 +9,5 @@ urlpatterns = [
     path('games/<int:pk>', views.LogListView.as_view(), name='game_detail'),
     path('log/<int:pk>', views.ImageListView.as_view(), name='log_detail'),
     path('log/<int:pk>/frame/<int:bla>', views.ImageDetailView.as_view(), name='image_detail'),
+    path('combined/<int:pk>/frame/<int:bla>', views.CombinedView.as_view(), name='combined_view'),
 ]
