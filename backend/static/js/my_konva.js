@@ -175,16 +175,18 @@ button1.addEventListener("click", function() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         rects.forEach((rect) => {
             console.log(rect.x(), rect.y());
-            //FIXME: dont allow too tiny bounding boxes
-            bbox = {
-                height: Math.abs(rect.height()) / 480,
-                width: Math.abs(rect.width()) / 640,
-                id: generateUUID4(),
-                x: rect.x() / 640,
-                y: rect.y() / 480,
-                label: "ball", // FIXME 
+            // dont allow too tiny bounding boxes
+            if(Math.abs(rect.height()) * Math.abs(rect.width()) > 50){
+                bbox = {
+                    height: Math.abs(rect.height()) / 480,
+                    width: Math.abs(rect.width()) / 640,
+                    id: generateUUID4(),
+                    x: rect.x() / 640,
+                    y: rect.y() / 480,
+                    label: "ball", // FIXME 
+                }
+                new_bbox_list.push(bbox)
             }
-            new_bbox_list.push(bbox)
           });
         state.top_image.annotation.bbox = new_bbox_list;
 
@@ -221,16 +223,18 @@ button2.addEventListener("click", function() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         rects.forEach((rect) => {
             console.log("bla:", rect.x(), rect.y(), rect.width(), rect.height());
-            //FIXME: dont allow too tiny bounding boxes
-            bbox = {
-                height: Math.abs(rect.height()) / 480,
-                width: Math.abs(rect.width()) / 640,
-                id: generateUUID4(),
-                x: rect.x() / 640,
-                y: rect.y() / 480,
-                label: "ball", // FIXME 
+            // dont allow too tiny bounding boxes
+            if(Math.abs(rect.height()) * Math.abs(rect.width()) > 50){
+                bbox = {
+                    height: Math.abs(rect.height()) / 480,
+                    width: Math.abs(rect.width()) / 640,
+                    id: generateUUID4(),
+                    x: rect.x() / 640,
+                    y: rect.y() / 480,
+                    label: "ball", // FIXME 
+                }
+                new_bbox_list.push(bbox)
             }
-            new_bbox_list.push(bbox)
           });
         state.bottom_image.annotation.bbox = new_bbox_list;
 
