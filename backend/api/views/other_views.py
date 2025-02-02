@@ -333,7 +333,20 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = models.Annotation.objects.all()
+
+        query_params = self.request.query_params.copy()
+        
+        if "id" in query_params:
+            id_value = query_params["id"]
+            queryset = queryset.filter(image__log=id_value)
+
+        if "label" in query_params:
+            label_value = query_params["label"]
+            # Filter the queryset where the label in any of the bbox objects matches the provided label_value
+            queryset = queryset.filter(annotation__bbox__contains=[{"label": label_value}])
+
         return queryset
+
         #image_id = self.request.query_params.get("image")
         #if image_id is not None:
         #    return queryset.filter(image=image_id).get()

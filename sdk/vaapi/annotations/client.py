@@ -97,13 +97,15 @@ class AnnotationsClient:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def list(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[Annotation]:
+    def list(self, id: int, *, request_options: typing.Optional[RequestOptions] = None,**filters: typing.Any) -> typing.List[Annotation]:
         """
         TODO: think about when it makes sense to use list for annotations:
         - kind of only makes sense for statistics on annotations.
         """
+        query_params = {k: v for k, v in filters.items()}
+        query_params["id"] = id
         _response = self._client_wrapper.httpx_client.request(
-            f"api/annotations/", method="GET", request_options=request_options
+            f"api/annotations/", method="GET", request_options=request_options,params=query_params
         )
         try:
             if 200 <= _response.status_code < 300:
