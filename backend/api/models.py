@@ -47,7 +47,7 @@ class Log(models.Model):
     log_path = models.CharField(max_length=200, blank=True, null=True)
     combined_log_path = models.CharField(max_length=200, blank=True, null=True)
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
-    is_experiment = models.BooleanField(default=True)
+    is_experiment = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.log_path}"
