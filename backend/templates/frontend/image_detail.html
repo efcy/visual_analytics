@@ -22,8 +22,7 @@
         <p>blablabla: {{bottom_image.image_url}}</p>
         <a href="{% if prev_frame %}{% url 'image_detail' log_id prev_frame %}{% else %}{% endif %}" class="prev-button">Previous</a>
         <a href="{% if next_frame %}{% url 'image_detail' log_id next_frame %}{% else %}{% endif %}" class="next-button">Next</a>
-    <button id="button1" type="submit">Submit Top</button>
-    <button id="button2" type="submit">Submit Bottom</button>
+    <button id="save_button" type="submit">Save Annotation</button>
     <div class="test">
         <div class="timeline">
             {% for frame in frame_numbers %}
@@ -34,8 +33,9 @@
     </div>
 
 </main>
-<script src="{% static 'js/my_konva.js' %}"></script>
 <script src="{% static 'js/helper.js' %}"></script>
+<script src="{% static 'js/my_konva.js' %}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         scrollTimeline();

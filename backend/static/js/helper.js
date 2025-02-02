@@ -90,3 +90,99 @@ const getCurrentClassColor = () => {
     return "rgba(255, 0, 255, 0.5)"
   }
 }
+
+
+const saveFunction = () => {
+  // FIXME: this would change uuid everytime you click submit
+  const stage = Konva.stages.find((s) => s.container().id === 'konva-container1');
+  const new_bbox_list = []
+  if (stage) {
+      const drawingLayer = stage.findOne('.drawingLayer'); // Retrieve the layer
+      const rects = drawingLayer.find('.bb'); // Find all Rect shapes
+      console.log(rects)
+
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      rects.forEach((rect) => {
+          console.log(rect.x(), rect.y());
+          // dont allow too tiny bounding boxes
+          if(Math.abs(rect.height()) * Math.abs(rect.width()) > 50){
+              bbox = {
+                  height: Math.abs(rect.height()) / 480,
+                  width: Math.abs(rect.width()) / 640,
+                  id: generateUUID4(),
+                  x: rect.x() / 640,
+                  y: rect.y() / 480,
+                  label: "ball", // FIXME 
+              }
+              new_bbox_list.push(bbox)
+          }
+        });
+      state.top_image.annotation.bbox = new_bbox_list;
+
+      fetch(state.api_url, {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify({ 
+              image: state.top_image.id,
+              annotations: state.top_image.annotation 
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log("Success:", data);
+      })
+      .catch(error => {
+          console.error("Error:", error);
+      });
+  }
+
+  // FIXME: this would change uuid everytime you click submit
+  const stage2 = Konva.stages.find((s) => s.container().id === 'konva-container2');
+  const new_bbox_list2 = []
+  if (stage2) {
+      const drawingLayer = stage2.findOne('.drawingLayer'); // Retrieve the layer
+      const rects = drawingLayer.find('.bb'); // Find all Rect shapes
+      console.log(rects)
+
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      rects.forEach((rect) => {
+          console.log("bla:", rect.x(), rect.y(), rect.width(), rect.height());
+          // dont allow too tiny bounding boxes
+          if(Math.abs(rect.height()) * Math.abs(rect.width()) > 50){
+              bbox = {
+                  height: Math.abs(rect.height()) / 480,
+                  width: Math.abs(rect.width()) / 640,
+                  id: generateUUID4(),
+                  x: rect.x() / 640,
+                  y: rect.y() / 480,
+                  label: "ball", // FIXME 
+              }
+              new_bbox_list2.push(bbox)
+          }
+        });
+      state.bottom_image.annotation.bbox = new_bbox_list2;
+
+      fetch(state.api_url, {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify({ 
+              image: state.bottom_image.id,
+              annotations: state.bottom_image.annotation 
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log("Success:", data);
+      })
+      .catch(error => {
+          console.error("Error:", error);
+      });
+  }
+  console.log("Save function triggered!");
+}
