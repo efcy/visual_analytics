@@ -175,9 +175,10 @@ button1.addEventListener("click", function() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         rects.forEach((rect) => {
             console.log(rect.x(), rect.y());
+            //FIXME: dont allow too tiny bounding boxes
             bbox = {
-                height: rect.height() / 480,
-                width: rect.width() / 640,
+                height: Math.abs(rect.height()) / 480,
+                width: Math.abs(rect.width()) / 640,
                 id: generateUUID4(),
                 x: rect.x() / 640,
                 y: rect.y() / 480,
@@ -219,10 +220,11 @@ button2.addEventListener("click", function() {
 
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         rects.forEach((rect) => {
-            console.log(rect.x(), rect.y());
+            console.log("bla:", rect.x(), rect.y(), rect.width(), rect.height());
+            //FIXME: dont allow too tiny bounding boxes
             bbox = {
-                height: rect.height() / 480,
-                width: rect.width() / 640,
+                height: Math.abs(rect.height()) / 480,
+                width: Math.abs(rect.width()) / 640,
                 id: generateUUID4(),
                 x: rect.x() / 640,
                 y: rect.y() / 480,
