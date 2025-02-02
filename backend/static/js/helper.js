@@ -86,4 +86,7 @@ const getCurrentClassColor = () => {
   if(currentClass == 3){
     return "rgba(0, 0, 255, 0.5)"
   }
+  if(currentClass == 4){
+    return "rgba(255, 0, 255, 0.5)"
+  }
 }
