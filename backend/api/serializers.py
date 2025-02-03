@@ -37,9 +37,10 @@ class LogSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
-        formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
-        representation['game_name'] = formatted_str
+        if 'game_name' in representation and representation['game_name']:
+            pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
+            formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
+            representation['game_name'] = formatted_str
         return representation
 
 class EventSerializer(serializers.ModelSerializer):
