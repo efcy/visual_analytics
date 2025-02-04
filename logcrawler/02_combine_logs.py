@@ -198,6 +198,7 @@ def calculate_first_image(logpath):
 
 
 if __name__ == "__main__":
+    # TODO make it possible to run it locally without having to use a database. Useful for seeing the images in the log to figure out a good name.
     log_root_path = os.environ.get("VAT_LOG_ROOT")
 
     client = Vaapi(
@@ -246,7 +247,3 @@ if __name__ == "__main__":
                 # not an error: /vol/repl261-vol4/naoth/logs/2024-04-17_GO24/2024-04-19_21-00-00_Berlin United_vs_Nao Devils_half1-test/game_logs/7_16_Nao0017_240419-1937
                 #raise ValueError("We shouldn't have gotten this far, either image.log or image_jpeg.log should exist")
                 print("WARNING: nothing to combine found here")
-
-        # insert in db if the file exists - so combining was successful
-        if combined_log_path.is_file():
-            print("\tset combined status to true")

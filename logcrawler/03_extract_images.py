@@ -192,10 +192,10 @@ def worker(data_queue, output_paths):
 
 
 def calculate_output_path(log_folder: str):
-    log_path_w_prefix = root_path / Path(log_folder)
+    log_path_w_prefix = log_root_path / Path(log_folder)
     if Path(log_path_w_prefix).is_file():
         print("\tdetected experiment log")
-        actual_log_folder = root_path / Path(log_folder).parent
+        actual_log_folder = log_root_path / Path(log_folder).parent
         log = log_path_w_prefix
 
         extracted_folder = (
@@ -209,9 +209,9 @@ def calculate_output_path(log_folder: str):
         print(f"\toutput folder will be {extracted_folder}")
     else:
         print("\tdetected normal game log")
-        actual_log_folder = root_path / Path(log_folder)
-        combined_log = root_path / Path(actual_log_folder) / "combined.log"
-        game_log = root_path / Path(actual_log_folder) / "game.log"
+        actual_log_folder = log_root_path / Path(log_folder)
+        combined_log = log_root_path / Path(actual_log_folder) / "combined.log"
+        game_log = log_root_path / Path(actual_log_folder) / "game.log"
         if combined_log.is_file():
             log = combined_log
         elif game_log.is_file():
@@ -234,7 +234,7 @@ def calculate_output_path(log_folder: str):
 
 
 if __name__ == "__main__":
-    log_root_path = os.environ.get("VAT_LOG_ROOT")
+    log_root_path = os.environ.get("VAT_LOG_ROOT") 
 
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),

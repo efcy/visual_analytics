@@ -3,3 +3,4 @@ naoth==0.5.1
 tqdm==4.66.5
 requests
 opencv-python
+pillow==11.1.0

@@ -44,13 +44,10 @@ if __name__ == "__main__":
 
     for data in sorted(data, key=sort_key_fn, reverse=True):
         log_id = data.id
-        print(data.log_path)
         images = client.image.list(log=log_id, blurredness_value=None)
 
         image_data = list()
-        print(len(images))
-        #print(images)
-        #quit()
+
         for idx, img in enumerate(tqdm(images)):
             if args.local:
                 image_path = Path(log_root_path) / img.image_url
@@ -64,8 +61,6 @@ if __name__ == "__main__":
                 else:
                     url = "https://logs.naoth.de/" + img.image_url
                 
-
-
                 response = requests.get(url)
                 response.raise_for_status()  # Raise an error for bad status codes
 
@@ -103,7 +98,6 @@ if __name__ == "__main__":
                     quit()
 
         if len(image_data) > 0:
-            print(len(image_data))
             try:
                 response = client.image.bulk_update(
                     data=image_data
