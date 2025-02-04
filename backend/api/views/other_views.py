@@ -1,6 +1,6 @@
 
 from rest_framework import generics,viewsets
-from rest_framework import permissions
+from django.shortcuts import get_object_or_404
 from . import serializers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -531,12 +531,14 @@ class LogStatusViewSet(viewsets.ModelViewSet):
         # we get and remove log_id from the request data before validating the rest of the data
         # other we get an error because log_id is 1:1 field to log.id
         log_id = request.data.pop("log_id")
+        log_instance = get_object_or_404(models.Log, id=int(log_id))
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         validated_data = serializer.validated_data
 
         instance, created = models.LogStatus.objects.update_or_create(
-            log_id=log_id,
+            log_id=log_instance,
             defaults=validated_data
         )
         
