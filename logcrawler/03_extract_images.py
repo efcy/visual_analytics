@@ -192,6 +192,8 @@ def worker(data_queue, output_paths):
 
 
 def calculate_output_path(log_folder: str):
+    # FIXME have a better detection if its experiment log or not
+    """
     log_path_w_prefix = log_root_path / Path(log_folder)
     if Path(log_path_w_prefix).is_file():
         print("\tdetected experiment log")
@@ -207,28 +209,30 @@ def calculate_output_path(log_folder: str):
         output_folder_bottom_jpg = extracted_folder / Path("log_bottom_jpg")
 
         print(f"\toutput folder will be {extracted_folder}")
+
     else:
-        print("\tdetected normal game log")
-        actual_log_folder = log_root_path / Path(log_folder)
-        combined_log = log_root_path / Path(actual_log_folder) / "combined.log"
-        game_log = log_root_path / Path(actual_log_folder) / "game.log"
-        if combined_log.is_file():
-            log = combined_log
-        elif game_log.is_file():
-            log = game_log
-        else:
-            log = None
+    """
+    print("\tdetected normal game log")
+    actual_log_folder = log_root_path / Path(log_folder)
+    combined_log = log_root_path / Path(actual_log_folder) / "combined.log"
+    game_log = log_root_path / Path(actual_log_folder) / "game.log"
+    if combined_log.is_file():
+        log = combined_log
+    elif game_log.is_file():
+        log = game_log
+    else:
+        log = None
 
-        extracted_folder = (
-            Path(actual_log_folder).parent.parent
-            / Path("extracted")
-            / Path(actual_log_folder).name
-        )
+    extracted_folder = (
+        Path(actual_log_folder).parent.parent
+        / Path("extracted")
+        / Path(actual_log_folder).name
+    )
 
-        output_folder_top = extracted_folder / Path("log_top")
-        output_folder_bottom = extracted_folder / Path("log_bottom")
-        output_folder_top_jpg = extracted_folder / Path("log_top_jpg")
-        output_folder_bottom_jpg = extracted_folder / Path("log_bottom_jpg")
+    output_folder_top = extracted_folder / Path("log_top")
+    output_folder_bottom = extracted_folder / Path("log_bottom")
+    output_folder_top_jpg = extracted_folder / Path("log_top_jpg")
+    output_folder_bottom_jpg = extracted_folder / Path("log_bottom_jpg")
 
     return log, output_folder_top, output_folder_bottom, output_folder_top_jpg, output_folder_bottom_jpg
 
