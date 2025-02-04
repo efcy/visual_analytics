@@ -12,6 +12,22 @@ from PIL import PngImagePlugin
 from PIL import Image as PIL_Image
 from vaapi.client import Vaapi
 
+def is_done(log_id):
+    # get the log status object for a given log_id
+    response = client.log_status.list(log_id=log_id)
+
+    if len(response) == 0:
+        print("\tno log_status found")
+        return False
+    
+    log_status = response[0]
+    # if all numbers are zero or null we return false
+    total_images = int(log_status.num_jpg_bottom or 0) + int(log_status.num_jpg_top or 0) + int(log_status.num_bottom or 0) + int(log_status.num_top or 0)
+    print(log_status)
+    if total_images == 0:
+        return False
+    else:
+        return True
 
 def export_images(logfile, img, output_folder_top, output_folder_bottom, out_top_jpg, out_bottom_jpg):
     """
@@ -238,6 +254,7 @@ def calculate_output_path(log_folder: str):
 
 
 if __name__ == "__main__":
+    # FIXME this has nothing to stop it from doing work twice
     log_root_path = os.environ.get("VAT_LOG_ROOT") 
 
     client = Vaapi(
@@ -251,13 +268,19 @@ if __name__ == "__main__":
         return data.log_path
     
     for data in sorted(existing_data, key=sort_key_fn, reverse=True):
-        log_id = data.id
-        log_path = Path(log_root_path) / data.log_path
+        log_folder_path = Path(log_root_path) / Path(data.log_path).parent
+        print(log_folder_path)
 
+        log_id = data.id
+        if is_done(log_id):
+            print("\twe already counted all the images and put them in the db we assume that all images have been extracted")
+            continue
+        
         data_queue = queue.Queue()
-        print(log_path)
-        log, out_top, out_bottom, out_top_jpg, out_bottom_jpg = calculate_output_path(log_path)
+        
+        log, out_top, out_bottom, out_top_jpg, out_bottom_jpg = calculate_output_path(log_folder_path)
         if log is None:
+            print("\tcouldnt find a valid log file")
             continue
 
         out_top.mkdir(exist_ok=True, parents=True)
