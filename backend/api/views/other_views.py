@@ -514,9 +514,6 @@ class MotionReprCountView(APIView):
 class LogStatusViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogStatusSerializer
     queryset = models.LogStatus.objects.all()
-
-    def get_queryset(self):
-        return models.LogStatus.objects.all()
     
     def get_queryset(self):
         queryset = models.LogStatus.objects.all()
@@ -531,13 +528,15 @@ class LogStatusViewSet(viewsets.ModelViewSet):
         return queryset.filter(filters)
 
     def create(self, request, *args, **kwargs):
+        # we get and remove log_id from the request data before validating the rest of the data
+        # other we get an error because log_id is 1:1 field to log.id
+        log_id = request.data.pop("log_id")
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
+        serializer.is_valid()
         validated_data = serializer.validated_data
-        
+
         instance, created = models.LogStatus.objects.update_or_create(
-            log_id=validated_data.get('log_id'),
+            log_id=log_id,
             defaults=validated_data
         )
         

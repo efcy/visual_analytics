@@ -94,19 +94,23 @@ if __name__ == "__main__":
                     log_path = str(Path(logfolder) / "game.log").removeprefix(log_root_path).strip("/")
                     combined_log_path = str(Path(logfolder) / "combined.log").removeprefix(log_root_path).strip("/")
                     sensor_log_path = str(Path(logfolder) / "sensor.log").removeprefix(log_root_path).strip("/")
+                    try:
+                        response = client.logs.create(
+                            game_id=game_id, 
+                            robot_version=version,
+                            player_number=int(playernumber),
+                            head_number=int(head_number),
+                            body_serial=body_serial,
+                            head_serial=head_serial,
+                            representation_list=data,
+                            log_path=log_path,
+                            combined_log_path=combined_log_path,
+                            sensor_log_path=sensor_log_path,
+                        )
+                    except Exception as e:
+                        print("ERROR:", e)
+                        continue
 
-                    response = client.logs.create(
-                        game_id=game_id, 
-                        robot_version=version,
-                        player_number=int(playernumber),
-                        head_number=int(head_number),
-                        body_serial=body_serial,
-                        head_serial=head_serial,
-                        representation_list=data,
-                        log_path=log_path,
-                        combined_log_path=combined_log_path,
-                        sensor_log_path=sensor_log_path,
-                    )
                     # get log id of the newly created log object
                     log_id = response.id
 
