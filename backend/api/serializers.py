@@ -34,13 +34,16 @@ class LogSerializer(serializers.ModelSerializer):
         model = models.Log
         fields = '__all__'
 
-
+    # used for formatting time from  2024-04-19 21:00:00+00:00 to 2024-04-19 21:00
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        if 'game_name' in representation and representation['game_name']:
-            pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
-            formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
-            representation['game_name'] = formatted_str
+        # we check for request method since game_name is only included in responses of get requests
+        if self.context.get('request') and self.context['request'].method == 'GET':
+            if 'game_name' in representation and representation['game_name']:
+                pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
+                formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
+                representation['game_name'] = formatted_str
+                print("used it")
         return representation
 
 class EventSerializer(serializers.ModelSerializer):

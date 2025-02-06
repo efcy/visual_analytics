@@ -235,8 +235,11 @@ class LogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
+        #adds event name to object
         queryset = models.Log.objects.select_related('game_id').annotate(event_name=F('game_id__event_id__name'))
-
+        
+        #adds game name to object like "2024-04-19 14:10 Berlin United vs Bembelbots half2"
+        # since I can't format the string here correctly I had to overload the to_representation function in LogSerializer
         queryset = queryset.select_related('game_id').annotate(game_name=functions.Concat(
         'game_id__start_time', Value(' '),
         'game_id__team1', Value(' vs '),
