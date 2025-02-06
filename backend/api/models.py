@@ -90,6 +90,9 @@ class LogStatus(models.Model):
     num_bottom = models.IntegerField(blank=True, null=True)
     num_top = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        verbose_name_plural = "Log status"
+
 
 class Image(models.Model):
     class Camera(models.TextChoices):
