@@ -317,7 +317,7 @@ class CognitionRepresentationClient:
         )
         """
         query_params = {k: v for k, v in filters.items() if v is not None}
-        _response = self._client_wrapper.httpx_client.request("api/cognitionrepr/", method="GET", request_options=request_options,params=query_params)
+        _response = self._client_wrapper.httpx_client.request("api/cognitionrepr/count/", method="GET", request_options=request_options,params=query_params)
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(typing.Dict[str, typing.Any], _response.json())  # type: ignore
