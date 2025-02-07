@@ -34,6 +34,33 @@ def is_done(log_id, status_dict):
         quit()
         return status_dict
 
+def is_done_motion(log_id, status_dict):
+    # TODO get log_status representation here and check each field.
+    new_dict = status_dict.copy()
+    try:
+        # we use list here because we only know the log_id here and not the if of the logstatus object
+        response = client.log_status.list(log_id=log_id)
+        if len(response) == 0:
+            return status_dict
+        log_status = response[0]
+
+        for k,v in status_dict.items():
+            if k == "FrameInfo":
+                field_value = getattr(log_status, "num_motion_frames")
+            else:
+                field_value = getattr(log_status, k)
+            
+            if field_value == None:
+                print(f"\tdid not find a value for repr {k}")
+            else:
+                new_dict.pop(k)
+        return new_dict
+    # TODO would be nice to handle the vaapi API error here explicitely
+    except Exception as e:
+        print("error", e)
+        quit()
+        return status_dict
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -57,7 +84,7 @@ if __name__ == "__main__":
 
         print("log_path: ", log_path)
 
-        cognition_status_dict = {
+        cognition_status_dict = {   
             'BallModel': 0,
             'BallCandidates': 0,
             'BallCandidatesTop': 0,
@@ -140,7 +167,7 @@ if __name__ == "__main__":
             'GyrometerData': 0,
         }
 
-        new_motion_status_dict = is_done(log_id, motion_status_dict)
+        new_motion_status_dict = is_done_motion(log_id, motion_status_dict)
         if not args.force and len(new_motion_status_dict) == 0:
             print("\twe already calculated number of full sensor frames for this log")
         else:
@@ -170,6 +197,7 @@ if __name__ == "__main__":
             try:
                 if "FrameInfo" in new_motion_status_dict:
                     new_motion_status_dict['num_motion_frames'] = new_motion_status_dict.pop('FrameInfo')
+                print(new_motion_status_dict)
                 response = client.log_status.update(
                 log_id=log_id, 
                 **new_motion_status_dict

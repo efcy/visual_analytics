@@ -43,6 +43,7 @@ if __name__ == "__main__":
     online = is_server_alive("https://logs.berlin-united.com/")
 
     for data in sorted(data, key=sort_key_fn, reverse=True):
+        print("log_path: ", data.log_path)
         log_id = data.id
         images = client.image.list(log=log_id, blurredness_value=None)
 
@@ -84,7 +85,9 @@ if __name__ == "__main__":
 
             except Exception as e:
                  print(e)
-                 continue
+                 print(f"Image broken at {url} in log: {log_id}")
+                 print("This problem can occur if the image extraction for this log was aborted")
+                 quit()
             
             if idx % 1000 == 0 and idx != 0:
                 try:

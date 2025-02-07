@@ -254,7 +254,7 @@ def calculate_output_path(log_folder: str):
 
 
 if __name__ == "__main__":
-    # FIXME this has nothing to stop it from doing work twice
+    # FIXME aborting this script can result in broken images being written
     log_root_path = os.environ.get("VAT_LOG_ROOT") 
 
     client = Vaapi(
@@ -272,9 +272,11 @@ if __name__ == "__main__":
         print(log_folder_path)
 
         log_id = data.id
-        if is_done(log_id):
-            print("\twe already counted all the images and put them in the db we assume that all images have been extracted")
+        if log_id != 168:
             continue
+        #if is_done(log_id):
+        #   print("\twe already counted all the images and put them in the db we assume that all images have been extracted")
+        #    continue
         
         data_queue = queue.Queue()
         
