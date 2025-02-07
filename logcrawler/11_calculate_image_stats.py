@@ -45,7 +45,7 @@ if __name__ == "__main__":
     for data in sorted(data, key=sort_key_fn, reverse=True):
         print("log_path: ", data.log_path)
         log_id = data.id
-        images = client.image.list(log=log_id, blurredness_value=None)
+        images = client.image.list(log=log_id, blurredness_value="None")
 
         image_data = list()
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                     url = "https://logs.berlin-united.com/" + img.image_url
                 else:
                     url = "https://logs.naoth.de/" + img.image_url
-                
+
                 response = requests.get(url)
                 response.raise_for_status()  # Raise an error for bad status codes
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
                  print("This problem can occur if the image extraction for this log was aborted")
                  quit()
             
-            if idx % 1000 == 0 and idx != 0:
+            if idx % 100 == 0 and idx != 0:
                 try:
                     response = client.image.bulk_update(
                         data=image_data
