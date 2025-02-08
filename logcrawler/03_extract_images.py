@@ -272,11 +272,10 @@ if __name__ == "__main__":
         print(log_folder_path)
 
         log_id = data.id
-        if log_id != 168:
-            continue
-        #if is_done(log_id):
-        #   print("\twe already counted all the images and put them in the db we assume that all images have been extracted")
-        #    continue
+
+        if is_done(log_id):
+           print("\twe already counted all the images and put them in the db we assume that all images have been extracted")
+           continue
         
         data_queue = queue.Queue()
         
