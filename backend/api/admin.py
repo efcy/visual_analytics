@@ -19,8 +19,8 @@ class AnnotationForm(forms.ModelForm):
         return None
 
 class ImageAdmin(admin.ModelAdmin):
-    search_fields = ['log__log_path','image_url__icontains']
-    list_display = ["log","frame_number"]
+    search_fields = ['log_id__log_path','image_url__icontains']
+    list_display = ["log_id","frame_number"]
 
 
 class GameAdmin(admin.ModelAdmin):

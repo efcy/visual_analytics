@@ -103,7 +103,7 @@ class Image(models.Model):
         jpeg = "JPEG", _("jpeg")
     # FIXME playernumber, robotnumber and serial must be part of the foreign key, we can change robots midgame when one robot breaks
     # FIXME it should be log_id instead of log to have consistency
-    log = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE,related_name='images')
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     frame_number = models.IntegerField(blank=True, null=True)
@@ -113,10 +113,10 @@ class Image(models.Model):
     resolution =  models.CharField(max_length=11, blank=True, null=True) # 1640x1480x2
 
     class Meta:
-        unique_together = ('log', 'camera', 'type', 'frame_number')
+        unique_together = ('log_id', 'camera', 'type', 'frame_number')
 
     def __str__(self):
-        return f"{self.log}-{self.camera}-{self.type}-{self.frame_number}"
+        return f"{self.log_id}-{self.camera}-{self.type}-{self.frame_number}"
 
 
 class Annotation(models.Model):
