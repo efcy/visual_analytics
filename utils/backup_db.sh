@@ -48,9 +48,3 @@ for LOG_ID in "${LOG_IDS[@]}"; do
         echo -e "\tExported data for log_id_id = $LOG_ID to ${TABLE_NAME}_${LOG_ID}.sql"
     done
 done
-# TODO get all the log ids somehow
-#psql -h localhost -U naoth -d vat -c "CREATE TABLE temp_cognitionrepresentation AS SELECT * FROM api_cognitionrepresentation WHERE log_id_id = 1;"
-#pg_dump -h localhost -p 1234 -U naoth -d vat -t temp_cognitionrepresentation > cognitionrepresentation_1.sql
-#psql -h localhost -p 1234 -U naoth -d vat -c "DROP TABLE temp_cognitionrepresentation;"
-
-#api_image

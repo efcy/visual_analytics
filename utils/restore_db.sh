@@ -22,6 +22,7 @@ sed -i 's/temp_/api_behavioroption/g' sql_output/api_behavioroption_1.sql
 sed -i 's/temp_/api_behavioroption/g' sql_output/api_behavioroption_2.sql
 sed -i 's/temp_/api_behavioroption/g' sql_output/api_behavioroption_168.sql
 
+
 sed -i 's/temp_/api_behavioroptionstate/g' sql_output/api_behavioroptionstate_1.sql
 sed -i 's/temp_/api_behavioroptionstate/g' sql_output/api_behavioroptionstate_2.sql
 sed -i 's/temp_/api_behavioroptionstate/g' sql_output/api_behavioroptionstate_168.sql
