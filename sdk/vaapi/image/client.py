@@ -222,7 +222,7 @@ class ImageClient:
             api_key="YOUR_API_KEY",
         )
         client.image.list(
-            id=1,
+            log_id=1,
         )
         """
         query_params = {k: v for k, v in filters.items()}
@@ -238,7 +238,7 @@ class ImageClient:
     def create(
         self,
         *,
-        log: typing.Optional[int] = OMIT,
+        log_id: typing.Optional[int] = OMIT,
         camera: typing.Optional[str] = OMIT,
         type: typing.Optional[str] = OMIT,
         frame_number: typing.Optional[int] = OMIT,
@@ -337,7 +337,7 @@ class ImageClient:
             f"api/image/",
             method="POST",
             json={
-                "log": log,
+                "log_id": log_id,
                 "camera": camera,
                 "type": type,
                 "frame_number": frame_number,

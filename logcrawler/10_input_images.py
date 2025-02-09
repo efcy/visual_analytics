@@ -39,7 +39,7 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
             url_path = str(file).removeprefix(log_root_path).strip("/")
             
             image_ar[idx] = {
-                "log": log_id,
+                "log_id": log_id,
                 "camera": camera,
                 "type": type,
                 "frame_number": framenumber,
@@ -61,7 +61,7 @@ def handle_insertion(individual_extracted_folder, data, camera, type):
     #sleep(5)
 
 def is_done(robot_data_id, camera, type):
-    response = client.image.get_image_count(log=robot_data_id, camera=camera, type=type)
+    response = client.image.get_image_count(log_id=robot_data_id, camera=camera, type=type)
     db_count = int(response["count"])
     # FIXME use the correct data for check if its done
     response2 = client.log_status.list(log_id=robot_data_id)

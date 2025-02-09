@@ -43,9 +43,9 @@ if __name__ == "__main__":
     online = is_server_alive("https://logs.berlin-united.com/")
 
     for data in sorted(data, key=sort_key_fn, reverse=True):
-        print("log_path: ", data.log_path)
+        print("log_path: ", data.id, data.log_path)
         log_id = data.id
-        images = client.image.list(log=log_id, blurredness_value="None")
+        images = client.image.list(log_id=log_id, blurredness_value="None")
 
         image_data = list()
 
@@ -53,8 +53,6 @@ if __name__ == "__main__":
             if args.local:
                 image_path = Path(log_root_path) / img.image_url
                 image_cv = cv2.imread(image_path, cv2.IMREAD_COLOR)
-                #im = Image.open(str(image_path))
-                #image_cv = np.asarray(im)
             else:
                 # try for timeout use the other one if one is not working
                 if online:

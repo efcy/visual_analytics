@@ -16,7 +16,7 @@ import time
 class ImageCountView(APIView):
     def get(self, request):
         # Get filter parameters from query string
-        log_id = request.query_params.get('log')
+        log_id = request.query_params.get('log_id')
         camera = request.query_params.get('camera')
         image_type = request.query_params.get('type')
 
@@ -156,7 +156,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         data = self.request.data
         
         # we ignore the fields that act as unique identifiers here
-        update_fields = {k: v for k, v in data.items() if k not in ['log', 'camera', 'type', 'frame_number']}
+        update_fields = {k: v for k, v in data.items() if k not in ['log_id', 'camera', 'type', 'frame_number']}
         updated = models.Image.objects.filter(id=image_id).update(**update_fields)
 
         status_code = status.HTTP_201_CREATED if updated else status.HTTP_200_OK
@@ -170,7 +170,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
 
         instance, created = models.Image.objects.get_or_create(
-            log=validated_data.get('log'),
+            log_id=validated_data.get('log_id'),
             camera=validated_data.get('camera'),
             type=validated_data.get('type'),
             frame_number=validated_data.get('frame_number'),
@@ -186,7 +186,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         #validated_data = serializer.validated_data
         starttime = time.time()
         rows_tuples = [(
-            row['log'], 
+            row['log_id'], 
             row['camera'], 
             row['type'], 
             row['frame_number'],
@@ -197,9 +197,9 @@ class ImageViewSet(viewsets.ModelViewSet):
             ) for row in data]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO api_image (log_id, camera, type, frame_number, image_url, blurredness_value, brightness_value, resolution)
+            INSERT INTO api_image (log_id_id, camera, type, frame_number, image_url, blurredness_value, brightness_value, resolution)
             VALUES %s
-            ON CONFLICT (log_id, camera, type, frame_number) DO NOTHING;
+            ON CONFLICT (log_id_id, camera, type, frame_number) DO NOTHING;
             """ 
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=1000)
