@@ -2,6 +2,7 @@
 from rest_framework import generics,viewsets
 from django.shortcuts import get_object_or_404
 from . import serializers
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from . import models
@@ -228,6 +229,50 @@ class GameViewSet(viewsets.ModelViewSet):
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ExperimentViewSet(viewsets.ModelViewSet):
+    queryset = models.Experiment.objects.all()
+    serializer_class = serializers.ExperimentSerializer
+   
+    def get_queryset(self):
+        event_id = self.request.query_params.get("event")
+
+        queryset = models.Experiment.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
+
+        if event_id is not None:
+            queryset = queryset.filter(event_id=event_id)
+        
+        return queryset
+        
+    def create(self, request, *args, **kwargs):
+        row_tuple = [(
+            request.data.get('event_id'),
+            request.data.get('name'),
+            request.data.get('field'),
+            request.data.get('comment'),
+        )]
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO api_experiment (event_id_id, name, field, comment)
+            VALUES %s
+            ON CONFLICT (event_id_id, name) DO NOTHING
+            RETURNING id;
+            """
+
+            execute_values(cursor, query, row_tuple, page_size=1)
+            result = cursor.fetchone()
+            if result:
+                serializer = self.get_serializer(models.Experiment.objects.get(id=result[0]))
+                # If insert was successful, get the object
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                # If ON CONFLICT DO NOTHING prevented insert, get the existing object
+                instance = models.Experiment.objects.get(
+                    event_id=request.data.get('event_id'),
+                    name=request.data.get('name')
+                )
+                serializer = self.get_serializer(instance)
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
@@ -260,22 +305,35 @@ class LogViewSet(viewsets.ModelViewSet):
         return queryset.filter(filters)
         
     def create(self, request, *args, **kwargs):
-        # Check if the data is a list (bulk create) or dict (single create)
-        is_many = isinstance(request.data, list)
+        serializer = self.get_serializer(data=request.data)
+        print("before")
+        print(request.data)
+        serializer.is_valid(raise_exception=False)
         
-        serializer = self.get_serializer(data=request.data, many=is_many)
-        serializer.is_valid(raise_exception=True)
-        
-        if is_many:
-            return self.bulk_create(serializer)
-        else:
-            return self.single_create(serializer)
-
-    def single_create(self, serializer):
         validated_data = serializer.validated_data
-        
+        print("validated_data", validated_data)
+        print("after")
+        # Determine if the log is associated with a Game or an Experiment
+        game_id = validated_data.pop('game_id', None)
+        experiment_id = validated_data.pop('experiment_id', None)
+        print("experiment_id", experiment_id)
+        if game_id:
+            content_object = models.Game.objects.get(id=game_id)
+        elif experiment_id:
+            content_object = models.Experiment.objects.get(id=experiment_id)
+        else:
+            return Response(
+                {"error": "Either game_id or experiment_id is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Add content_type and object_id to the validated data
+        validated_data['content_type'] = ContentType.objects.get_for_model(content_object)
+        validated_data['object_id'] = content_object.id
+
         instance, created = models.Log.objects.get_or_create(
-            game_id=validated_data.get('game_id'),
+            content_type=validated_data['content_type'],
+            object_id=validated_data['object_id'],
             player_number=validated_data.get('player_number'),
             head_number=validated_data.get('head_number'),
             log_path=validated_data.get('log_path'),
@@ -286,48 +344,6 @@ class LogViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status_code)
-
-    def bulk_create(self, serializer):
-        validated_data = serializer.validated_data
-
-        with transaction.atomic():
-            # Get all existing logs
-            existing_combinations = set(
-                models.Log.objects.values_list('game_id', 'player_number', 'head_number', 'log_path')
-            )
-
-            # Separate new and existing events
-            new_logs = []
-            existing_logs = []
-            for item in validated_data:
-                combo = (item['game_id'], item['player_number'], item['head_number'], item['log_path'])
-                if combo not in existing_combinations:
-                    new_logs.append(models.Log(**item))
-                    existing_combinations.add(combo)  # Add to set to catch duplicates within the input
-                else:
-                    # Fetch the existing event
-                    existing_event = models.Log.objects.get(
-                        game_id=item['game_id'],
-                        player_number=item['player_number'],
-                        head_number=item['head_number'],
-                        log_path=item['log_path']
-                    )
-                    existing_logs.append(existing_event)
-
-            # Bulk create new events
-            created_logs = models.Log.objects.bulk_create(new_logs)
-
-        # Combine created and existing events
-        all_logs = created_logs + existing_logs
-
-        # Serialize the results
-        result_serializer = self.get_serializer(all_logs, many=True)
-
-        return Response({
-            'created': len(created_logs),
-            'existing': len(existing_logs),
-            'events': result_serializer.data
-        }, status=status.HTTP_200_OK)
 
 
 class AnnotationViewSet(viewsets.ModelViewSet):

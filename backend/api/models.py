@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
@@ -36,8 +38,23 @@ class Game(models.Model):
     def __str__(self):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
+
+class Experiment(models.Model):
+    event_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='experiments')
+    # either the folder name if its an experiment of multiple robots or the logfile name
+    name = models.CharField(max_length=100,blank=True, null=True)
+    field = models.CharField(max_length=100, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('event_id', 'name')
+
+
 class Log(models.Model):
-    game_id = models.ForeignKey(Game,on_delete=models.CASCADE,related_name='robot_data')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)
