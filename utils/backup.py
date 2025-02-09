@@ -6,6 +6,8 @@ import psycopg2
 from psycopg2 import sql
 import time
 
+# kubectl port-forward postgres-postgresql-0 -n postgres 1234:5432
+
 DB_HOST="localhost"
 DB_PORT="1234"
 DB_USER="naoth"
