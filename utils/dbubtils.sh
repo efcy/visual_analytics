@@ -15,13 +15,9 @@ if [ "$mode" == "renew" ]; then
 
     cd ../backend
     pushd .
-    find . -path "*/migrations/*.py" ! -name "__init__.py" ! -delete
-    find . -path "*/migrations/__pycache__/*" -delete
-    rm -rf ./venv
     cd /tmp
     # Execute the drop database command
     sudo -u postgres psql -c "DROP DATABASE IF EXISTS $VAT_POSTGRES_DB";
-
     sudo -u postgres psql -c "CREATE DATABASE $VAT_POSTGRES_DB;"
 
     sudo -u postgres psql -c "DROP OWNED BY $VAT_POSTGRES_USER;"
@@ -38,10 +34,7 @@ if [ "$mode" == "renew" ]; then
     
 
     popd
-    python3 -m venv venv
     source venv/bin/activate
-    python -m pip install -r requirements.txt
-    python manage.py makemigrations
     python manage.py migrate
 
     # Check if the command was successful
