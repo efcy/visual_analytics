@@ -87,6 +87,7 @@ class LogClient:
         id: int,
         *,
         game_id: typing.Optional[str] = OMIT,
+        experiment_id: typing.Optional[str] = OMIT,
         robot_version: typing.Optional[str] = OMIT,
         player_number: typing.Optional[dt.date] = OMIT,
         head_number: typing.Optional[str] = OMIT,
@@ -185,6 +186,7 @@ class LogClient:
             method="PATCH",
             json={
                 "game_id": game_id,
+                "experiment_id": experiment_id,
                 "robot_version": robot_version,
                 "player_number": player_number,
                 "head_number": head_number,
@@ -271,6 +273,7 @@ class LogClient:
         self,
         *,
         game_id: typing.Optional[str] = OMIT,
+        experiment_id: typing.Optional[str] = OMIT,
         robot_version: typing.Optional[str] = OMIT,
         player_number: typing.Optional[dt.date] = OMIT,
         head_number: typing.Optional[str] = OMIT,
@@ -381,6 +384,7 @@ class LogClient:
             method="POST",
             json={
                 "game_id": game_id,
+                "experiment_id": experiment_id,
                 "robot_version": robot_version,
                 "player_number": player_number,
                 "head_number": head_number,
