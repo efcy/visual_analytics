@@ -28,22 +28,30 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
-    event_name = serializers.CharField(read_only=True)
-    game_name = serializers.CharField(read_only=True)
+    game_id = serializers.IntegerField(required=False, write_only=True)
+    experiment_id = serializers.IntegerField(required=False, write_only=True)
     class Meta:
         model = models.Log
-        fields = '__all__'
+        # we have to list all the fields here since we want to add game_id and experiment id here to __all__
+        fields = [
+            'experiment_id', 'game_id', 'log_path', 'player_number', 'head_number',
+            'robot_version', 'body_serial', 'head_serial', 'representation_list',
+            'combined_log_path', 'sensor_log_path', 'id'
+        ]
 
-    # used for formatting time from  2024-04-19 21:00:00+00:00 to 2024-04-19 21:00
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        # we check for request method since game_name is only included in responses of get requests
-        if self.context.get('request') and self.context['request'].method == 'GET':
-            if 'game_name' in representation and representation['game_name']:
-                pattern = r'(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}):\d{2}\+\d{2}(.+)'
-                formatted_str = re.sub(pattern, r'\1\2', representation['game_name'])
-                representation['game_name'] = formatted_str
-        return representation
+    def validate(self, data):
+        # Only validate game_id and experiment_id during creation
+        if self.instance is None:  # Check if this is a create operation
+            # Ensure either game_id or experiment_id is provided, but not both
+            game_id = data.get('game_id')
+            experiment_id = data.get('experiment_id')
+
+            if not game_id and not experiment_id:
+                raise serializers.ValidationError("Either game_id or experiment_id is required.")
+            if game_id and experiment_id:
+                raise serializers.ValidationError("Only one of game_id or experiment_id is allowed.")
+
+        return data
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,6 +65,11 @@ class GameSerializer(serializers.ModelSerializer):
         model = models.Game
         fields = '__all__'
 
+class ExperimentSerializer(serializers.ModelSerializer):
+    event_name = serializers.CharField(read_only=True)
+    class Meta:
+        model = models.Experiment
+        fields = '__all__'
 
 class CognitionRepresentationSerializer(serializers.ModelSerializer):
     class Meta:

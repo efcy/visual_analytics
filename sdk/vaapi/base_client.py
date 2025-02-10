@@ -18,7 +18,7 @@ from .xabsl_symbol_complete.client import XabslSymbolClientComplete
 from .xabsl_symbol_sparse.client import XabslSymbolClientSparse
 from .log_status.client import LogStatusClient
 from .frame_filter.client import FrameFilterClient
-
+from .experiment.client import ExperimentClient
 
 class VaapiBase:
     """
@@ -88,4 +88,4 @@ class VaapiBase:
         self.xabsl_symbol_sparse = XabslSymbolClientSparse(client_wrapper=self._client_wrapper)
         self.log_status = LogStatusClient(client_wrapper=self._client_wrapper)
         self.frame_filter = FrameFilterClient(client_wrapper=self._client_wrapper)
-
+        self.experiment = ExperimentClient(client_wrapper=self._client_wrapper)
