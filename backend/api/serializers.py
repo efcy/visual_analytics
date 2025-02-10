@@ -36,18 +36,20 @@ class LogSerializer(serializers.ModelSerializer):
         fields = [
             'experiment_id', 'game_id', 'log_path', 'player_number', 'head_number',
             'robot_version', 'body_serial', 'head_serial', 'representation_list',
-            'combined_log_path', 'sensor_log_path'
+            'combined_log_path', 'sensor_log_path', 'id'
         ]
 
     def validate(self, data):
-        # Ensure either game_id or experiment_id is provided, but not both
-        game_id = data.get('game_id')
-        experiment_id = data.get('experiment_id')
+        # Only validate game_id and experiment_id during creation
+        if self.instance is None:  # Check if this is a create operation
+            # Ensure either game_id or experiment_id is provided, but not both
+            game_id = data.get('game_id')
+            experiment_id = data.get('experiment_id')
 
-        if not game_id and not experiment_id:
-            raise serializers.ValidationError("Either game_id or experiment_id is required.")
-        if game_id and experiment_id:
-            raise serializers.ValidationError("Only one of game_id or experiment_id is allowed.")
+            if not game_id and not experiment_id:
+                raise serializers.ValidationError("Either game_id or experiment_id is required.")
+            if game_id and experiment_id:
+                raise serializers.ValidationError("Only one of game_id or experiment_id is allowed.")
 
         return data
 

@@ -279,20 +279,7 @@ class LogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogSerializer
 
     def get_queryset(self):
-
-        #adds event name to object
-        queryset = models.Log.objects.select_related('game_id').annotate(event_name=F('game_id__event_id__name'))
-        
-        #adds game name to object like "2024-04-19 14:10 Berlin United vs Bembelbots half2"
-        # since I can't format the string here correctly I had to overload the to_representation function in LogSerializer
-        queryset = queryset.select_related('game_id').annotate(game_name=functions.Concat(
-        'game_id__start_time', Value(' '),
-        'game_id__team1', Value(' vs '),
-        'game_id__team2', Value(' '),
-        'game_id__half',
-        output_field=CharField()
-    ))
-         
+        queryset = models.Log.objects.all()
         query_params = self.request.query_params
 
         filters = Q()
@@ -306,17 +293,14 @@ class LogViewSet(viewsets.ModelViewSet):
         
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print("before")
-        print(request.data)
         serializer.is_valid(raise_exception=False)
         
         validated_data = serializer.validated_data
-        print("validated_data", validated_data)
-        print("after")
+
         # Determine if the log is associated with a Game or an Experiment
         game_id = validated_data.pop('game_id', None)
         experiment_id = validated_data.pop('experiment_id', None)
-        print("experiment_id", experiment_id)
+
         if game_id:
             content_object = models.Game.objects.get(id=game_id)
         elif experiment_id:
