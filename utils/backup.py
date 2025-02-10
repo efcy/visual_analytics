@@ -2,11 +2,15 @@ import argparse
 from pathlib import Path
 import subprocess
 import os
+import fileinput
 import psycopg2
 from psycopg2 import sql
 import time
 
 # kubectl port-forward postgres-postgresql-0 -n postgres 1234:5432
+# full backup: python backup.py -a -g -o /opt/local-path-provisioner/db_backup
+# tar --use-compress-program="pigz -k -3" -cf db_backup.tar.gz /opt/local-path-provisioner/db_backup/
+
 
 DB_HOST="localhost"
 DB_PORT="1234"
@@ -20,6 +24,12 @@ conn = psycopg2.connect(
         user=DB_USER,
         password=os.environ.get("PGPASSWORD")
     )
+
+def replace_string_in_first_lines(file_path, old_string, new_string, num_lines):
+    for i, line in enumerate(fileinput.input(file_path, inplace=True)):
+        if i < num_lines:
+            line = line.replace(old_string, new_string)
+        print(line, end='')
 
 def get_all_log_ids():
     # Create a cursor object
@@ -79,7 +89,7 @@ def export_full_tables():
             print('Exception happened during dump %s' %(e))
 
 
-def export_split_table(log_id):
+def export_split_table(log_id, force=False, export_tables=None):
     tables = [
         "api_behaviorframeoption",
         "api_behavioroption",
@@ -89,9 +99,14 @@ def export_split_table(log_id):
         "api_image",
         "api_xabslsymbolsparse"
     ]
+    # 
+    if export_tables:
+        tables = export_tables
+        force = True
+
     for table in tables:
         output_file = Path(args.output) / f"{table}_{log_id}.sql"
-        if output_file.exists():
+        if output_file.exists() and not force:
             continue
 
         try:
@@ -111,6 +126,10 @@ def export_split_table(log_id):
             delete_temp_table(temp_table_name)
         except Exception as e:
             print('Exception happened during dump %s' %(e))
+            quit()
+        
+        # change the table name in the sql files
+        replace_string_in_first_lines(output_file, "temp_", "", 200)
 
 
 if __name__ == "__main__":
@@ -119,6 +138,9 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--logs", nargs="+", required=False, type=int, help="Log Id's separated by space")
     parser.add_argument("-o", "--output", required=True, help="Output folder for all sql files")
     parser.add_argument("-g", "--global_tables", action="store_true", required=False, default=False, help="")
+    parser.add_argument("-f", "--force", action="store_true", required=False, default=False, help="")
+    parser.add_argument("-t", "--tables", nargs="+", required=False, type=str, help="table names to export")
+    # TODO add optional list of tables to export, those should be forced
 
     args = parser.parse_args()
     Path(args.output).mkdir(exist_ok=True, parents=True)
@@ -131,17 +153,17 @@ if __name__ == "__main__":
         for log_id in args.logs:
             print(f"exporting data for log {log_id}")
             t0 = time.time()
-            export_split_table(log_id)
+            export_split_table(log_id, args.force, args.tables)
             t1 = time.time()
             print(f"time to export: {t1-t0}s")
-        
+
     elif args.all:
         log_ids = get_all_log_ids()
-        
+
         for log_id in log_ids:
             print(f"exporting data for log {log_id}")
             t0 = time.time()
-            export_split_table(log_id)
+            export_split_table(log_id, args.force, args.tables)
             t1 = time.time()
             print(f"time to export: {t1-t0}s")
     else:
@@ -149,5 +171,4 @@ if __name__ == "__main__":
         print(parser.print_help())
         quit()
 
-    
     conn.close()
