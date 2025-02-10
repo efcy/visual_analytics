@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, DetailView, View
+from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import json
@@ -68,8 +69,9 @@ class LogListView(DetailView):
     template_name = 'frontend/logs.html'
 
     def get_context_data(self, **kwargs):
+        game_content_type = ContentType.objects.get_for_model(Game)
         context = super().get_context_data(**kwargs)
-        context['logs'] = Log.objects.filter(game_id=context['game'])
+        context['logs'] = Log.objects.filter(content_type=game_content_type, object_id=context['game'].id)
         
         return context
 
