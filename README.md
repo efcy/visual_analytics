@@ -1,5 +1,6 @@
 # Berlin United Visual Analytics Tool
-The goal of of this tool is to make it possible to quickly view, annotate and analyze all of our RoboCup data. 
+The goal of of this tool is to make it possible to quickly view, annotate and analyze all of our recorded RoboCup data. Our tool provides a synchronized view of all logs and external video recordings.
+
 
 ## Overview
 
