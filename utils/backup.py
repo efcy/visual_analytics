@@ -140,7 +140,6 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--global_tables", action="store_true", required=False, default=False, help="")
     parser.add_argument("-f", "--force", action="store_true", required=False, default=False, help="")
     parser.add_argument("-t", "--tables", nargs="+", required=False, type=str, help="table names to export")
-    # TODO add optional list of tables to export, those should be forced
 
     args = parser.parse_args()
     Path(args.output).mkdir(exist_ok=True, parents=True)
