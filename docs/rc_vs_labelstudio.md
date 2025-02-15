@@ -1,2 +1,0 @@
-# RobotControl vs Labelstudio
-We will reimplement some of the features that RobotControl already has. However this tool has a different purpose. Our labelstudio version should be used to add data to our recorded like annotations or comments. Also our tool supports analyzing data from multiple games, events and robots. RobotControl on the other hand can be used for live debugging or immediate analyzing of one log. Our tool requires an upload to the server. Therefore it's less likely to be used during a competition where the internet is most likely to be pretty bad.
