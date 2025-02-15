@@ -16,6 +16,5 @@ pyyaml
 uritemplate
 inflection
 django-environ
-django-dbbackup==4.2.1
 drf-orjson-renderer
 jsonfield==3.1.0
