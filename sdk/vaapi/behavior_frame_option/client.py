@@ -54,7 +54,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.behavior_frame_option.delete(
@@ -119,7 +119,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.behavior_frame_option.update(
@@ -176,7 +176,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
 
@@ -217,7 +217,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -255,7 +255,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -307,7 +307,7 @@ class BehaviorFrameOptionClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.behavior_frame_option.filter(

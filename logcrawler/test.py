@@ -5,7 +5,7 @@ import os
 
 if __name__ == "__main__":
     client = Vaapi(
-        base_url='https://api.berlin-united.com/',  
+        base_url='https://vat.berlin-united.com/',  
         #FIXME use env var here
         api_key="43378af71b0af6b8064b61ce13ac8bbab42ed151",
     )

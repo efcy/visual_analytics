@@ -23,7 +23,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -64,7 +64,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -143,7 +143,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -216,7 +216,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -251,7 +251,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -289,7 +289,7 @@ class EventsClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """

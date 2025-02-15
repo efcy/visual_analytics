@@ -23,7 +23,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -64,7 +64,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -145,7 +145,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -218,7 +218,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.image.list(
@@ -306,7 +306,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.create(
@@ -366,7 +366,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -398,7 +398,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -428,7 +428,7 @@ class ImageClient:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """

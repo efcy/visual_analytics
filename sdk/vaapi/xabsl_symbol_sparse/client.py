@@ -63,7 +63,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
          
@@ -107,7 +107,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.delete(
@@ -187,7 +187,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.update(
@@ -245,7 +245,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.list(
@@ -291,7 +291,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.create(
@@ -345,7 +345,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.bulk_create(
@@ -391,7 +391,7 @@ class XabslSymbolClientSparse:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.xabsl_symbol_sparse.get_behavior_count(
