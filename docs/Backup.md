@@ -15,14 +15,24 @@ The backup will only backup VAT data and now user related data.
 
 
 ## Restore a backup
-Make sure you have a database where no data exists that is the same as the data you want to restore. In the backend folder run
-```
+Make sure you have a database where no data exists that is the same as the data you want to restore. Also the environment variables need to be set:
+- VAT_POSTGRES_HOST
+- VAT_POSTGRES_PORT
+- VAT_POSTGRES_USER
+- VAT_POSTGRES_DB
+
+If you set up the project locally you probably have them already set to the values needed for your local environment. Make sure you have the same database schema as the remote. If you are behind just run:
+```bash
 python manage.py makemigrations
 python mange.py migrate
-python restore.py
 ```
 
-If you deleted the whole database you need to setup user and organisations again manually.
+To restore data from the backup run
+```bash
+python restore.py -i <path to folder containing the sql files>
+```
+
+If you deleted the whole database before restoring you need to setup user and organisations manually again. See dev setup for more information.
 
 ## Backup Automation
 Not implemented yet

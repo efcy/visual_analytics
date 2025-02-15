@@ -2,15 +2,13 @@ import argparse
 from pathlib import Path
 import subprocess
 import os
-import psycopg2
-from psycopg2 import sql
-import time
-from django.core import management
+import re
 
-DB_HOST=os.getenv('VAT_POSTGRES_HOST')
-DB_PORT=os.getenv('VAT_POSTGRES_PORT')
-DB_USER=os.getenv('VAT_POSTGRES_USER')
-DB_NAME=os.getenv('VAT_POSTGRES_DB')
+# Custom key function for natural sorting
+def natural_sort_key(s):
+    # Use a regular expression to split the string into parts
+    return [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', str(s))]
+
 
 def import_global_tables():
     sql_table = [
@@ -24,7 +22,7 @@ def import_global_tables():
 
     for file in sql_table:
         try:
-            command = f"psql -h {DB_HOST} -p {DB_PORT} -U {DB_USER} -d {DB_NAME} -f '{args.input}/{file}'"
+            command = f"psql -h {os.getenv('VAT_POSTGRES_HOST')} -p {os.getenv('VAT_POSTGRES_PORT')} -U {os.getenv('VAT_POSTGRES_USER')} -d {os.getenv('VAT_POSTGRES_DB')} -f '{args.input}/{file}'"
             print(f"running {command}")
             output_file = f"error.txt"
             f = open(str(output_file), "w")
@@ -37,24 +35,12 @@ def import_global_tables():
             print('Exception happened during dump %s' %(e))
             quit()
 
-def modify_sql(file_path):
-    print(file_path)  # Do something with the file
-    # Read the file content
-    with file_path.open('r', encoding='utf-8') as file:
-        content = file.read()
-    
-    # Remove the string 'temp_' from the content
-    modified_content = content.replace('temp_', '')
-    
-    # Write the modified content back to the file
-    with file_path.open('w', encoding='utf-8') as file:
-        file.write(modified_content)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-a", "--all", action="store_true", default=False)
-    parser.add_argument("-t", "--table", nargs="+", required=False, type=str, help="tables that should be restored")
     parser.add_argument("-i", "--input", required=True, help="path to the folder containing all the sql files")
+    parser.add_argument("-t", "--table", nargs="+", required=False, type=str, help="tables that should be restored")
+    parser.add_argument("--ids",  nargs="+", required=False, type=int, help="ids that should be restored")
     
     args = parser.parse_args()
     
@@ -68,12 +54,28 @@ if __name__ == "__main__":
         "api_motionrepresentation",
         "api_image"
     ]
-    for bla in sql_table:
-        count = 0
-        for file_path in sorted(Path(args.input).glob(f'{bla}_*.sql')):
-            modify_sql(file_path)
+    for table in sql_table:
+        if args.table:
+            if table not in args.table:
+                continue
+        print(f"importing {table} tables")
+        for file_path in sorted(Path(args.input).glob(f'{table}_*.sql'), key=natural_sort_key):
+            # if we have a list of ids, get the number of the file
+            match = re.search(r'_(\d+)\.sql$', str(file_path))
+            if match:
+                # Extract the number from the match object
+                number = int(match.group(1))
+            else:
+                print("ERROR: could not parse number of ")
+                quit()
+            if args.ids:                
+                # Check if the number is in the list of numbers
+                if number not in args.ids:
+                    continue
+                
+            print(f"importing table for log id {number}")
             try:
-                command = f"psql -h {DB_HOST} -p {DB_PORT} -U {DB_USER} -d {DB_NAME} -f '{file_path}'"
+                command = f"psql -h {os.getenv('VAT_POSTGRES_HOST')} -p {os.getenv('VAT_POSTGRES_PORT')} -U {os.getenv('VAT_POSTGRES_USER')} -d {os.getenv('VAT_POSTGRES_DB')} -f '{file_path}'"
                 print(f"running {command}")
                 output_file = f"error.txt"
                 f = open(str(output_file), "w")
@@ -85,10 +87,3 @@ if __name__ == "__main__":
             except Exception as e:
                 print('Exception happened during dump %s' %(e))
                 quit()
-            count += 1
-            if count > 10:
-                break
-
-
-            
-
