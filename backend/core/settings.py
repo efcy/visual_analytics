@@ -24,7 +24,7 @@ INTERNAL_IPS = [
 ]
 #list of allowed hosts that can perform requests to django
 #matches with host headers in requests
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'api.berlin-united.com', 'vat.berlin-united.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'vat.berlin-united.com']
 
 #configures default authentication and permissions
 #users need to authenticate with session or token to use any endpoint
@@ -163,12 +163,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://github.com/adamchainz/django-cors-headers
 CORS_ALLOW_ALL_ORIGINS = False #we shouldn't to this because it makes the cors allowed origins obsolete
 CORS_ALLOWS_CREDENTIALS = False
-CORS_ALLOWED_ORIGINS = ['https://api.berlin-united.com','https://vat.berlin-united.com', 'http://localhost:5173', 'http://localhost:8000']
+CORS_ALLOWED_ORIGINS = ['https://vat.berlin-united.com', 'http://localhost:8000']
 
 #makes csrf cookie valid on all subdomains
 #CSRF_COOKIE_DOMAIN = ".berlin-united.com"
 #specifies all domains where django accepts POST requests from with CSRF tokens
-CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'https://vat.berlin-united.com', 'http://localhost:8000', 'http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['https://vat.berlin-united.com', 'http://localhost:8000']
 
 #requiered if there is a loadbalancer in front of django that forwards requests over http
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -177,7 +177,7 @@ CSRF_TRUSTED_ORIGINS = ['https://api.berlin-united.com', 'https://vat.berlin-uni
 SPECTACULAR_SETTINGS = {
     'AUTHENTICATION_WHITELIST': ['rest_framework.authentication.TokenAuthentication'],
     'TAGS' : [{'name':"Events"},{'name':'api'},{'name':'accounts'}],
-    'SERVERS': [{'url': 'https://api.berlin-united.com'}]
+    'SERVERS': [{'url': 'https://vat.berlin-united.com'}]
 }
 
 #registers our custom user model

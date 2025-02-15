@@ -6,7 +6,7 @@ The logcrawler scripts use the [VAAPI pip package](https://pypi.org/project/vaap
 You will need these environment variables in order to run the scripts:
 ```bash
 VAT_LOG_ROOT=<"path to folder containing all the events">
-VAT_API_URL=<"http://127.0.0.1:8000/ or https://api.berlin-united.com/">
+VAT_API_URL=<"http://127.0.0.1:8000/ or https://vat.berlin-united.com/">
 VAT_API_TOKEN=<token you can get from the website>
 ```
 

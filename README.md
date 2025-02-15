@@ -9,7 +9,7 @@ We are heavily inspired and built upon the previous work of
 This tool provides a database model and an API for our recorded data along with a Frontend to view and annotate the data. We provide a synchronized view of all logs and external video recordings.
 This tool is intended to be used within the Berlin United code ecosystem. For parsing log files we use the [naoth pip package](https://pypi.org/project/naoth/) and for inserting the parsed data in the db we use https://pypi.org/project/vaapi/
 
-A live version can be accessed at https://api.berlin-united.com/
+A live version can be accessed at https://vat.berlin-united.com/
 
 ## Setup locally
 Dev environment setup is described [here](docs/dev-setup.md).

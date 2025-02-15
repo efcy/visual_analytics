@@ -23,7 +23,7 @@ class XabslSymbolClientComplete:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -61,10 +61,10 @@ class XabslSymbolClientComplete:
 
         Examples
         --------
-        from vaapi.client import Vaapi
+        from vaapi.client import Vaapihttps://vat.berlin-united.com/
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.delete(
@@ -142,7 +142,7 @@ class XabslSymbolClientComplete:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.update(
@@ -218,7 +218,7 @@ class XabslSymbolClientComplete:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         client.annotations.list(
@@ -249,7 +249,7 @@ class XabslSymbolClientComplete:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """
@@ -283,7 +283,7 @@ class XabslSymbolClientComplete:
         from vaapi.client import Vaapi
 
         client = Vaapi(
-            base_url='https://api.berlin-united.com/',  
+            base_url='https://vat.berlin-united.com/',  
             api_key="YOUR_API_KEY",
         )
         """

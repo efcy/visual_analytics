@@ -1,15 +1,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: certificate-api
+  name: certificate-vat
   namespace: {{ .Values.namespace }}
 spec:
-  secretName: tls-cert-api
+  secretName: tls-cert-vat
   duration: 2160h # 90d
   renewBefore: 360h # 15d
-  commonName: api.berlin-united.com
+  commonName: vat.berlin-united.com
   dnsNames:
-  - api.berlin-united.com
+  - vat.berlin-united.com
   issuerRef:
-    name: letsencrypt-prod-api
+    name: letsencrypt-prod-vat
     kind: Issuer

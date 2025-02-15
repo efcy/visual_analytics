@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-prod-api
+  name: letsencrypt-prod-vat
   namespace: {{ .Values.namespace }}
 spec:
   acme:
@@ -14,7 +14,7 @@ spec:
     solvers:
     - selector:
         dnsNames:
-        - 'api.berlin-united.com'
+        - 'vat.berlin-united.com'
       dns01:
         cloudflare:
           apiTokenSecretRef:
