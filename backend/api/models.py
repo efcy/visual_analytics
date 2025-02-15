@@ -42,6 +42,7 @@ class VideoRecording(models.Model):
     # also sometimes we do have a combined youtube video
     game_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='recordings')
     urls = models.JSONField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
     # TODO add calculated camera matrix here
 
 
