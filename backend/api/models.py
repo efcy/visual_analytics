@@ -118,6 +118,16 @@ class LogStatus(models.Model):
         verbose_name_plural = "Log status"
 
 
+class CognitionFrame(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognitionframe')
+    frame_number = models.IntegerField(blank=True, null=True)
+
+
+class MotionFrame(models.Model):
+    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motionframe')
+    frame_number = models.IntegerField(blank=True, null=True)
+
+
 class Image(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
