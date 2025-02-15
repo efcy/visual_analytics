@@ -1,39 +1,38 @@
 # Backups
+Database backups can be multiple hundreds of gigabyte. Tools like `python manage.py dbbackup` create one large backup file. This is not useful in our case. We wrote a custom python script that exports an sql file per log_id for every model that is dependent on the log model. That way each sql output file has manageable size.
 
 ## Create Backups
-
-Locally you can create backups of the database that django is using by running
+To export all data you can run:
 ```bash
-python manage.py dbbackup
+python utils/backup.py -a -g -o <my_output_path>
 ```
-The location is controlled by the env var `VAT_BACKUP_FOLDER`. 
-It is advised to exclude the user tables from the backup. You can do it like this:
-
+If you want to run this locally or directly on the server and not inside a k8s pod you have to first setup port forwarding to the postgres port inside the postgres pod.
 ```bash
-python manage.py dbbackup -x user_vatuser -x user_organization -x authtoken_token
+kubectl port-forward postgres-postgresql-0 -n postgres 1234:5432
 ```
 
-More infoprmation can be found at: https://django-dbbackup.readthedocs.io/en/master/commands.html#dbrestore
+The backup will only backup VAT data and now user related data.
 
-### K8s
-In k8s you have to run this command inside the backend pod
-```bash
-k exec -it vat-backend-5b977bbf57-zqfqj -c backend -- python manage.py dbbackup
-```
-
-The backup file will be saved on the server where k8s is running on. You can download it from there.
 
 ## Restore a backup
-You can use backups from the live version and use it in your local version. This only works if the postgres database is set up in the same way as the live version.
+Make sure you have a database where no data exists that is the same as the data you want to restore. Also the environment variables need to be set:
+- VAT_POSTGRES_HOST
+- VAT_POSTGRES_PORT
+- VAT_POSTGRES_USER
+- VAT_POSTGRES_DB
 
-
+If you set up the project locally you probably have them already set to the values needed for your local environment. Make sure you have the same database schema as the remote. If you are behind just run:
 ```bash
-python manage.py dbrestore -I <backup file>
+python manage.py makemigrations
+python mange.py migrate
 ```
 
-### Troubleshooting
-see this issue if you have errors while restoring the backup that have to do with constraints
-https://github.com/jazzband/django-dbbackup/issues/478
-pyt
+To restore data from the backup run
+```bash
+python restore.py -i <path to folder containing the sql files>
+```
+
+If you deleted the whole database before restoring you need to setup user and organisations manually again. See dev setup for more information.
+
 ## Backup Automation
 Not implemented yet

@@ -63,8 +63,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework.authtoken',
     'user',
-    'dbbackup',  # django-dbbackup
-    #'django.contrib.gis',
 ]
 #registers middleware components
 #these components process requests before reaching or leaving a view
@@ -102,7 +100,6 @@ TEMPLATES = [
 #specifies location of wsgi application
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 # loads env variables for database connection
@@ -117,11 +114,6 @@ DATABASES = {
         }   
 }
 
-# Database Backup
-# https://django-dbbackup.readthedocs.io/en/master/installation.html
-DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DBBACKUP_STORAGE_OPTIONS = {'location': os.getenv('VAT_BACKUP_FOLDER')}
-DBBACKUP_CONNECTORS = {"default": {"SINGLE_TRANSACTION": False}}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
