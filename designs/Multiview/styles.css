@@ -1,0 +1,88 @@
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Full height layout */
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav main_container";
+  grid-template-rows: 50px auto;
+  grid-template-columns: 150px auto;
+}
+
+/* Header styling */
+.header {
+  grid-area: header;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.nav {
+  grid-area: nav;
+  background: #f0f0f0;
+}
+
+.container{
+  grid-area: main_container;
+  height: 100%;
+  width: 100%;
+}
+
+/* Main content styling */
+.main-content {
+  height: 90%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Image grid layout */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+    justify-content: center;
+}
+
+/* Image container styling */
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image styling */
+.image-container img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Ensure images scale properly */
+}
+
+/* Caption styling */
+.caption {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}
+
+.timeline {
+  background-color: aqua;
+  border: 1px solid black;
+  margin: 5px;
+}
