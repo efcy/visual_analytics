@@ -18,8 +18,6 @@ class Event(models.Model):
         return self.name
 
 class Game(models.Model):
-    #related names attribute is to get all objects related to a 'parent' object. 
-    # for example Event.games.all() returns all games for a specified event
     event_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='games')
     team1 = models.CharField(max_length=100,blank=True, null=True)
     team2 = models.CharField(max_length=100,blank=True, null=True)
@@ -37,6 +35,15 @@ class Game(models.Model):
 
     def __str__(self):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
+
+
+class VideoRecording(models.Model):
+    # we model urls as json field because we can have multiple recordings and sometimes recordings are split up
+    # also sometimes we do have a combined youtube video
+    game_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='recordings')
+    urls = models.JSONField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    # TODO add calculated camera matrix here
 
 
 class Experiment(models.Model):
