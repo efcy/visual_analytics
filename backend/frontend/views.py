@@ -3,6 +3,8 @@ from django.views.generic import TemplateView, DetailView, View
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 import json
 from .forms import SignupForm
 from api.models import Event, Game, Log, Image, Annotation, FrameFilter
@@ -20,7 +22,8 @@ def LoginView(request):
 
         if user is not None:
             login(request, user)
-            return redirect("events")
+            next_url = request.GET.get("next", "events")
+            return redirect(next_url)
         else:
             messages.info(request, "Username or password is incorrect")
 
@@ -38,11 +41,18 @@ def SignupView(request):
             form.save()
             user = form.cleaned_data.get("username")
             messages.success(request, "Account was created for " + user)
-            return redirect("login")
+            return redirect("mylogin")
     
     context = {'form':form}
     return render(request, 'frontend/signup.html', context)
 
+def LogoutView(request):
+    logout(request)
+    return redirect('mylogin')
+
+
+
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
 class EventListView(TemplateView):
     template_name = 'frontend/events.html'
 
@@ -52,6 +62,7 @@ class EventListView(TemplateView):
         return context
 
 
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
 class GameListView(DetailView):
     # could also be called EventDetailView
     model = Event
@@ -63,6 +74,8 @@ class GameListView(DetailView):
         
         return context
 
+
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
 class LogListView(DetailView):
     # could also be called GameDetailView
     model = Game
@@ -76,12 +89,12 @@ class LogListView(DetailView):
         return context
 
 
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
 class ImageListView(DetailView):
     # could also be called LogDetailView
     # TODO: maybe I should query FrameInfo from cognition representation table here sort that use that as extra parameter
     model = Log
     template_name = 'frontend/image.html'
-
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -102,6 +115,7 @@ class ImageListView(DetailView):
         return super().get(request, *args, **kwargs)  # Handle cases where no images exist
 
 
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
 class ImageDetailView(View):
     def get(self, request, **kwargs):
         context = {}
