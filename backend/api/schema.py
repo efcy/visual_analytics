@@ -1,7 +1,7 @@
 import graphene
-from graphene_django import DjangoObjectType
-import .graphql.types
-from .models import Event,Game,Log
+
+from .graphql.types import *
+from .models import Event,Game,Log, CognitionRepresentation, LogStatus
 from django.core.exceptions import FieldDoesNotExist
 from graphene import InputObjectType, String, Int, Float, Boolean
 from django.db.models import Q
@@ -67,21 +67,30 @@ class Query(graphene.ObjectType):
     events = graphene.List(EventType, filters=graphene.List(GenericFilterInput))
     games = graphene.List(GameType, filters=graphene.List(GenericFilterInput))
     logs = graphene.List(LogType, filters=graphene.List(GenericFilterInput))
+    logstatus = graphene.List(LogStatusType, filters=graphene.List(GenericFilterInput))
+    cogrepr = graphene.List(CognitionRepresentationType, filters=graphene.List(GenericFilterInput))
 
     def resolve_events(self, info, filters=None):
         queryset = Event.objects.all()    
-        return apply_generic_filters(Event,queryset, filters)
+        return apply_generic_filters(Event, queryset, filters)
 
     def resolve_games(self, info, filters=None):
         queryset = Game.objects.all()
-        return apply_generic_filters(Game,queryset, filters)
+        return apply_generic_filters(Game, queryset, filters)
 
     def resolve_logs(self, info, filters=None):
         queryset = Log.objects.all()
-        return apply_generic_filters(Log,queryset, filters)
+        return apply_generic_filters(Log, queryset, filters)
     
+    def resolve_logstatus(self, info, filters=None):
+        queryset = LogStatus.objects.all()
+        return apply_generic_filters(LogStatus, queryset, filters)
+
+    def resolve_cogrepr(self, info, filters=None):
+        queryset = CognitionRepresentation.objects.all()
+        return apply_generic_filters(CognitionRepresentation, queryset, filters)
 
 class Mutation(graphene.ObjectType):
     bla = CreateEvent.Field()
 
-schema = graphene.Schema(query=Query,mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=Mutation)
