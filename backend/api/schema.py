@@ -1,7 +1,7 @@
 import graphene
 
 from .graphql.types import *
-from .models import Event,Game,Log, CognitionRepresentation, LogStatus
+from .models import Event,Game,Log, CognitionRepresentation, LogStatus, Image
 from django.core.exceptions import FieldDoesNotExist
 from graphene import InputObjectType, String, Int, Float, Boolean
 from django.db.models import Q
@@ -69,6 +69,7 @@ class Query(graphene.ObjectType):
     logs = graphene.List(LogType, filters=graphene.List(GenericFilterInput))
     logstatus = graphene.List(LogStatusType, filters=graphene.List(GenericFilterInput))
     cogrepr = graphene.List(CognitionRepresentationType, filters=graphene.List(GenericFilterInput))
+    images = graphene.List(ImageType, filters=graphene.List(GenericFilterInput))
 
     def resolve_events(self, info, filters=None):
         queryset = Event.objects.all()    
@@ -85,6 +86,10 @@ class Query(graphene.ObjectType):
     def resolve_logstatus(self, info, filters=None):
         queryset = LogStatus.objects.all()
         return apply_generic_filters(LogStatus, queryset, filters)
+    
+    def resolve_images(self, info, filters=None):
+        queryset = Image.objects.all()
+        return apply_generic_filters(Image, queryset, filters)
 
     def resolve_cogrepr(self, info, filters=None):
         queryset = CognitionRepresentation.objects.all()

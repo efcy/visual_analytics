@@ -23,5 +23,15 @@ cogrepr(filters:[{field:"log_id", value:"1"}, {field: "representation_name", val
 }
 """
 
+query = """
+query{
+images(filters:[{field:"log_id", value:"1"}, {field: "blurredness_value", value:null}]){
+    frameNumber
+    imageUrl
+    blurrednessValue
+  }
+}
+"""
+
 b = client.execute(query)
 print(b)
