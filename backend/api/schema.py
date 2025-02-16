@@ -75,7 +75,10 @@ class Query(graphene.ObjectType):
     logs = graphene.List(LogType, filters=graphene.List(GenericFilterInput))
 
     def resolve_events(self, info, filters=None):
-        queryset = Event.objects.all()
+        user = info.context.user
+        if not user.is_authenticated:
+            raise graphene.PermissionDenied("Authentication required")
+        queryset = Event.objects.all()    
         return apply_generic_filters(Event,queryset, filters)
 
     def resolve_games(self, info, filters=None):
