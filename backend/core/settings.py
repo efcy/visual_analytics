@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework.authtoken',
     'user',
+    'graphene_django',
 ]
 #registers middleware components
 #these components process requests before reaching or leaving a view
