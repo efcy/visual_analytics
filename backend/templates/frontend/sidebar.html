@@ -1,35 +1,13 @@
+<!-- icons taken from https://fonts.google.com/icons -->
+{% load static %}
 <nav class="nav">
-  <ul class="nav_list">
-    <li>
-      <a href="{% url 'events' %} "> Home </a>
-    </li>
-    <li>
-      <label for="panel_toggle" class="toggle_button">Data View</label>
-    </li>
-    <li>
-      <button id="anchor_1" popovertarget="popover_1">Class</button>
-    </li>
-    <li>
-      <a href=""> Logout </a>
-    </li>
-  </ul>
-  <div popover id="popover_1" class="pop1">
-    <p>Select one Class for Annotation</p>
-    <label>
-      <input type="radio" name="number-list" value="1" />
-      <span>Ball</span>
-    </label>
-    <label>
-      <input type="radio" name="number-list" value="2" />
-      <span>Nao</span>
-    </label>
-    <label>
-      <input type="radio" name="number-list" value="3" />
-      <span>Penalty Mark</span>
-    </label>
-    <label>
-      <input type="radio" name="number-list" value="4" />
-      <span>Referee</span>
-    </label>
-  </div>
+  <a href="{% url 'events' %}">
+    <img src={% static 'images/home.svg' %} alt="Home"/>
+  </a>
+  <a href="{% url 'events' %}">
+    <img src={% static 'images/settings.svg' %} alt="Home"/>
+  </a>
+  <a href="{% url 'logout' %}">
+    <img src={% static 'images/logout.svg' %} alt="Logout"/>
+  </a>
 </nav>
