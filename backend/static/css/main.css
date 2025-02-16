@@ -12,8 +12,8 @@
   grid-template-areas:
     "header header"
     "nav main_container";
-  grid-template-rows: 50px auto;
-  grid-template-columns: 150px auto;
+  grid-template-rows: 40px auto;
+  grid-template-columns: 80px auto;
   background: radial-gradient(
     circle at 50% 50%,
     rgb(159, 232, 253) 20%,
