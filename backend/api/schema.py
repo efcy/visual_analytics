@@ -5,6 +5,8 @@ from .models import Event,Game,Log
 from django.core.exceptions import FieldDoesNotExist
 from graphene import InputObjectType, String, Int, Float, Boolean
 from django.db.models import Q
+from .serializers import EventSerializer
+from graphene_django.rest_framework.mutation import SerializerMutation
 
 def apply_generic_filters(model, queryset, filters):
     if not filters:
@@ -40,10 +42,10 @@ class GenericFilterInput(InputObjectType):
     value = String()
 
 class EventType(DjangoObjectType):
-    
     class Meta:
         model = Event
         fields = "__all__"
+
 
 class GameType(DjangoObjectType):
     
@@ -57,16 +59,25 @@ class LogType(DjangoObjectType):
         model = Log
         fields = "__all__"
 
-class CreateEvent(graphene.Mutation):
-    class Arguments:
-        name = graphene.String(required=True)
-    
-    event = graphene.Field(EventType)
 
-    def mutate(self, info,name):
-        event = Event(name=name)
-        event.save()
-        return CreateEvent(event=event)
+class CreateEvent(SerializerMutation):
+    class Meta:
+        serializer_class = EventSerializer
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        # Extract the unique field (e.g., 'name') from the input
+        name = input.get('name')
+
+        # Use get_or_create to fetch or create the event
+        event, created = Event.objects.get_or_create(
+            name=name,
+            defaults=input
+        )
+
+        # Return the event instance
+        return cls(event=event)
+
 
 class Query(graphene.ObjectType):
     #extra argument for each Type is a list of Filter Type so we can filter for multiple fields
@@ -88,6 +99,6 @@ class Query(graphene.ObjectType):
     
 
 class Mutation(graphene.ObjectType):
-    create_event = CreateEvent.Field()
+    bla = CreateEvent.Field()
 
 schema = graphene.Schema(query=Query,mutation=Mutation)
