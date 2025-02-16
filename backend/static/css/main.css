@@ -32,9 +32,14 @@
 
 .header {
   grid-area: header;
-  background: #333;
-  color: white;
-  padding: 1rem;
+  color: black;
+  padding-left: 16px;
+  align-items: center;
+
+  display: flex;
+}
+.header-logo{
+  height: 80%;
 }
 
 .app-content {
