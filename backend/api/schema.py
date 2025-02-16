@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-
+import .graphql.types
 from .models import Event,Game,Log
 from django.core.exceptions import FieldDoesNotExist
 from graphene import InputObjectType, String, Int, Float, Boolean
@@ -41,23 +41,6 @@ class GenericFilterInput(InputObjectType):
     field = String(required=True)
     value = String()
 
-class EventType(DjangoObjectType):
-    class Meta:
-        model = Event
-        fields = "__all__"
-
-
-class GameType(DjangoObjectType):
-    
-    class Meta:
-        model = Game
-        fields = "__all__"
-
-class LogType(DjangoObjectType):
-    
-    class Meta:
-        model = Log
-        fields = "__all__"
 
 
 class CreateEvent(SerializerMutation):
@@ -76,7 +59,7 @@ class CreateEvent(SerializerMutation):
         )
 
         # Return the event instance
-        return cls(event=event)
+        return event
 
 
 class Query(graphene.ObjectType):

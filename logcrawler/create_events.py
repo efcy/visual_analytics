@@ -19,12 +19,13 @@ create_query = """
 mutation CreateEvent($name: String!) {
   bla(input: {name: $name})
     {
-      name
-  }
+        id
+        name
+    }
 }
 """
 
-a = client.execute(create_query, variables={"name": "aaaaaaaaaa"})
+a = client.execute(create_query, variables={"name": "2024-07-15_RC24"})
 print(a)
 b = client.execute(query)
 print(b)

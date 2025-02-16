@@ -16,6 +16,7 @@ class VATClient:
         self.api_key = api_key
 
     def execute(self, query, variables=None):
+        # TODO check if we can return data in better way
         default_headers = {"Accept": "application/json", "Content-Type": "application/json", "Authorization": f"Token {self.api_key}"}
         data = {"query": query, "variables": variables}
         req = requests.post(f"{self.base_url}graphql/", data=json.dumps(data).encode("utf-8"), headers=default_headers)
