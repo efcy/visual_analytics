@@ -5,24 +5,14 @@ import os
 if __name__ == "__main__":
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),  
-        api_key=os.environ.get("VAT_API_TOKEN"),
+        api_key="222ca62d70706ed2ff65afe21ca3475ff23f3b05",
     )
     """
     Get FrameInfo from Cognition Process
     """
-    response = client.cognition_repr.list(
-        log_id=168,
-        representation_name="FrameInfo",
+    response = client.games.list(
+        event_id= 1,
     )
-    print(response[0])
-
-    """
-    Get FrameInfo from Motion Process
-    """
-    response = client.motion_repr.list(
-        log_id=168,
-        representation_name="FrameInfo",
-    )
-    print(response[0])
+    print(response)
 
     
