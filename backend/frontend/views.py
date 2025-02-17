@@ -229,28 +229,39 @@ class MultiView(View):
         context = {}
         game_id = self.kwargs.get('pk')
         context["game_id"]= game_id
-        print(game_id)
+
         current_frame = self.kwargs.get('frame')
         # we need to handle the generic foreign key here, we only want logs of type game
         logs = Log.objects.filter(object_id=game_id, content_type=ContentType.objects.get_for_model(Game)).order_by('id')
         top_images = list()
         frame_numbers = list()
         for idx, log in enumerate(logs):
-            print("log.id", log.id)
+            # TODO handle the logic that no image is present for the given frames
+            """
+            get all the frames for all logs
+            slice them so they start at the same time
+            have a default image in case no image is present for the frame
+
+            potentially remove frames where no robot has any images
+            potentially show the time
+            """
+            frame_number_list = Image.objects.filter(log_id=log.id, camera="TOP").order_by('frame_number').values_list('frame_number', flat=True).distinct()
             first_standby_frame = self.get_first_standby_frame(log.id)
-            #print(first_standby_frame)
-            new_frame_number = first_standby_frame + current_frame
-            #print(first_standby_frame, current_frame, new_frame_number)
-            a = Image.objects.filter(log_id=log.id, camera="TOP", frame_number=new_frame_number).first()
-            frame_number_list = Image.objects.filter(log_id=log.id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
-            bla = len(frame_number_list)
             first_frame_index = list(frame_number_list).index(first_standby_frame)
             frame_number_list = list(frame_number_list)[first_frame_index:]
             frame_numbers.append(frame_number_list)
+            a = Image.objects.filter(log_id=log.id, camera="TOP", frame_number=frame_number_list[current_frame]).first()
+            
+            print(frame_number_list)
+            
+            a.image_url = "https://logs.berlin-united.com/" + a.image_url
             top_images.append(a)
-            print(len(frame_number_list), first_frame_index, bla)
+            print(a)
 
 
-        # FIXME dont use actual frame numbers here but a range of numbers 
-        context['frame_numbers'] = frame_numbers[0]
+        # FIXME add prev and next frame here
+        context['frame_numbers'] = range(len(frame_numbers[0]))
+        context['current_frame'] = current_frame
+        context['top_images'] = top_images
+        context['next_frame'] = current_frame + 1
         return render(request, 'frontend/multiview.html', context)

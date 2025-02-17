@@ -14,38 +14,16 @@
 <main class="multi_view_container">
     <div class="grid_container">
         <div class="multi_view_image_grid">
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 1">
-                <p class="caption">Caption 1</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 2">
-                <p class="caption">Caption 2</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 3">
-                <p class="caption">Caption 3</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 4">
-                <p class="caption">Caption 4</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 5">
-                <p class="caption">Caption 5</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 6">
-                <p class="caption">Caption 6</p>
-            </div>
-            <div class="multi_view_image_container">
-                <img src="https://placehold.co/640x480" alt="Image 7">
-                <p class="caption">Caption 7</p>
-            </div>
+            {% for image in top_images %}
+                <div class="multi_view_image_container">
+                    <img src="{{ image.image_url }}" alt="Image 1">
+                    <p class="caption">Caption 1</p>
+                </div>
+            {% endfor %}
         </div>
     </div>
     <div class="timeline-container">
-        <p>blablabla: {{bottom_image.image_url}}</p>
+        <p>blablabla: aaaa</p>
         <a href="{% if prev_frame %}{% url 'multiview_detail' game_id prev_frame %}{% else %}{% endif %}" class="prev-button">Previous</a>
         <a href="{% if next_frame %}{% url 'multiview_detail' game_id next_frame %}{% else %}{% endif %}" class="next-button">Next</a>
     <button id="save_button" type="submit">Save Annotation</button>
@@ -73,5 +51,14 @@
         scaleImages();
     });
 
+</script>
+<script type="speculationrules">
+    {
+      "prerender": [
+        {
+          "urls": ["{% url 'multiview_detail' game_id next_frame %}"]
+        }
+      ]
+    }
 </script>
 {% endblock %}
