@@ -4,6 +4,44 @@ import subprocess
 import os
 import re
 
+class ImportLog:
+    def __init__(self, log_file="import_log.txt"):
+        """
+        Initializes the ImportLog class.
+        :param log_file: Path to the log file.
+        """
+        self.log_file = log_file
+        
+        # Ensure the log file exists
+        if not os.path.exists(self.log_file):
+            with open(self.log_file, "w") as f:
+                f.write("# Import Log - Processed Files\n")
+
+    def log(self, filename: str):
+        """
+        Logs a new file entry with a timestamp.
+        :param filename: Name of the processed file.
+        """
+        if not self.is_logged(filename):
+            with open(self.log_file, "a") as f:
+                f.write(f"{filename}\n")
+
+    def is_logged(self, filename: str) -> bool:
+        """
+        Checks if a file has already been logged.
+        :param filename: Name of the file to check.
+        :return: True if the file is logged, False otherwise.
+        """
+        with open(self.log_file, "r") as f:
+            return any(filename in line for line in f)
+        
+    def delete_log(self):
+        """
+        Clears the log file.
+        """
+        Path(self.log_file).unlink()
+
+
 # Custom key function for natural sorting
 def natural_sort_key(s):
     # Use a regular expression to split the string into parts
@@ -59,17 +97,18 @@ if __name__ == "__main__":
     parser.add_argument("--ids",  nargs="+", required=False, type=int, help="ids that should be restored")
     
     args = parser.parse_args()
-    
-    import_global_tables()
+    import_log = ImportLog()
+
+    #import_global_tables()
 
     sql_table = [
         "api_behavioroption",
         "api_behavioroptionstate",
         "api_behaviorframeoption",
         "api_xabslsymbolsparse",
-        "api_cognitionrepresentation",
+        "api_image",
         "api_motionrepresentation",
-        "api_image"
+        "api_cognitionrepresentation",
     ]
     for table in sql_table:
         if args.table:
@@ -89,7 +128,12 @@ if __name__ == "__main__":
                 # Check if the number is in the list of numbers
                 if number not in args.ids:
                     continue
-                
+
+            # check if we already done the insert for this sql file
+            if import_log.is_logged(str(file_path)):
+                print(f"skipping {file_path}")
+                continue
+            # TODO else check if data is there for the table and id
             print(f"importing table for log id {number}")
             try:
                 command = f"psql -h {os.getenv('VAT_POSTGRES_HOST')} -p {os.getenv('VAT_POSTGRES_PORT')} -U {os.getenv('VAT_POSTGRES_USER')} -d {os.getenv('VAT_POSTGRES_DB')} -f '{file_path}'"
@@ -104,6 +148,10 @@ if __name__ == "__main__":
                 if return_code != 0:
                     print(f"Command failed with return code {return_code}. Aborting script.")
                     quit()
+                else:
+                    import_log.log(str(file_path))
             except Exception as e:
                 print('Exception happened during dump %s' %(e))
                 quit()
+
+    import_log.delete_log()
