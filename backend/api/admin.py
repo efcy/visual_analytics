@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django import forms
 from .models import Event, Game, Log, Image, MotionRepresentation, CognitionRepresentation, Annotation, \
-BehaviorOption, BehaviorOptionState, BehaviorFrameOption, LogStatus, XabslSymbolSparse, XabslSymbolComplete, FrameFilter, Experiment
+BehaviorOption, BehaviorOptionState, BehaviorFrameOption, LogStatus, XabslSymbolSparse, XabslSymbolComplete, FrameFilter, Experiment, CognitionFrame, \
+    MotionFrame
 
 class AnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -170,3 +171,5 @@ admin.site.register(LogStatus, LogStatusAdmin)
 admin.site.register(XabslSymbolComplete, XabslSymbolCompleteAdmin)
 admin.site.register(XabslSymbolSparse)
 admin.site.register(FrameFilter, FrameFilterAdmin)
+admin.site.register(CognitionFrame)
+admin.site.register(MotionFrame)

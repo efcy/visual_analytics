@@ -135,3 +135,13 @@ class FrameFilterSerializer(serializers.ModelSerializer):
             }
         )
         return instance
+    
+class CognitionFrameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CognitionFrame
+        fields = '__all__'
+
+class MotionFrameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MotionFrame
+        fields = '__all__'
