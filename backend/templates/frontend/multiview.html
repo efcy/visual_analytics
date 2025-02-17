@@ -1,0 +1,64 @@
+{% extends "frontend/base.html" %} 
+
+{% block header %}
+{% include "frontend/header.html" %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "frontend/sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% csrf_token %}
+<main class="multi_view_container">
+    <div class="grid_container">
+        <div class="multi_view_image_grid">
+            {% for image in top_images %}
+                <div class="multi_view_image_container">
+                    <img src="{{ image.image_url }}" alt="Image 1">
+                    <p class="caption">Caption 1</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="timeline-container">
+        <p>blablabla: aaaa</p>
+        <a href="{% if prev_frame %}{% url 'multiview_detail' game_id prev_frame %}{% else %}{% endif %}" class="prev-button">Previous</a>
+        <a href="{% if next_frame %}{% url 'multiview_detail' game_id next_frame %}{% else %}{% endif %}" class="next-button">Next</a>
+    <button id="save_button" type="submit">Save Annotation</button>
+    <div class="test">
+        <div class="timeline">
+            {% for frame in frame_numbers %}
+                <a href="{% url 'multiview_detail' game_id frame %}" class="timeline-box {% if frame == current_frame %}timeline-active{% endif %}"></a>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+</main>
+<script src="{% static 'js/helper.js' %}"></script>
+<script src="{% static 'js/my_konva.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        scrollTimeline();
+        arrow_navigation();
+        const resizeObserver = new ResizeObserver(scaleImages);
+        const mainContent = document.querySelector('.grid_container');
+        resizeObserver.observe(mainContent);
+
+        scaleImages();
+    });
+
+</script>
+<script type="speculationrules">
+    {
+      "prerender": [
+        {
+          "urls": ["{% url 'multiview_detail' game_id next_frame %}"]
+        }
+      ]
+    }
+</script>
+{% endblock %}

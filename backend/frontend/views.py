@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation, FrameFilter
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter, BehaviorFrameOption
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -205,3 +205,63 @@ class ImageDetailView(View):
             return JsonResponse({"message": "Canvas data received and processed."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
+class MultiView(View):
+    def get_first_standby_frame(self, log_id):
+        """
+        response = client.behavior_frame_option.filter(
+            log_id=168,
+            option_name="decide_game_state",
+            state_name="standby",
+        )
+        print(response)
+        """
+        behavior_data_combined =  BehaviorFrameOption.objects.select_related(
+                'options_id',         # Joins BehaviorOption
+                'active_state',       # Joins BehaviorOptionState
+                'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
+            )
+        behavior_frame_options = behavior_data_combined.filter(log_id=log_id, options_id__option_name="decide_game_state", active_state__name="standby").order_by('frame').first()
+        return behavior_frame_options.frame
+
+    def get(self, request, **kwargs):
+        context = {}
+        game_id = self.kwargs.get('pk')
+        context["game_id"]= game_id
+
+        current_frame = self.kwargs.get('frame')
+        # we need to handle the generic foreign key here, we only want logs of type game
+        logs = Log.objects.filter(object_id=game_id, content_type=ContentType.objects.get_for_model(Game)).order_by('id')
+        top_images = list()
+        frame_numbers = list()
+        for idx, log in enumerate(logs):
+            # TODO handle the logic that no image is present for the given frames
+            """
+            get all the frames for all logs
+            slice them so they start at the same time
+            have a default image in case no image is present for the frame
+
+            potentially remove frames where no robot has any images
+            potentially show the time
+            """
+            frame_number_list = Image.objects.filter(log_id=log.id, camera="TOP").order_by('frame_number').values_list('frame_number', flat=True).distinct()
+            first_standby_frame = self.get_first_standby_frame(log.id)
+            first_frame_index = list(frame_number_list).index(first_standby_frame)
+            frame_number_list = list(frame_number_list)[first_frame_index:]
+            frame_numbers.append(frame_number_list)
+            a = Image.objects.filter(log_id=log.id, camera="TOP", frame_number=frame_number_list[current_frame]).first()
+            
+            print(frame_number_list)
+            
+            a.image_url = "https://logs.berlin-united.com/" + a.image_url
+            top_images.append(a)
+            print(a)
+
+
+        # FIXME add prev and next frame here
+        context['frame_numbers'] = range(len(frame_numbers[0]))
+        context['current_frame'] = current_frame
+        context['top_images'] = top_images
+        context['next_frame'] = current_frame + 1
+        return render(request, 'frontend/multiview.html', context)

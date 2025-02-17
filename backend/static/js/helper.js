@@ -186,3 +186,33 @@ const saveFunction = () => {
   }
   console.log("Save function triggered!");
 }
+
+function scaleImages() {
+  //FIXME make this more generic or rename this so its clear its only for a specific view
+  const mainContent = document.querySelector('.grid_container');
+  const images = document.querySelectorAll('.multi_view_image_container img');
+
+  const mainContentWidth = mainContent.clientWidth;
+  const mainContentHeight = mainContent.clientHeight;
+  console.log(mainContentWidth, mainContentHeight)
+  // Constraints
+  const maxImageHeight = mainContentHeight / 2 - 20 -40 ; // Half the height of main-content - 2 xpadding - 2 space for caption
+  const maxImageWidth = mainContentWidth / 4 -40 ;// One-fourth the width of main-content
+
+  images.forEach((img) => {
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+
+    // Calculate new dimensions based on constraints
+    let newWidth = maxImageWidth;
+    let newHeight = newWidth / aspectRatio;
+
+    if (newHeight > maxImageHeight) {
+      newHeight = maxImageHeight;
+      newWidth = newHeight * aspectRatio;
+    }
+
+    // Apply new dimensions to the image
+    img.style.width = `${newWidth}px`;
+    img.style.height = `${newHeight}px`;
+  });
+}
