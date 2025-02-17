@@ -72,7 +72,19 @@ def export_full_tables():
         "api_log",
         "api_logstatus",
         "api_xabslsymbolcomplete",
-        "api_annotation"
+        "api_annotation",
+        "auth_group",
+        "auth_group_permissions",
+        "auth_permission",
+        "authtoken_token",
+        "django_admin_log",
+        "django_content_type",
+        "django_migrations",
+        "django_session",
+        "user_vatuser",
+        "user_organization",
+        "user_vatuser_groups",
+        "user_vatuser_user_permissions"
     ]
     for table in tables:
         try:
@@ -144,6 +156,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
     Path(args.output).mkdir(exist_ok=True, parents=True)
     
+    try:
+        command = f"pg_dump -h {DB_HOST} -p {DB_PORT} -U {DB_USER} -d {DB_NAME} --schema-only"
+        print(f"running {command} > schema.sql")
+        output_file = Path(args.output) / "schema.sql"
+        f = open(str(output_file), "w")
+        proc = subprocess.Popen(command, shell=True, env={
+                    'PGPASSWORD': os.environ.get("PGPASSWORD")
+                    },
+                    stdout=f)
+        proc.wait()
+    except Exception as e:
+        print('Exception happened during dump %s' %(e))
+
     if args.global_tables:
         print("will export tables that are the same for all log ids")
         export_full_tables()

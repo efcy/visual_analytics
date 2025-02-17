@@ -12,6 +12,19 @@ def natural_sort_key(s):
 
 def import_global_tables():
     sql_table = [
+        "schema.sql",
+        "auth_group.sql",
+        "django_content_type.sql",
+        "auth_permission.sql",
+        "auth_group_permissions.sql",
+        "user_organization.sql",
+        "user_vatuser.sql",
+        "authtoken_token.sql",
+        "django_admin_log.sql",
+        "django_migrations.sql",
+        "django_session.sql",
+        "user_vatuser_groups.sql",
+        "user_vatuser_user_permissions.sql",
         "api_event.sql",
         "api_game.sql",
         "api_log.sql",
@@ -30,7 +43,10 @@ def import_global_tables():
                         'PGPASSWORD': os.environ.get("PGPASSWORD")
                         },
                         stdout=f)
-            proc.wait()
+            return_code = proc.wait()
+            if return_code != 0:
+                print(f"Command failed with return code {return_code}. Aborting script.")
+                quit()
         except Exception as e:
             print('Exception happened during dump %s' %(e))
             quit()
@@ -45,6 +61,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     import_global_tables()
+
+    quit()
     sql_table = [
         "api_behavioroption",
         "api_behavioroptionstate",
@@ -83,7 +101,10 @@ if __name__ == "__main__":
                             'PGPASSWORD': os.environ.get("PGPASSWORD")
                             },
                             stdout=f)
-                proc.wait()
+                return_code = proc.wait()
+                if return_code != 0:
+                    print(f"Command failed with return code {return_code}. Aborting script.")
+                    quit()
             except Exception as e:
                 print('Exception happened during dump %s' %(e))
                 quit()
