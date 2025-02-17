@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation, FrameFilter
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter, BehaviorFrameOption
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -205,3 +205,52 @@ class ImageDetailView(View):
             return JsonResponse({"message": "Canvas data received and processed."})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
+class MultiView(View):
+    def get_first_standby_frame(self, log_id):
+        """
+        response = client.behavior_frame_option.filter(
+            log_id=168,
+            option_name="decide_game_state",
+            state_name="standby",
+        )
+        print(response)
+        """
+        behavior_data_combined =  BehaviorFrameOption.objects.select_related(
+                'options_id',         # Joins BehaviorOption
+                'active_state',       # Joins BehaviorOptionState
+                'active_state__option_id'  # Joins BehaviorOption via BehaviorOptionState
+            )
+        behavior_frame_options = behavior_data_combined.filter(log_id=log_id, options_id__option_name="decide_game_state", active_state__name="standby").order_by('frame').first()
+        return behavior_frame_options.frame
+
+    def get(self, request, **kwargs):
+        context = {}
+        game_id = self.kwargs.get('pk')
+        context["game_id"]= game_id
+        print(game_id)
+        current_frame = self.kwargs.get('frame')
+        # we need to handle the generic foreign key here, we only want logs of type game
+        logs = Log.objects.filter(object_id=game_id, content_type=ContentType.objects.get_for_model(Game)).order_by('id')
+        top_images = list()
+        frame_numbers = list()
+        for idx, log in enumerate(logs):
+            print("log.id", log.id)
+            first_standby_frame = self.get_first_standby_frame(log.id)
+            #print(first_standby_frame)
+            new_frame_number = first_standby_frame + current_frame
+            #print(first_standby_frame, current_frame, new_frame_number)
+            a = Image.objects.filter(log_id=log.id, camera="TOP", frame_number=new_frame_number).first()
+            frame_number_list = Image.objects.filter(log_id=log.id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+            bla = len(frame_number_list)
+            first_frame_index = list(frame_number_list).index(first_standby_frame)
+            frame_number_list = list(frame_number_list)[first_frame_index:]
+            frame_numbers.append(frame_number_list)
+            top_images.append(a)
+            print(len(frame_number_list), first_frame_index, bla)
+
+
+        # FIXME dont use actual frame numbers here but a range of numbers 
+        context['frame_numbers'] = frame_numbers[0]
+        return render(request, 'frontend/multiview.html', context)

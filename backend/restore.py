@@ -62,7 +62,6 @@ if __name__ == "__main__":
     
     import_global_tables()
 
-    quit()
     sql_table = [
         "api_behavioroption",
         "api_behavioroptionstate",

@@ -33,17 +33,20 @@ class GameAdmin(admin.ModelAdmin):
 
 
 class LogAdmin(admin.ModelAdmin):
-    search_fields = ['game_id__team1__icontains', 'game_id__team2__icontains', "head_number","player_number"]
-    list_display = ["get_game_id", "get_id", "get_start_time", "get_team1", "get_team2", "player_number", "head_number", "is_test"]
-
+    search_fields = ["head_number","player_number"]
+    #list_display = ["get_game_id", "get_id", "get_start_time", "get_team1", "get_team2", "player_number", "head_number", "is_test"]
+    list_display = ["get_game_id", "get_id",  "get_log"]
     def get_game_id(self, obj):
-        return obj.game_id.id
+        return obj.object_id
 
     def get_id(self, obj):
         return obj.id
     
+    def get_log(self, obj):
+        return obj
+    """
     def get_start_time(self, obj):
-        return obj.game_id.start_time
+        return obj.object_id.start_time
     
     def get_team1(self, obj):
         return obj.game_id.team1
@@ -59,7 +62,8 @@ class LogAdmin(admin.ModelAdmin):
     get_start_time.short_description = 'Time'
     get_team1.short_description = 'Team 1'
     get_team2.short_description = 'Team 2'
-
+    """
+    get_id.short_description = 'Log ID'
 class AnnotationAdmin(admin.ModelAdmin):
     raw_id_fields = ('image',)
     list_per_page = 50
@@ -101,6 +105,8 @@ class BehaviorOptionStateAdmin(admin.ModelAdmin):
 class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     list_display = ('get_log_id', 'get_option_id','get_option_name', 'get_active_state', 'frame')
     search_fields = ['options_id__option_name']
+
+
     def get_log_id(self, obj):
         return obj.log_id.id
     
@@ -156,7 +162,7 @@ class FrameFilterAdmin(admin.ModelAdmin):
 admin.site.register(Event)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Experiment)
-admin.site.register(Log)
+admin.site.register(Log, LogAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(CognitionRepresentation, CognitionRepresentationAdmin)
 admin.site.register(MotionRepresentation)
