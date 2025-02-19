@@ -11,7 +11,7 @@ query{
 log_status = """
 query log_status($id: String!) {
   logstatus(filters: [{ field: "log_id", value: $id }]) {
-    id
+    logId {id}
     numJpgTop
     numJpgBottom
     numTop
@@ -70,5 +70,5 @@ if __name__ == "__main__":
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
 
-    data = client.execute(log_status_motion_frames,log_status_var)
+    data = client.execute(existing_logs,log_status_var)
     print(data)
