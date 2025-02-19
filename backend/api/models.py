@@ -58,9 +58,10 @@ class Experiment(models.Model):
 
 
 class Log(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    log_game = models.ForeignKey(Game, null=True, blank=True,
+                                    on_delete=models.CASCADE)
+    log_experiment = models.ForeignKey(Experiment, null=True, blank=True,
+                                     on_delete=models.CASCADE)
 
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
