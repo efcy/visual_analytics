@@ -75,6 +75,14 @@ class Log(models.Model):
 
     def __str__(self):
         return f"{self.log_path}"
+    
+    @property
+    def log_type(self):
+        if self.log_game_id is not None:
+            return self.log_game
+        if self.log_experiment_id is not None:
+            return self.log_experiment
+        raise AssertionError("Neither 'log_game_id' nor 'log_experiment_id' is set")
 
 
 class LogStatus(models.Model):
