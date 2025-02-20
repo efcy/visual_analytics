@@ -640,3 +640,34 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
             deleted_count, _ = self.get_queryset().delete()
             return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
         return super().destroy(request, *args, **kwargs)
+    
+
+class CognitionFrameCount(APIView):
+    def get(self, request):
+        # Get filter parameters from query string
+        log_id = request.query_params.get('log_id')
+
+        # start with all images
+        queryset = models.CognitionFrame.objects.all()
+
+        # apply filters if provided
+        queryset = queryset.filter(log_id=log_id)
+
+        # get the count
+        count = queryset.count()
+        return Response({'count': count}, status=status.HTTP_200_OK)
+    
+class MotionFrameCount(APIView):
+    def get(self, request):
+        # Get filter parameters from query string
+        log_id = request.query_params.get('log_id')
+
+        # start with all images
+        queryset = models.MotionFrame.objects.all()
+
+        # apply filters if provided
+        queryset = queryset.filter(log_id=log_id)
+
+        # get the count
+        count = queryset.count()
+        return Response({'count': count}, status=status.HTTP_200_OK)
