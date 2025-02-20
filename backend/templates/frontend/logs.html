@@ -13,7 +13,7 @@
 {% load static %}
 <div class=projects_section>
     <div class="project_boxes jsGridView">
-        {% for log in logs %}
+        {% for log in game_logs %}
         <div class="event_card">
             <div class="event_header">
                 <a href="{% url 'log_detail' log.id %}">

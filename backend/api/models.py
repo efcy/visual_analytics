@@ -58,10 +58,8 @@ class Experiment(models.Model):
 
 
 class Log(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
+    log_game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
+    log_experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)
@@ -74,6 +72,14 @@ class Log(models.Model):
 
     def __str__(self):
         return f"{self.log_path}"
+    
+    @property
+    def log_type(self):
+        if self.log_game_id is not None:
+            return self.log_game
+        if self.log_experiment_id is not None:
+            return self.log_experiment
+        raise AssertionError("Neither 'log_game_id' nor 'log_experiment_id' is set")
 
 
 class LogStatus(models.Model):

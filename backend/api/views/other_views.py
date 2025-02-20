@@ -297,27 +297,9 @@ class LogViewSet(viewsets.ModelViewSet):
         
         validated_data = serializer.validated_data
 
-        # Determine if the log is associated with a Game or an Experiment
-        game_id = validated_data.pop('game_id', None)
-        experiment_id = validated_data.pop('experiment_id', None)
-
-        if game_id:
-            content_object = models.Game.objects.get(id=game_id)
-        elif experiment_id:
-            content_object = models.Experiment.objects.get(id=experiment_id)
-        else:
-            return Response(
-                {"error": "Either game_id or experiment_id is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Add content_type and object_id to the validated data
-        validated_data['content_type'] = ContentType.objects.get_for_model(content_object)
-        validated_data['object_id'] = content_object.id
-
         instance, created = models.Log.objects.get_or_create(
-            content_type=validated_data['content_type'],
-            object_id=validated_data['object_id'],
+            log_game=validated_data.get('log_game'),
+            log_experiment=validated_data.get('log_experiment'),
             player_number=validated_data.get('player_number'),
             head_number=validated_data.get('head_number'),
             log_path=validated_data.get('log_path'),
