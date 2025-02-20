@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, DetailView, View
-from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import json
 from .forms import SignupForm
-from api.models import Event, Game, Log, Image, Annotation, FrameFilter
+from api.models import Event, Game, Log, Image, Annotation, FrameFilter, Experiment
 from api.serializers import AnnotationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -76,16 +75,28 @@ class GameListView(DetailView):
 
 
 @method_decorator(login_required(login_url='mylogin'), name='dispatch')
-class LogListView(DetailView):
+class GameLogListView(DetailView):
     # could also be called GameDetailView
     model = Game
     template_name = 'frontend/logs.html'
 
     def get_context_data(self, **kwargs):
-        game_content_type = ContentType.objects.get_for_model(Game)
         context = super().get_context_data(**kwargs)
-        context['logs'] = Log.objects.filter(content_type=game_content_type, object_id=context['game'].id)
-        
+        context['game_logs'] = Log.objects.filter(log_game=context['game'].id)
+
+        return context
+
+
+@method_decorator(login_required(login_url='mylogin'), name='dispatch')
+class ExperimentLogListView(DetailView):
+    # could also be called ExperimentDetailView
+    model = Experiment
+    template_name = 'frontend/logs.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['experiment_logs'] = Log.objects.filter(log_experiment=context['experiment'].id)
+
         return context
 
 

@@ -12,19 +12,6 @@ def natural_sort_key(s):
 
 def import_global_tables():
     sql_table = [
-        "schema.sql",
-        "auth_group.sql",
-        "django_content_type.sql",
-        "auth_permission.sql",
-        "auth_group_permissions.sql",
-        "user_organization.sql",
-        "user_vatuser.sql",
-        "authtoken_token.sql",
-        "django_admin_log.sql",
-        "django_migrations.sql",
-        "django_session.sql",
-        "user_vatuser_groups.sql",
-        "user_vatuser_user_permissions.sql",
         "api_event.sql",
         "api_game.sql",
         "api_log.sql",

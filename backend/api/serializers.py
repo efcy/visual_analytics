@@ -28,28 +28,20 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
-    game_id = serializers.IntegerField(required=False, write_only=True)
-    experiment_id = serializers.IntegerField(required=False, write_only=True)
     class Meta:
         model = models.Log
         # we have to list all the fields here since we want to add game_id and experiment id here to __all__
-        fields = [
-            'experiment_id', 'game_id', 'log_path', 'player_number', 'head_number',
-            'robot_version', 'body_serial', 'head_serial', 'representation_list',
-            'combined_log_path', 'sensor_log_path', 'id'
-        ]
+        fields = '__all__'
 
     def validate(self, data):
-        # Only validate game_id and experiment_id during creation
-        if self.instance is None:  # Check if this is a create operation
-            # Ensure either game_id or experiment_id is provided, but not both
-            game_id = data.get('game_id')
-            experiment_id = data.get('experiment_id')
+        # Ensure either game_id or experiment_id is provided, but not both
+        game_id = data.get('log_game')
+        experiment_id = data.get('log_experiment')
 
-            if not game_id and not experiment_id:
-                raise serializers.ValidationError("Either game_id or experiment_id is required.")
-            if game_id and experiment_id:
-                raise serializers.ValidationError("Only one of game_id or experiment_id is allowed.")
+        if not game_id and not experiment_id:
+            raise serializers.ValidationError("Either log_game or log_experiment is required.")
+        if game_id and experiment_id:
+            raise serializers.ValidationError("Only one of log_game or log_experiment is allowed.")
 
         return data
 

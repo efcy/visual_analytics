@@ -58,11 +58,8 @@ class Experiment(models.Model):
 
 
 class Log(models.Model):
-    log_game = models.ForeignKey(Game, null=True, blank=True,
-                                    on_delete=models.CASCADE)
-    log_experiment = models.ForeignKey(Experiment, null=True, blank=True,
-                                     on_delete=models.CASCADE)
-
+    log_game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
+    log_experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)

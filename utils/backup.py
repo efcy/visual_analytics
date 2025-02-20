@@ -73,18 +73,6 @@ def export_full_tables():
         "api_logstatus",
         "api_xabslsymbolcomplete",
         "api_annotation",
-        "auth_group",
-        "auth_group_permissions",
-        "auth_permission",
-        "authtoken_token",
-        "django_admin_log",
-        "django_content_type",
-        "django_migrations",
-        "django_session",
-        "user_vatuser",
-        "user_organization",
-        "user_vatuser_groups",
-        "user_vatuser_user_permissions"
     ]
     for table in tables:
         try:
