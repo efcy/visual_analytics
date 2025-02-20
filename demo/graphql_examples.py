@@ -62,6 +62,16 @@ logstatus(filters: [{ field: "log_id", value: $id }]){
     }}
 """
 
+image_without_stats = """query($id: String!){
+  images(filters:[{field:"blurredness_value",value:"null"},{field:"log_id",value:$id}])
+  {
+    id
+    frameNumber
+    imageUrl
+    blurrednessValue
+  }
+}"""
+
 
 
 if __name__ == "__main__":
@@ -70,5 +80,5 @@ if __name__ == "__main__":
         api_key=os.environ.get("VAT_API_TOKEN"),
     )
 
-    data = client.execute(existing_logs,log_status_var)
+    data = client.execute(image_without_stats,log_status_var)
     print(data)
