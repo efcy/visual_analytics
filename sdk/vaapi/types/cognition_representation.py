@@ -9,14 +9,8 @@ class CognitionRepresentation(pydantic_v1.BaseModel):
     #: Id assigned by django
     id: typing.Optional[int] = None
 
-    #: Log ID: Id of related log / robot data
-    log_id: typing.Optional[int] = pydantic_v1.Field(default=None)
-
-    #: Frame Number from game.log or combined.log
-    frame_number: typing.Optional[int] = None
-
-    #: representation_name
-    representation_name: typing.Optional[str] = pydantic_v1.Field(default=None)
+    #: reference to a specific cognition frame
+    frame: typing.Optional[int] = pydantic_v1.Field(default=None)
 
     #: representation_data
     representation_data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
