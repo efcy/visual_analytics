@@ -9,7 +9,7 @@ import time
 
 # kubectl port-forward postgres-postgresql-0 -n postgres 1234:5432
 # full backup: python backup.py -a -g -o /opt/local-path-provisioner/db_backup
-# tar --use-compress-program="pigz -k -3" -cf db_backup.tar.gz /opt/local-path-provisioner/db_backup/
+# tar --use-compress-program="pigz -k -3" -cf /opt/local-path-provisioner/db_backup.tar.gz -C /opt/local-path-provisioner/ db_backup/ 
 
 
 DB_HOST="localhost"
@@ -145,19 +145,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     Path(args.output).mkdir(exist_ok=True, parents=True)
-    
-    try:
-        command = f"pg_dump -h {DB_HOST} -p {DB_PORT} -U {DB_USER} -d {DB_NAME} --schema-only"
-        print(f"running {command} > schema.sql")
-        output_file = Path(args.output) / "schema.sql"
-        f = open(str(output_file), "w")
-        proc = subprocess.Popen(command, shell=True, env={
-                    'PGPASSWORD': os.environ.get("PGPASSWORD")
-                    },
-                    stdout=f)
-        proc.wait()
-    except Exception as e:
-        print('Exception happened during dump %s' %(e))
 
     if args.global_tables:
         print("will export tables that are the same for all log ids")

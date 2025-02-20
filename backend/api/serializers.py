@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from . import models
-import re
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -135,13 +135,3 @@ class FrameFilterSerializer(serializers.ModelSerializer):
             }
         )
         return instance
-    
-class CognitionFrameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.CognitionFrame
-        fields = '__all__'
-
-class MotionFrameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.MotionFrame
-        fields = '__all__'

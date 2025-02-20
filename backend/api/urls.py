@@ -18,9 +18,6 @@ urlpatterns = [
     path('cognitionrepr/count/', views.CognitionReprCountView.as_view(), name='cognitionrepr-count'),
     path('motionrepr/count/', views.MotionReprCountView.as_view(), name='motionnrepr-count'),
     path('image/update/', views.ImageUpdateView.as_view(), name='image-update'),
-    path('cognitionframe/count/', views.CognitionFrameCount.as_view(), name='cognitionframe-count'),
-    path('motionframe/count/', views.MotionFrameCount.as_view(), name='motionframe-count'),
-    
 ]
 
 router = routers.DefaultRouter()
@@ -39,7 +36,5 @@ router.register("behavior/symbol/complete",views.XabslSymbolCompleteViewSet)
 router.register("behavior/symbol/sparse",views.XabslSymbolSparseViewSet)
 router.register("log-status",views.LogStatusViewSet)
 router.register("frame-filter",views.FrameFilterView)
-router.register("cognitionframe",views.CognitionFrameViewSet)
-router.register("motionframe",views.MotionFrameViewSet)
 
 urlpatterns += router.urls

@@ -57,7 +57,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "api",  # I see other using api.apps.ApiConfig here
+    "api",
+    "cognition",
+    "motion",
+    "frontend",
     "corsheaders",
     "rest_framework",
     'drf_spectacular',
