@@ -25,7 +25,10 @@ def apply_generic_filters(model, queryset, filters):
         
         # Convert `value` to the correct type based on the model field
         try:
-            typed_value = model_field.to_python(value)
+            if value == "null":
+                typed_value = None
+            else:
+                typed_value = model_field.to_python(value)
         except Exception as e:
             raise ValueError(f"Invalid value '{value}' for field '{field_name}': {str(e)}")
         
