@@ -2,16 +2,12 @@ from django.urls import path
 from . import views
 from rest_framework import routers
 
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 app_name = 'api'
 
 urlpatterns = [
     path('',views.scalar_doc,name="scalar_doc"),
     path('health/',views.health_check,name="health_check"),
     path('image-count/', views.ImageCountView.as_view(), name='image-count'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('behavior/filter/', views.BehaviorFrameOptionAPIView.as_view(), name='behavior-filter'),
     path('behavior/count/', views.BehaviorFrameCountView.as_view(), name='behavior-count'),
     path('behavior/symbol/count/', views.BehaviorSymbolCountView.as_view(), name='behavior-count'),
