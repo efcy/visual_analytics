@@ -54,6 +54,8 @@ if __name__ == "__main__":
         "api_behavioroptionstate",
         "api_behaviorframeoption",
         "api_xabslsymbolsparse",
+        "api_cognitionframe",
+        "api_motionframe",
         "api_cognitionrepresentation",
         "api_motionrepresentation",
         "api_image"

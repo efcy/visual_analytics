@@ -94,6 +94,8 @@ def export_split_table(log_id, force=False, export_tables=None):
         "api_behaviorframeoption",
         "api_behavioroption",
         "api_behavioroptionstate",
+        "api_cognitionframe",
+        "api_motionframe",
         "api_cognitionrepresentation",
         "api_motionrepresentation",
         "api_image",

@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
@@ -127,11 +125,25 @@ class LogStatus(models.Model):
 class CognitionFrame(models.Model):
     log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognitionframe')
     frame_number = models.IntegerField(blank=True, null=True)
+    frame_time = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame_number']),
+        ]
+        unique_together = ('log_id', 'frame_number')
 
 
 class MotionFrame(models.Model):
     log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motionframe')
     frame_number = models.IntegerField(blank=True, null=True)
+    frame_time = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['log_id', 'frame_number']),
+        ]
+        unique_together = ('log_id', 'frame_number')
 
 
 class Image(models.Model):
@@ -169,7 +181,6 @@ class Annotation(models.Model):
 class CognitionRepresentation(models.Model):
     log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognition_repr')
     frame_number = models.IntegerField(blank=True, null=True)
-    # TODO maybe add frametime here
     representation_name = models.CharField(max_length=40)
     representation_data = models.JSONField(blank=True, null=True)
 

@@ -19,6 +19,8 @@ from .xabsl_symbol_sparse.client import XabslSymbolClientSparse
 from .log_status.client import LogStatusClient
 from .frame_filter.client import FrameFilterClient
 from .experiment.client import ExperimentClient
+from .motion_frame.client import MotionFrameClient
+from .cognition_frame.client import CognitionFrameClient
 
 class VaapiBase:
     """
@@ -78,6 +80,8 @@ class VaapiBase:
         self.events = EventsClient(client_wrapper=self._client_wrapper)
         self.games = GameClient(client_wrapper=self._client_wrapper)  
         self.logs = LogClient(client_wrapper=self._client_wrapper)
+        self.cognitionframe = CognitionFrameClient(client_wrapper=self._client_wrapper)
+        self.motionframe = MotionFrameClient(client_wrapper=self._client_wrapper)
         self.cognition_repr = CognitionRepresentationClient(client_wrapper=self._client_wrapper)
         self.motion_repr = MotionRepresentationClient(client_wrapper=self._client_wrapper)
         self.behavior_option = BehaviorOptionClient(client_wrapper=self._client_wrapper)
