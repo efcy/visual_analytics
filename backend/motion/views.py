@@ -6,8 +6,67 @@ from . import serializers
 
 from django.db import connection
 from django.db.models import Q
-
+from django.apps import apps
 from psycopg2.extras import execute_values
+import json
+
+
+class DynamicModelMixin:
+    def get_model(self):
+        # Get the model name from the URL kwargs
+        model_name = self.kwargs.get('model_name')
+        # Get the model class from the app's models
+        return apps.get_model('motion', model_name)
+
+    def get_queryset(self):
+        # Override get_queryset to use the dynamic model
+        model = self.get_model()
+        queryset = model.objects.all()
+        query_params = self.request.query_params
+
+        filters = Q()
+        for field in model._meta.fields:
+            param_value = query_params.get(field.name)
+            if param_value:
+                filters &= Q(**{field.name: param_value})
+        return queryset.filter(filters)
+
+
+class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
+    # No need to define queryset or serializer_class here; they will be set dynamically
+    def get_serializer_class(self):
+        # Dynamically set the serializer class based on the model
+        model = self.get_model()
+        # Assuming you have a naming convention for serializers, e.g., <ModelName>Serializer
+        serializer_class_name = f"{model.__name__}Serializer"
+        return getattr(serializers, serializer_class_name)
+
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            print("error: input not a list")
+            return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
+
+        # Dynamically get the model
+        model = self.get_model()
+
+        # Prepare the data for bulk insert
+        rows_tuples = [
+            (row['log_id'], row['frame_number'], row['representation_name'], json.dumps(row['representation_data']))
+            for row in request.data
+        ]
+
+        with connection.cursor() as cursor:
+            query = f"""
+            INSERT INTO motion_{model.__name__.lower()} (frame_id, representation_data)
+            VALUES %s
+            ON CONFLICT (frame_id) DO UPDATE SET representation_data = EXCLUDED.representation_data;
+            """
+            # rows is a list of tuples containing the data
+            execute_values(cursor, query, rows_tuples, page_size=500)
+
+        return Response({}, status=status.HTTP_200_OK)
 
 
 class MotionFrameCount(APIView):
