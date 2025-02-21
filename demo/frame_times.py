@@ -5,7 +5,7 @@ import os
 if __name__ == "__main__":
     client = Vaapi(
         base_url=os.environ.get("VAT_API_URL"),  
-        api_key="222ca62d70706ed2ff65afe21ca3475ff23f3b05",
+        api_key=os.environ.get("VAT_API_TOKEN"),
     )
     """
     Get FrameInfo from Cognition Process
