@@ -23,7 +23,6 @@ from .motion_frame.client import MotionFrameClient
 from .cognition_frame.client import CognitionFrameClient
 
 cognition_representation_list = [
-            "FrameInfo",
             "BallModel",
             "BallCandidates",
             "BallCandidatesTop",
@@ -42,7 +41,6 @@ cognition_representation_list = [
             "RansacCirclePercept2018"
         ]
 motion_representation_list = [
-            "FrameInfo",
             "IMUData", 
             "FSRData", 
             "ButtonData", 
@@ -53,6 +51,7 @@ motion_representation_list = [
             "MotorJointData",
             "GyrometerData",
         ]
+
 class VaapiBase:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
@@ -114,8 +113,6 @@ class VaapiBase:
         self.logs = LogClient(client_wrapper=self._client_wrapper)
         self.cognitionframe = CognitionFrameClient(client_wrapper=self._client_wrapper)
         self.motionframe = MotionFrameClient(client_wrapper=self._client_wrapper)
-        #self.cognition_repr = CognitionRepresentationClient(client_wrapper=self._client_wrapper)
-        #self.motion_repr = MotionRepresentationClient(client_wrapper=self._client_wrapper)
         self.behavior_option = BehaviorOptionClient(client_wrapper=self._client_wrapper)
         self.behavior_option_state = BehaviorOptionStateClient(client_wrapper=self._client_wrapper)
         self.behavior_frame_option = BehaviorFrameOptionClient(client_wrapper=self._client_wrapper)
