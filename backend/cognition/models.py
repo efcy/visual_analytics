@@ -10,6 +10,7 @@ class CognitionFrame(models.Model):
     frame_time = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        verbose_name_plural = "Cognition Frames"
         indexes = [
             models.Index(fields=['log_id', 'frame_number']),
         ]
@@ -22,6 +23,9 @@ class BallModel(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Ball Model"
 
 
 class BallCandidates(models.Model):
@@ -30,6 +34,9 @@ class BallCandidates(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Ball Candidates"
 
 
 class BallCandidatesTop(models.Model):
@@ -38,6 +45,9 @@ class BallCandidatesTop(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Ball Candidates Top"
 
 
 class CameraMatrix(models.Model):
@@ -46,6 +56,9 @@ class CameraMatrix(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Camera Matrix"
 
 
 class CameraMatrixTop(models.Model):
@@ -54,6 +67,9 @@ class CameraMatrixTop(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Camera Matrix Top"
 
 
 class OdometryData(models.Model):
@@ -62,6 +78,9 @@ class OdometryData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Odometry Data"
 
 
 class FieldPercept(models.Model):
@@ -70,6 +89,9 @@ class FieldPercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Field Percept"
 
 
 class FieldPerceptTop(models.Model):
@@ -78,6 +100,9 @@ class FieldPerceptTop(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Field Percept Top"
 
 
 class GoalPercept(models.Model):
@@ -86,6 +111,9 @@ class GoalPercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Goal Percept"
 
 
 class GoalPerceptTop(models.Model):
@@ -94,6 +122,9 @@ class GoalPerceptTop(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Goal Percept Top"
 
 
 class MultiBallPercept(models.Model):
@@ -102,6 +133,9 @@ class MultiBallPercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Multi Ball Percept"
 
 
 class RansacLinePercept(models.Model):
@@ -110,6 +144,9 @@ class RansacLinePercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Ransac Line Percept"
 
 
 class ShortLinePercept(models.Model):
@@ -118,6 +155,9 @@ class ShortLinePercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Short Line Percept"
 
 
 class ScanLineEdgelPercept(models.Model):
@@ -126,6 +166,9 @@ class ScanLineEdgelPercept(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Scanline Edgel Percept"
 
 
 class ScanLineEdgelPerceptTop(models.Model):
@@ -134,6 +177,9 @@ class ScanLineEdgelPerceptTop(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Scanline Edgel Percept Top"
 
 
 class RansacCirclePercept2018(models.Model):
@@ -142,3 +188,6 @@ class RansacCirclePercept2018(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Ransac Circle Percept 2018"

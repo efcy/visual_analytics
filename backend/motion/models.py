@@ -11,6 +11,7 @@ class MotionFrame(models.Model):
     frame_time = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        verbose_name_plural = "Motion Frames"
         indexes = [
             models.Index(fields=['log_id', 'frame_number']),
         ]
@@ -22,6 +23,9 @@ class IMUData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "IMU Data"
 
 
 class FSRData(models.Model):
@@ -30,6 +34,9 @@ class FSRData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "FSR Data"
 
 
 class ButtonData(models.Model):
@@ -38,6 +45,9 @@ class ButtonData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Button Data"
 
 
 class SensorJointData(models.Model):
@@ -46,6 +56,9 @@ class SensorJointData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Sensor Joint Data"
 
 
 class AccelerometerData(models.Model):
@@ -54,6 +67,9 @@ class AccelerometerData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Accelerometer Data"
 
 
 class InertialSensorData(models.Model):
@@ -62,6 +78,9 @@ class InertialSensorData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Inertial Sensor Data"
 
 
 class MotionStatus(models.Model):
@@ -70,6 +89,9 @@ class MotionStatus(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+    
+    class Meta:
+        verbose_name_plural = "Motion Status"
 
 
 class MotorJointData(models.Model):
@@ -79,6 +101,9 @@ class MotorJointData(models.Model):
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
+    class Meta:
+        verbose_name_plural = "Motor Joint Data"
+
 
 class GyrometerData(models.Model):
     frame = models.ForeignKey(MotionFrame,on_delete=models.CASCADE, related_name='gyrometerdata')
@@ -86,3 +111,6 @@ class GyrometerData(models.Model):
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
+
+    class Meta:
+        verbose_name_plural = "Gyrometer Data"
