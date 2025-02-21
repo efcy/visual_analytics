@@ -110,6 +110,7 @@ class UpdateAnnotation(SerializerMutation):
             raise Exception(f"Annotation for image with id {image_id} does not exist")
         
         annotation_instance.annotation = input.get('annotation')
+        annotation_instance.save()
         return annotation_instance
 
 
