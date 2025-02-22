@@ -72,13 +72,13 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 class CognitionFrameCount(APIView):
     def get(self, request):
         # Get filter parameters from query string
-        log_id = request.query_params.get('log_id')
+        log_id = request.query_params.get('log')
 
         # start with all images
         queryset = CognitionFrame.objects.all()
 
         # apply filters if provided
-        queryset = queryset.filter(log_id=log_id)
+        queryset = queryset.filter(log=log_id)
 
         # get the count
         count = queryset.count()
@@ -108,13 +108,13 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
             print("error: input not a list")
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-        rows_tuples = [(row['log_id'], row['frame_number'], row['frame_time']) for row in request.data]
+        rows_tuples = [(row['log'], row['frame_number'], row['frame_time']) for row in request.data]
 
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO cognition_cognitionframe (log_id_id, frame_number, frame_time)
+            INSERT INTO cognition_cognitionframe (log_id, frame_number, frame_time)
             VALUES %s
-            ON CONFLICT (log_id_id, frame_number) DO NOTHING;
+            ON CONFLICT (log_id, frame_number) DO NOTHING;
             """ 
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
