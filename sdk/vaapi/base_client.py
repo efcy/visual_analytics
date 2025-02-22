@@ -22,6 +22,36 @@ from .experiment.client import ExperimentClient
 from .motion_frame.client import MotionFrameClient
 from .cognition_frame.client import CognitionFrameClient
 
+cognition_representation_list = [
+            "BallModel",
+            "BallCandidates",
+            "BallCandidatesTop",
+            "CameraMatrix",
+            "CameraMatrixTop",
+            "OdometryData",
+            "FieldPercept",
+            "FieldPerceptTop",
+            "GoalPercept",
+            "GoalPerceptTop",
+            "MultiBallPercept",
+            "RansacLinePercept", 
+            "ShortLinePercept",
+            "ScanLineEdgelPercept",
+            "ScanLineEdgelPerceptTop",
+            "RansacCirclePercept2018"
+        ]
+motion_representation_list = [
+            "IMUData", 
+            "FSRData", 
+            "ButtonData", 
+            "SensorJointData", 
+            "AccelerometerData", 
+            "InertialSensorData", 
+            "MotionStatus",
+            "MotorJointData",
+            "GyrometerData",
+        ]
+
 class VaapiBase:
     """
     Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
@@ -44,9 +74,10 @@ class VaapiBase:
     Examples
     --------
     ```python
-    from label_studio_sdk.client import LabelStudio
+    from vaapi.client import Vaapi
 
-    client = LabelStudio(
+    client = Vaapi(
+        base_url='https://vat.berlin-united.com/',  
         api_key="YOUR_API_KEY",
     )
     ```
@@ -82,8 +113,6 @@ class VaapiBase:
         self.logs = LogClient(client_wrapper=self._client_wrapper)
         self.cognitionframe = CognitionFrameClient(client_wrapper=self._client_wrapper)
         self.motionframe = MotionFrameClient(client_wrapper=self._client_wrapper)
-        self.cognition_repr = CognitionRepresentationClient(client_wrapper=self._client_wrapper)
-        self.motion_repr = MotionRepresentationClient(client_wrapper=self._client_wrapper)
         self.behavior_option = BehaviorOptionClient(client_wrapper=self._client_wrapper)
         self.behavior_option_state = BehaviorOptionStateClient(client_wrapper=self._client_wrapper)
         self.behavior_frame_option = BehaviorFrameOptionClient(client_wrapper=self._client_wrapper)
@@ -93,3 +122,10 @@ class VaapiBase:
         self.log_status = LogStatusClient(client_wrapper=self._client_wrapper)
         self.frame_filter = FrameFilterClient(client_wrapper=self._client_wrapper)
         self.experiment = ExperimentClient(client_wrapper=self._client_wrapper)
+
+        # dynamically create client members
+        for attr_name in cognition_representation_list:
+            setattr(self, attr_name.lower(), CognitionRepresentationClient(client_wrapper=self._client_wrapper, endpoint=attr_name.lower()))
+
+        for attr_name in motion_representation_list:
+            setattr(self, attr_name.lower(), MotionRepresentationClient(client_wrapper=self._client_wrapper, endpoint=attr_name.lower()))

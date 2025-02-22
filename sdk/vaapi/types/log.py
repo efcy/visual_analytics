@@ -10,7 +10,10 @@ class Log(pydantic_v1.BaseModel):
     id: typing.Optional[int] = None
 
     #: Foreign key to the game this log is from
-    game_id: typing.Optional[str] = pydantic_v1.Field(default=None)
+    game: typing.Optional[int] = None
+
+    #: Foreign key to the experiment this log is from
+    experiment: typing.Optional[int] = None
     
     #: Robot Version, either v5 or v6
     robot_version: typing.Optional[str] = None

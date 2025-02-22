@@ -34,8 +34,8 @@ if [ "$mode" == "renew" ]; then
     
 
     popd
-    #source venv/bin/activate
-    #python manage.py migrate
+    source venv/bin/activate
+    python manage.py migrate
 
     # Check if the command was successful
     if [ $? -eq 0 ]; then
