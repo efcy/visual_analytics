@@ -11,5 +11,6 @@ urlpatterns = [
 router = routers.DefaultRouter()
 router.register("cognitionframe",views.CognitionFrameViewSet)
 router.register('cognition/(?P<model_name>[^/.]+)', views.DynamicModelViewSet, basename='dynamicmodel')
+router.register("frame-filter",views.FrameFilterView)
 
 urlpatterns += router.urls

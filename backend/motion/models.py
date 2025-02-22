@@ -1,5 +1,5 @@
 from django.db import models
-from api.models import Log
+from common.models import Log
 
 """
     All Models for Motion Representations

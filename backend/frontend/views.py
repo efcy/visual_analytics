@@ -5,10 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import json
 
-from api.models import Event, Game, Log, Image, Annotation, FrameFilter, Experiment
+from common.models import Event, Game, Log, Experiment
+from image.models import Image
+from annotation.models import Annotation
+from cognition.models import FrameFilter
 from django.http import JsonResponse
-
-
 
 
 @method_decorator(login_required(login_url='mylogin'), name='dispatch')

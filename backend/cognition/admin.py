@@ -1,6 +1,19 @@
 from django.contrib import admin
 from .models import *
 
+class FrameFilterAdmin(admin.ModelAdmin):
+    list_display = ("get_log_id", "get_user")
+
+    def get_log_id(self, obj):
+        return obj.log_id.id
+    
+    def get_user(self, obj):
+        return obj.user
+    
+    get_log_id.short_description = 'Log ID'
+
+
+
 class BallModelAdmin(admin.ModelAdmin):
     list_display = ('get_id', 'get_log_id', 'get_frame_number')
 
@@ -14,8 +27,8 @@ class BallModelAdmin(admin.ModelAdmin):
         return obj.id
 
 admin.site.register(CognitionFrame)
+admin.site.register(FrameFilter, FrameFilterAdmin)
 admin.site.register(BallModel, BallModelAdmin)
-
 admin.site.register(BallCandidates)
 admin.site.register(BallCandidatesTop)
 admin.site.register(CameraMatrix)
