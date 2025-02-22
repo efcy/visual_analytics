@@ -22,14 +22,14 @@ class LogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        # Ensure either game_id or experiment_id is provided, but not both
-        game_id = data.get('log_game')
-        experiment_id = data.get('log_experiment')
-
-        if not game_id and not experiment_id:
-            raise serializers.ValidationError("Either log_game or log_experiment is required.")
-        if game_id and experiment_id:
-            raise serializers.ValidationError("Only one of log_game or log_experiment is allowed.")
+        # Ensure either game_id or experiment_id is provided, but not both, only check on creation
+        if self.context.get('request').method == 'POST':
+            game_id = data.get('game')
+            experiment_id = data.get('experiment')
+            if not game_id and not experiment_id:
+                raise serializers.ValidationError("Either game or experiment is required.")
+            if game_id and experiment_id:
+                raise serializers.ValidationError("Only one of game or experiment is allowed.")
 
         return data
 

@@ -161,13 +161,11 @@ class EventViewSet(viewsets.ModelViewSet):
         # Serialize the results
         result_serializer = self.get_serializer(all_events, many=True)
 
-        status_code = status.HTTP_201_CREATED if existing ==0 else status.HTTP_200_OK
-
         return Response({
             'created': len(created_events),
             'existing': len(existing_events),
             'events': result_serializer.data
-        }, status=status_code)
+        }, status=status.HTTP_200_OK)
 
 
 class GameViewSet(viewsets.ModelViewSet):
@@ -177,16 +175,16 @@ class GameViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
 
-        queryset = models.Game.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
+        queryset = models.Game.objects.select_related('event').annotate(event_name=F('event__name'))
 
         if event_id is not None:
-            queryset = queryset.filter(event_id=event_id)
+            queryset = queryset.filter(event=event_id)
         
         return queryset
         
     def create(self, request, *args, **kwargs):
         row_tuple = [(
-            request.data.get('event_id'),
+            request.data.get('event'),
             request.data.get('team1'),
             request.data.get('team2'),
             request.data.get('half'),
@@ -200,9 +198,9 @@ class GameViewSet(viewsets.ModelViewSet):
         )]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO common_game (event_id_id, team1, team2, half, is_testgame, head_ref, assistent_ref, field, start_time, score, comment)
+            INSERT INTO common_game (event_id, team1, team2, half, is_testgame, head_ref, assistent_ref, field, start_time, score, comment)
             VALUES %s
-            ON CONFLICT (event_id_id, start_time, half) DO NOTHING
+            ON CONFLICT (event_id, start_time, half) DO NOTHING
             RETURNING id;
             """
 
@@ -215,7 +213,7 @@ class GameViewSet(viewsets.ModelViewSet):
             else:
                 # If ON CONFLICT DO NOTHING prevented insert, get the existing object
                 instance = models.Game.objects.get(
-                    event_id=request.data.get('event_id'),
+                    event_id=request.data.get('event'),
                     start_time=request.data.get('start_time'),
                     half=request.data.get('half')
                 )
@@ -230,25 +228,25 @@ class ExperimentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         event_id = self.request.query_params.get("event")
 
-        queryset = models.Experiment.objects.select_related('event_id').annotate(event_name=F('event_id__name'))
+        queryset = models.Experiment.objects.select_related('event').annotate(event_name=F('event__name'))
 
         if event_id is not None:
-            queryset = queryset.filter(event_id=event_id)
+            queryset = queryset.filter(event=event_id)
         
         return queryset
         
     def create(self, request, *args, **kwargs):
         row_tuple = [(
-            request.data.get('event_id'),
+            request.data.get('event'),
             request.data.get('name'),
             request.data.get('field'),
             request.data.get('comment'),
         )]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO common_experiment (event_id_id, name, field, comment)
+            INSERT INTO common_experiment (event_id, name, field, comment)
             VALUES %s
-            ON CONFLICT (event_id_id, name) DO NOTHING
+            ON CONFLICT (event_id, name) DO NOTHING
             RETURNING id;
             """
 
@@ -261,7 +259,7 @@ class ExperimentViewSet(viewsets.ModelViewSet):
             else:
                 # If ON CONFLICT DO NOTHING prevented insert, get the existing object
                 instance = models.Experiment.objects.get(
-                    event_id=request.data.get('event_id'),
+                    event_id=request.data.get('event'),
                     name=request.data.get('name')
                 )
                 serializer = self.get_serializer(instance)
@@ -287,13 +285,13 @@ class LogViewSet(viewsets.ModelViewSet):
         
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=False)
-        
+        serializer.is_valid(raise_exception=True)
+
         validated_data = serializer.validated_data
 
         instance, created = models.Log.objects.get_or_create(
-            log_game=validated_data.get('log_game'),
-            log_experiment=validated_data.get('log_experiment'),
+            game=validated_data.get('game'),
+            experiment=validated_data.get('experiment'),
             player_number=validated_data.get('player_number'),
             head_number=validated_data.get('head_number'),
             log_path=validated_data.get('log_path'),
@@ -325,15 +323,15 @@ class LogStatusViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # we get and remove log_id from the request data before validating the rest of the data
         # other we get an error because log_id is 1:1 field to log.id
-        log_id = request.data.pop("log_id")
-        log_instance = get_object_or_404(models.Log, id=int(log_id))
+        log = request.data.pop("log")
+        log_instance = get_object_or_404(models.Log, id=int(log))
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         validated_data = serializer.validated_data
 
         instance, created = models.LogStatus.objects.update_or_create(
-            log_id=log_instance,
+            log=log_instance,
             defaults=validated_data
         )
         
