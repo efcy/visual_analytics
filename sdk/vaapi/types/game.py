@@ -12,7 +12,7 @@ class Game(pydantic_v1.BaseModel):
     id: typing.Optional[int] = None
 
     #: Foreign key to the event this game belongs to.
-    event_id: typing.Optional[int] = pydantic_v1.Field(default=None)
+    event: typing.Optional[int] = pydantic_v1.Field(default=None)
     
     #: team1
     team1: typing.Optional[str] = None

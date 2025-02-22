@@ -6,16 +6,16 @@ from common.models import Log
 """
 
 class MotionFrame(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motionframe')
+    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='motionframe')
     frame_number = models.IntegerField(blank=True, null=True)
     frame_time = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Motion Frames"
         indexes = [
-            models.Index(fields=['log_id', 'frame_number']),
+            models.Index(fields=['log', 'frame_number']),
         ]
-        unique_together = ('log_id', 'frame_number')
+        unique_together = ('log', 'frame_number')
 
 class IMUData(models.Model):
     frame = models.ForeignKey(MotionFrame,on_delete=models.CASCADE, related_name='imudata')

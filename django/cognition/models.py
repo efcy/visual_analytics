@@ -4,24 +4,24 @@ from django.conf import settings
 
 
 class CognitionFrame(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognitionframe')
+    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='cognitionframe')
     frame_number = models.IntegerField(blank=True, null=True)
     frame_time = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Cognition Frames"
         indexes = [
-            models.Index(fields=['log_id', 'frame_number']),
+            models.Index(fields=['log', 'frame_number']),
         ]
-        unique_together = ('log_id', 'frame_number')
+        unique_together = ('log', 'frame_number')
 
 
 class FrameFilter(models.Model):
-    log_id = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='frame_filter')
+    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='frame_filter')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='frame_filter')
     frames = models.JSONField(blank=True, null=True)
     
-    unique_together = ('log_id', 'user')
+    unique_together = ('log', 'user')
 
 
 class BallModel(models.Model):

@@ -13,7 +13,7 @@ mode=$1
 
 if [ "$mode" == "renew" ]; then
 
-    cd ../backend
+    cd ../django
     pushd .
     cd /tmp
     # Execute the drop database command

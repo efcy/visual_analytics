@@ -44,7 +44,7 @@ class LogStatusAdmin(admin.ModelAdmin):
     list_display = ["get_log_id"]
 
     def get_log_id(self, obj):
-        return obj.log_id.id
+        return obj.log.id
     
     get_log_id.short_description = 'Log ID'
 

@@ -86,7 +86,7 @@ class GameClient:
         self,
         id: int,
         *,
-        event_id: typing.Optional[int] = OMIT,
+        event: typing.Optional[int] = OMIT,
         team1: typing.Optional[str] = OMIT,
         team2: typing.Optional[str] = OMIT,
         half: typing.Optional[str] = OMIT,
@@ -100,86 +100,12 @@ class GameClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Game:
         """
-        Update attributes for an existing annotation.
-
-        You will need to supply the annotation's unique ID. You can find the ID in the Label Studio UI listed at the top of the annotation in its tab. It is also listed in the History panel when viewing the annotation. Or you can use [Get all task annotations](list) to find all annotation IDs.
-
-        For information about the JSON format used in the result, see [Label Studio JSON format of annotated tasks](https://labelstud.io/guide/export#Label-Studio-JSON-format-of-annotated-tasks).
-
-        Parameters
-        ----------
-        id : int
-            A unique integer value identifying this annotation.
-
-        result : typing.Optional[typing.Sequence[typing.Dict[str, typing.Any]]]
-            Labeling result in JSON format. Read more about the format in [the Label Studio documentation.](https://labelstud.io/guide/task_format)
-
-        task : typing.Optional[int]
-            Corresponding task for this annotation
-
-        project : typing.Optional[int]
-            Project ID for this annotation
-
-        completed_by : typing.Optional[int]
-            User ID of the person who created this annotation
-
-        updated_by : typing.Optional[int]
-            Last user who updated this annotation
-
-        was_cancelled : typing.Optional[bool]
-            User skipped the task
-
-        ground_truth : typing.Optional[bool]
-            This annotation is a Ground Truth
-
-        lead_time : typing.Optional[float]
-            How much time it took to annotate the task (in seconds)
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Annotation
-            Updated annotation
-
-        Examples
-        --------
-        from vaapi.client import Vaapi
-
-        client = Vaapi(
-            base_url='https://vat.berlin-united.com/',  
-            api_key="YOUR_API_KEY",
-        )
-        client.annotations.update(
-            id=1,
-            result=[
-                {
-                    "original_width": 1920,
-                    "original_height": 1080,
-                    "image_rotation": 0,
-                    "from_name": "bboxes",
-                    "to_name": "image",
-                    "type": "rectanglelabels",
-                    "value": {
-                        "x": 20,
-                        "y": 30,
-                        "width": 50,
-                        "height": 60,
-                        "rotation": 0,
-                        "values": {"rectanglelabels": ["Person"]},
-                    },
-                }
-            ],
-            was_cancelled=False,
-            ground_truth=True,
-        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/games/{jsonable_encoder(id)}/",
             method="PATCH",
             json={
-                "event_id": event_id,
+                "event": event,
                 "team1": team1,
                 "team2": team2,
                 "half": half,
@@ -247,7 +173,7 @@ class GameClient:
     def create(
         self,
         *,
-        event_id: typing.Optional[int] = OMIT,
+        event: typing.Optional[int] = OMIT,
         team1: typing.Optional[str] = OMIT,
         team2: typing.Optional[str] = OMIT,
         half: typing.Optional[str] = OMIT,
@@ -261,98 +187,12 @@ class GameClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Game:
         """
-        Add annotations to a task like an annotator does.
-
-        You will need to supply the task ID. You can find this in Label Studio by opening a task and checking the URL. It is also listed at the top of the labeling interface. Or you can use [Get tasks list](../tasks/list).
-
-        The content of the result field depends on your labeling configuration. For example, send the following data as part of your POST
-        request to send an empty annotation with the ID of the user who completed the task:
-
-        ```json
-        {
-        "result": {},
-        "was_cancelled": true,
-        "ground_truth": true,
-        "lead_time": 0,
-        "task": 0
-        "completed_by": 123
-        }
-        ```
-
-        Parameters
-        ----------
-        id : int
-            Task ID
-
-        result : typing.Optional[typing.Sequence[typing.Dict[str, typing.Any]]]
-            Labeling result in JSON format. Read more about the format in [the Label Studio documentation.](https://labelstud.io/guide/task_format)
-
-        task : typing.Optional[int]
-            Corresponding task for this annotation
-
-        project : typing.Optional[int]
-            Project ID for this annotation
-
-        completed_by : typing.Optional[int]
-            User ID of the person who created this annotation
-
-        updated_by : typing.Optional[int]
-            Last user who updated this annotation
-
-        was_cancelled : typing.Optional[bool]
-            User skipped the task
-
-        ground_truth : typing.Optional[bool]
-            This annotation is a Ground Truth
-
-        lead_time : typing.Optional[float]
-            How much time it took to annotate the task (in seconds)
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Annotation
-            Created annotation
-
-        Examples
-        --------
-        from vaapi.client import Vaapi
-
-        client = Vaapi(
-            base_url='https://vat.berlin-united.com/',  
-            api_key="YOUR_API_KEY",
-        )
-        client.annotations.create(
-            id=1,
-            result=[
-                {
-                    "original_width": 1920,
-                    "original_height": 1080,
-                    "image_rotation": 0,
-                    "from_name": "bboxes",
-                    "to_name": "image",
-                    "type": "rectanglelabels",
-                    "value": {
-                        "x": 20,
-                        "y": 30,
-                        "width": 50,
-                        "height": 60,
-                        "rotation": 0,
-                        "values": {"rectanglelabels": ["Person"]},
-                    },
-                }
-            ],
-            was_cancelled=False,
-            ground_truth=True,
-        )
         """
         _response = self._client_wrapper.httpx_client.request(
             f"api/games/",
             method="POST",
             json={
-                "event_id": event_id,
+                "event": event,
                 "team1": team1,
                 "team2": team2,
                 "half": half,
@@ -367,7 +207,6 @@ class GameClient:
             request_options=request_options,
             omit=OMIT,
         )
-        print(_response.json())
         try:
             if 200 <= _response.status_code < 300:
                 return pydantic_v1.parse_obj_as(Game, _response.json())  # type: ignore
