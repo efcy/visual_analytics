@@ -80,7 +80,7 @@ class ImageUpdateView(APIView):
         # Build the complete SQL query
         ids = [str(item['id']) for item in data]
         sql = f"""
-            UPDATE api_image
+            UPDATE image_image
             SET {', '.join(case_statements)}
             WHERE id IN ({','.join(ids)})
         """
@@ -197,7 +197,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             ) for row in data]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO api_image (log_id_id, camera, type, frame_number, image_url, blurredness_value, brightness_value, resolution)
+            INSERT INTO image_image (log_id_id, camera, type, frame_number, image_url, blurredness_value, brightness_value, resolution)
             VALUES %s
             ON CONFLICT (log_id_id, camera, type, frame_number) DO NOTHING;
             """ 

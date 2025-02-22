@@ -236,7 +236,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         rows_tuples = [(row['log_id'], row['options_id'], row['active_state'], row['frame']) for row in request.data]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO api_behaviorframeoption (log_id_id, options_id_id, active_state_id, frame)
+            INSERT INTO behavior_behaviorframeoption (log_id_id, options_id_id, active_state_id, frame)
             VALUES %s
             ON CONFLICT (log_id_id, options_id_id, frame, active_state_id) DO NOTHING;
             """ 
@@ -309,7 +309,7 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
 
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO api_xabslsymbolsparse(log_id_id, frame, data)
+            INSERT INTO behavior_xabslsymbolsparse(log_id_id, frame, data)
             VALUES %s
             ON CONFLICT (log_id_id, frame) DO NOTHING;
             """ 
@@ -343,7 +343,7 @@ class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
 
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO api_xabslsymbolcomplete(log_id_id, data)
+            INSERT INTO behavior_xabslsymbolcomplete(log_id_id, data)
             VALUES %s
             ON CONFLICT (log_id_id) DO NOTHING;
             """ 

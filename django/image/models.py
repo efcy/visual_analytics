@@ -3,7 +3,7 @@ from django.db import models
 from common.models import Log
 from django.utils.translation import gettext_lazy as _
 
-class Image(models.Model):
+class NaoImage(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
         BOTTOM = "BOTTOM", _("Bottom")

@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from .models import Image
+from .models import NaoImage
 
 
 # Register your models here.
@@ -9,4 +9,4 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ["log_id","frame_number"]
 
 
-admin.site.register(Image, ImageAdmin)
+admin.site.register(NaoImage, ImageAdmin)

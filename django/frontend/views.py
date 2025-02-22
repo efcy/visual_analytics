@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 import json
 
 from common.models import Event, Game, Log, Experiment
-from image.models import Image
+from image.models import NaoImage
 from annotation.models import Annotation
 from cognition.models import FrameFilter
 from django.http import JsonResponse
@@ -77,9 +77,9 @@ class ImageListView(DetailView):
         ).first()
 
         if frames:
-            first_image = Image.objects.filter(log_id=self.object, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').first()
+            first_image = NaoImage.objects.filter(log_id=self.object, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').first()
         else:
-            first_image = Image.objects.filter(log_id=self.object).order_by('frame_number').first()
+            first_image = NaoImage.objects.filter(log_id=self.object).order_by('frame_number').first()
         
         if first_image:        
             return redirect('image_detail', pk=self.object.id, bla=first_image.frame_number)
@@ -94,8 +94,8 @@ class ImageDetailView(View):
         log_id = self.kwargs.get('pk')
 
         current_frame = self.kwargs.get('bla')
-        context['bottom_image'] = Image.objects.filter(log_id=log_id, camera="BOTTOM", frame_number=current_frame).first()
-        context['top_image'] = Image.objects.filter(log_id=log_id, camera="TOP", frame_number=current_frame).first()
+        context['bottom_image'] = NaoImage.objects.filter(log_id=log_id, camera="BOTTOM", frame_number=current_frame).first()
+        context['top_image'] = NaoImage.objects.filter(log_id=log_id, camera="TOP", frame_number=current_frame).first()
         context['log_id'] = log_id
         context['current_frame'] = current_frame
         # we have to get the frames for top and bottom image and then remove the duplicates here, because sometime we have only one image in the 
@@ -105,9 +105,9 @@ class ImageDetailView(View):
             user=self.request.user,
         ).first()
         if frames:
-            context['frame_numbers'] = Image.objects.filter(log_id=log_id, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+            context['frame_numbers'] = NaoImage.objects.filter(log_id=log_id, frame_number__in=frames.frames["frame_list"]).order_by('frame_number').values_list('frame_number', flat=True).distinct()
         else:
-            context['frame_numbers'] = Image.objects.filter(log_id=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
+            context['frame_numbers'] = NaoImage.objects.filter(log_id=log_id).order_by('frame_number').values_list('frame_number', flat=True).distinct()
         current_index = list(context['frame_numbers']).index(current_frame)
         context['prev_frame'] = list(context['frame_numbers'])[current_index - 1] if current_index > 0 else None
         context['next_frame'] = list(context['frame_numbers'])[current_index + 1] if current_index < len(context['frame_numbers']) - 1 else None
@@ -162,7 +162,7 @@ class ImageDetailView(View):
         try:
             json_data = json.loads(request.body)
             print(json_data)
-            my_image = Image.objects.get(id=int(json_data["image"]))
+            my_image = NaoImage.objects.get(id=int(json_data["image"]))
 
             annotation_instance, created = Annotation.objects.get_or_create(
                 image=my_image,

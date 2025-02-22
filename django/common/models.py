@@ -14,7 +14,7 @@ class Event(models.Model):
         return self.name
 
 class Game(models.Model):
-    event_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='games')
+    event = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='games')
     team1 = models.CharField(max_length=100,blank=True, null=True)
     team2 = models.CharField(max_length=100,blank=True, null=True)
     half = models.CharField(max_length=100,blank=True, null=True)
@@ -33,17 +33,8 @@ class Game(models.Model):
         return f"{self.start_time}: {self.team1} vs {self.team2} {self.half}"
 
 
-class VideoRecording(models.Model):
-    # we model urls as json field because we can have multiple recordings and sometimes recordings are split up
-    # also sometimes we do have a combined youtube video
-    game_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='recordings')
-    urls = models.JSONField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    # TODO add calculated camera matrix here
-
-
 class Experiment(models.Model):
-    event_id = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='experiments')
+    event = models.ForeignKey(Event,on_delete=models.CASCADE, related_name='experiments')
     # either the folder name if its an experiment of multiple robots or the logfile name
     name = models.CharField(max_length=100,blank=True, null=True)
     field = models.CharField(max_length=100, blank=True, null=True)
@@ -53,9 +44,19 @@ class Experiment(models.Model):
         unique_together = ('event_id', 'name')
 
 
+class VideoRecording(models.Model):
+    # we model urls as json field because we can have multiple recordings and sometimes recordings are split up
+    # also sometimes we do have a combined youtube video
+    game = models.ForeignKey(Game,null=True, blank=True, on_delete=models.CASCADE, related_name='recordings')
+    experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
+    urls = models.JSONField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    # TODO add calculated camera matrix here
+
+
 class Log(models.Model):
-    log_game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
-    log_experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
+    experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)
@@ -79,7 +80,7 @@ class Log(models.Model):
 
 
 class LogStatus(models.Model):
-    log_id = models.OneToOneField(Log,on_delete=models.CASCADE,related_name='log_status', primary_key=True)
+    log = models.OneToOneField(Log,on_delete=models.CASCADE,related_name='log_status', primary_key=True)
     # holds the number of frames that should be in the db for each representation
     FrameInfo = models.IntegerField(blank=True, null=True)
     BallModel = models.IntegerField(blank=True, null=True)
