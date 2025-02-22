@@ -13,25 +13,28 @@ class GameAdmin(admin.ModelAdmin):
 
 class LogAdmin(admin.ModelAdmin):
     search_fields = ['game_id__team1__icontains', 'game_id__team2__icontains', "head_number","player_number"]
-    list_display = ["get_game_id", "get_id", "get_start_time", "get_team1", "get_team2", "player_number", "head_number", "is_test"]
+    list_display = ["get_game_id", "get_id", "get_team1", "get_team2", "get_half", "player_number", "head_number", "get_start_time", "is_test"]
 
     def get_game_id(self, obj):
-        return obj.game_id.id
+        return obj.game.id
 
     def get_id(self, obj):
         return obj.id
     
-    def get_start_time(self, obj):
-        return obj.game_id.start_time
-    
     def get_team1(self, obj):
-        return obj.game_id.team1
+        return obj.game.team1
     
     def get_team2(self, obj):
-        return obj.game_id.team2
+        return obj.game.team2
+
+    def get_half(self, obj):
+        return obj.game.half
+
+    def get_start_time(self, obj):
+        return obj.game.start_time
 
     def is_test(self, obj):
-        return obj.game_id.is_testgame
+        return obj.game.is_testgame
     
     get_id.short_description = 'Log ID'
     get_game_id.short_description = 'Game ID'
@@ -52,5 +55,5 @@ class LogStatusAdmin(admin.ModelAdmin):
 admin.site.register(Event)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Experiment)
-admin.site.register(Log)
+admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
