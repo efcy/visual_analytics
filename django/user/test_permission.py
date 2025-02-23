@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-import time
+
 from common.models import Event
 
 #get VATUser model
