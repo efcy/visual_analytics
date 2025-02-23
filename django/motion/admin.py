@@ -1,6 +1,16 @@
 from django.contrib import admin
-from .models import MotionFrame, IMUData, FSRData, ButtonData, SensorJointData, \
-    AccelerometerData, InertialSensorData, MotionStatus, MotorJointData, GyrometerData
+from .models import (
+    MotionFrame,
+    IMUData,
+    FSRData,
+    ButtonData,
+    SensorJointData,
+    AccelerometerData,
+    InertialSensorData,
+    MotionStatus,
+    MotorJointData,
+    GyrometerData,
+)
 
 
 admin.site.register(MotionFrame)

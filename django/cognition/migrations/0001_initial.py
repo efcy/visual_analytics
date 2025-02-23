@@ -5,199 +5,405 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('common', '0001_initial'),
+        ("common", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GoalPercept',
+            name="GoalPercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Goal Percept',
+                "verbose_name_plural": "Goal Percept",
             },
         ),
         migrations.CreateModel(
-            name='GoalPerceptTop',
+            name="GoalPerceptTop",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Goal Percept Top',
+                "verbose_name_plural": "Goal Percept Top",
             },
         ),
         migrations.CreateModel(
-            name='MultiBallPercept',
+            name="MultiBallPercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Multi Ball Percept',
+                "verbose_name_plural": "Multi Ball Percept",
             },
         ),
         migrations.CreateModel(
-            name='OdometryData',
+            name="OdometryData",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Odometry Data',
+                "verbose_name_plural": "Odometry Data",
             },
         ),
         migrations.CreateModel(
-            name='RansacCirclePercept2018',
+            name="RansacCirclePercept2018",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Ransac Circle Percept 2018',
+                "verbose_name_plural": "Ransac Circle Percept 2018",
             },
         ),
         migrations.CreateModel(
-            name='RansacLinePercept',
+            name="RansacLinePercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Ransac Line Percept',
+                "verbose_name_plural": "Ransac Line Percept",
             },
         ),
         migrations.CreateModel(
-            name='ScanLineEdgelPercept',
+            name="ScanLineEdgelPercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Scanline Edgel Percept',
+                "verbose_name_plural": "Scanline Edgel Percept",
             },
         ),
         migrations.CreateModel(
-            name='ScanLineEdgelPerceptTop',
+            name="ScanLineEdgelPerceptTop",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Scanline Edgel Percept Top',
+                "verbose_name_plural": "Scanline Edgel Percept Top",
             },
         ),
         migrations.CreateModel(
-            name='ShortLinePercept',
+            name="ShortLinePercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Short Line Percept',
+                "verbose_name_plural": "Short Line Percept",
             },
         ),
         migrations.CreateModel(
-            name='CognitionFrame',
+            name="CognitionFrame",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('frame_number', models.IntegerField(blank=True, null=True)),
-                ('frame_time', models.IntegerField(blank=True, null=True)),
-                ('log', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cognitionframe', to='common.log')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("frame_number", models.IntegerField(blank=True, null=True)),
+                ("frame_time", models.IntegerField(blank=True, null=True)),
+                (
+                    "log",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cognitionframe",
+                        to="common.log",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Cognition Frames',
+                "verbose_name_plural": "Cognition Frames",
             },
         ),
         migrations.CreateModel(
-            name='CameraMatrixTop',
+            name="CameraMatrixTop",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cameramatrixtop', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cameramatrixtop",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Camera Matrix Top',
+                "verbose_name_plural": "Camera Matrix Top",
             },
         ),
         migrations.CreateModel(
-            name='CameraMatrix',
+            name="CameraMatrix",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cameramatrix', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cameramatrix",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Camera Matrix',
+                "verbose_name_plural": "Camera Matrix",
             },
         ),
         migrations.CreateModel(
-            name='BallModel',
+            name="BallModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ballmodel', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ballmodel",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Ball Model',
+                "verbose_name_plural": "Ball Model",
             },
         ),
         migrations.CreateModel(
-            name='BallCandidatesTop',
+            name="BallCandidatesTop",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ballcandidatestop', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ballcandidatestop",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Ball Candidates Top',
+                "verbose_name_plural": "Ball Candidates Top",
             },
         ),
         migrations.CreateModel(
-            name='BallCandidates',
+            name="BallCandidates",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ballcandidates', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ballcandidates",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Ball Candidates',
+                "verbose_name_plural": "Ball Candidates",
             },
         ),
         migrations.CreateModel(
-            name='FieldPercept',
+            name="FieldPercept",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fieldpercept', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fieldpercept",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Field Percept',
+                "verbose_name_plural": "Field Percept",
             },
         ),
         migrations.CreateModel(
-            name='FieldPerceptTop',
+            name="FieldPerceptTop",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fieldpercepttop', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fieldpercepttop",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Field Percept Top',
+                "verbose_name_plural": "Field Percept Top",
             },
         ),
         migrations.CreateModel(
-            name='FrameFilter',
+            name="FrameFilter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('frames', models.JSONField(blank=True, null=True)),
-                ('log', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='frame_filter', to='common.log')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("frames", models.JSONField(blank=True, null=True)),
+                (
+                    "log",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="frame_filter",
+                        to="common.log",
+                    ),
+                ),
             ],
         ),
     ]

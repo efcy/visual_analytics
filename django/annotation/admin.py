@@ -4,7 +4,7 @@ from .models import Annotation
 
 # Register your models here.
 class AnnotationAdmin(admin.ModelAdmin):
-    raw_id_fields = ('image',)
+    raw_id_fields = ("image",)
     list_per_page = 50
 
 

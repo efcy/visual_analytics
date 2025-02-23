@@ -5,65 +5,96 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('behavior', '0001_initial'),
-        ('cognition', '0001_initial'),
-        ('common', '0001_initial'),
+        ("behavior", "0001_initial"),
+        ("cognition", "0001_initial"),
+        ("common", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='behaviorframeoption',
-            name='frame',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_frame_option', to='cognition.cognitionframe'),
+            model_name="behaviorframeoption",
+            name="frame",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_frame_option",
+                to="cognition.cognitionframe",
+            ),
         ),
         migrations.AddField(
-            model_name='behavioroption',
-            name='log',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_options', to='common.log'),
+            model_name="behavioroption",
+            name="log",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_options",
+                to="common.log",
+            ),
         ),
         migrations.AddField(
-            model_name='behaviorframeoption',
-            name='options_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_frame_option', to='behavior.behavioroption'),
+            model_name="behaviorframeoption",
+            name="options_id",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_frame_option",
+                to="behavior.behavioroption",
+            ),
         ),
         migrations.AddField(
-            model_name='behavioroptionstate',
-            name='log',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_options_states', to='common.log'),
+            model_name="behavioroptionstate",
+            name="log",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_options_states",
+                to="common.log",
+            ),
         ),
         migrations.AddField(
-            model_name='behavioroptionstate',
-            name='option_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_options_states', to='behavior.behavioroption'),
+            model_name="behavioroptionstate",
+            name="option_id",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_options_states",
+                to="behavior.behavioroption",
+            ),
         ),
         migrations.AddField(
-            model_name='behaviorframeoption',
-            name='active_state',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='behavior_frame_option', to='behavior.behavioroptionstate'),
+            model_name="behaviorframeoption",
+            name="active_state",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="behavior_frame_option",
+                to="behavior.behavioroptionstate",
+            ),
         ),
         migrations.AddIndex(
-            model_name='xabslsymbolcomplete',
-            index=models.Index(fields=['log'], name='behavior_xa_log_id_ee5563_idx'),
+            model_name="xabslsymbolcomplete",
+            index=models.Index(fields=["log"], name="behavior_xa_log_id_ee5563_idx"),
         ),
         migrations.AddField(
-            model_name='xabslsymbolsparse',
-            name='frame',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='xabsl_symbol_sparse', to='cognition.cognitionframe'),
+            model_name="xabslsymbolsparse",
+            name="frame",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="xabsl_symbol_sparse",
+                to="cognition.cognitionframe",
+            ),
         ),
         migrations.AddIndex(
-            model_name='behaviorframeoption',
-            index=models.Index(fields=['frame', 'options_id'], name='behavior_be_frame_i_36b8b1_idx'),
+            model_name="behaviorframeoption",
+            index=models.Index(
+                fields=["frame", "options_id"], name="behavior_be_frame_i_36b8b1_idx"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='behaviorframeoption',
-            unique_together={('options_id', 'frame', 'active_state')},
+            name="behaviorframeoption",
+            unique_together={("options_id", "frame", "active_state")},
         ),
         migrations.AddConstraint(
-            model_name='xabslsymbolsparse',
-            constraint=models.UniqueConstraint(fields=('frame',), name='unique_frame_id_xabslsymbolsparse'),
+            model_name="xabslsymbolsparse",
+            constraint=models.UniqueConstraint(
+                fields=("frame",), name="unique_frame_id_xabslsymbolsparse"
+            ),
         ),
     ]

@@ -14,9 +14,9 @@ import json
 class DynamicModelMixin:
     def get_model(self):
         # Get the model name from the URL kwargs
-        model_name = self.kwargs.get('model_name')
+        model_name = self.kwargs.get("model_name")
         # Get the model class from the app's models
-        return apps.get_model('motion', model_name)
+        return apps.get_model("motion", model_name)
 
     def get_queryset(self):
         # Override get_queryset to use the dynamic model
@@ -53,7 +53,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
         # Prepare the data for bulk insert
         rows_tuples = [
-            (row['frame'], json.dumps(row['representation_data']))
+            (row["frame"], json.dumps(row["representation_data"]))
             for row in request.data
         ]
 
@@ -72,7 +72,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 class MotionFrameCount(APIView):
     def get(self, request):
         # Get filter parameters from query string
-        log_id = request.query_params.get('log')
+        log_id = request.query_params.get("log")
 
         # start with all images
         queryset = MotionFrame.objects.all()
@@ -82,7 +82,7 @@ class MotionFrameCount(APIView):
 
         # get the count
         count = queryset.count()
-        return Response({'count': count}, status=status.HTTP_200_OK)
+        return Response({"count": count}, status=status.HTTP_200_OK)
 
 
 class MotionFrameViewSet(viewsets.ModelViewSet):
@@ -108,23 +108,27 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
             print("error: input not a list")
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-        rows_tuples = [(row['log'], row['frame_number'], row['frame_time']) for row in request.data]
+        rows_tuples = [
+            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
+        ]
 
         with connection.cursor() as cursor:
             query = """
             INSERT INTO motion_motionframe (log_id, frame_number, frame_time)
             VALUES %s
             ON CONFLICT (log_id, frame_number) DO NOTHING;
-            """ 
+            """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
 
-        return Response({
-        }, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         # Override destroy method to handle both single and bulk delete
-        if kwargs.get('pk') == 'all':
+        if kwargs.get("pk") == "all":
             deleted_count, _ = self.get_queryset().delete()
-            return Response({'message': f'Deleted {deleted_count} objects'}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"message": f"Deleted {deleted_count} objects"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
         return super().destroy(request, *args, **kwargs)

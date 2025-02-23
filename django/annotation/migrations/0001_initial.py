@@ -5,21 +5,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('image', '0001_initial'),
+        ("image", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Annotation',
+            name="Annotation",
             fields=[
-                ('image', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='Annotation', serialize=False, to='image.naoimage')),
-                ('annotation', models.JSONField(blank=True, null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
+                (
+                    "image",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        related_name="Annotation",
+                        serialize=False,
+                        to="image.naoimage",
+                    ),
+                ),
+                ("annotation", models.JSONField(blank=True, null=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
             ],
         ),
     ]

@@ -5,4 +5,4 @@ from .models import MotionFrame
 class MotionFrameSerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionFrame
-        fields = '__all__'
+        fields = "__all__"

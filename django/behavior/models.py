@@ -1,13 +1,15 @@
-
 from django.db import models
 from common.models import Log
 from cognition.models import CognitionFrame
+
 
 # Create your models here.
 class BehaviorOption(models.Model):
     # we need to keep the reference to the log here because the xabsl code could change between logs,
     # changing the options and the states in it as well
-    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='behavior_options')
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="behavior_options"
+    )
     # this id depends on the order it appears in the BehaviorStateComplete representation
     # we need this to get the actual option id during insertion of BehaviorStateSparse
     # lookup looks like this: client.list(log_id=log_id, xabsl_internal_id=<id in BehaviorStateSparse>)
@@ -19,8 +21,12 @@ class BehaviorOption(models.Model):
 
 
 class BehaviorOptionState(models.Model):
-    log = models.ForeignKey(Log,on_delete=models.CASCADE, related_name='behavior_options_states')
-    option_id = models.ForeignKey(BehaviorOption, on_delete=models.CASCADE, related_name='behavior_options_states')
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="behavior_options_states"
+    )
+    option_id = models.ForeignKey(
+        BehaviorOption, on_delete=models.CASCADE, related_name="behavior_options_states"
+    )
     # state id within an option - this is the id BehaviorFrameOption.activeState refers to
     xabsl_internal_state_id = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=40, blank=True, null=True)
@@ -31,42 +37,60 @@ class BehaviorOptionState(models.Model):
 
 
 class BehaviorFrameOption(models.Model):
-    frame = models.ForeignKey(CognitionFrame,on_delete=models.CASCADE, related_name='behavior_frame_option')
-    options_id = models.ForeignKey(BehaviorOption,on_delete=models.CASCADE, related_name='behavior_frame_option')
-    active_state = models.ForeignKey(BehaviorOptionState,on_delete=models.CASCADE, related_name='behavior_frame_option')
+    frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="behavior_frame_option"
+    )
+    options_id = models.ForeignKey(
+        BehaviorOption, on_delete=models.CASCADE, related_name="behavior_frame_option"
+    )
+    active_state = models.ForeignKey(
+        BehaviorOptionState,
+        on_delete=models.CASCADE,
+        related_name="behavior_frame_option",
+    )
 
-    # parent can't be a foreign key for now because we identify the root option with -1. 
+    # parent can't be a foreign key for now because we identify the root option with -1.
     # TODO add root option with id -1 => would mean we manually need to create the id column and handle the primary key behavior
-    #parent = models.ForeignKey(BehaviorOption,to_field='id', on_delete=models.CASCADE, related_name='behavior_frame_options_parent')
-    #parent = models.IntegerField(blank=True, null=True)
-    #frame = models.IntegerField(blank=True, null=True)
-    #time = models.IntegerField(blank=True, null=True)
-    #time_of_execution = models.IntegerField(blank=True, null=True)
-    #state_time = models.IntegerField(blank=True, null=True)
+    # parent = models.ForeignKey(BehaviorOption,to_field='id', on_delete=models.CASCADE, related_name='behavior_frame_options_parent')
+    # parent = models.IntegerField(blank=True, null=True)
+    # frame = models.IntegerField(blank=True, null=True)
+    # time = models.IntegerField(blank=True, null=True)
+    # time_of_execution = models.IntegerField(blank=True, null=True)
+    # state_time = models.IntegerField(blank=True, null=True)
 
     class Meta:
         indexes = [
-            models.Index(fields=['frame', 'options_id']),
+            models.Index(fields=["frame", "options_id"]),
         ]
-        unique_together = ('options_id', 'frame', 'active_state')
+        unique_together = ("options_id", "frame", "active_state")
 
 
 class XabslSymbolComplete(models.Model):
-    log = models.OneToOneField(Log,on_delete=models.CASCADE, related_name='xabsl_symbol_complete', primary_key=True)
+    log = models.OneToOneField(
+        Log,
+        on_delete=models.CASCADE,
+        related_name="xabsl_symbol_complete",
+        primary_key=True,
+    )
     data = models.JSONField(blank=True, null=True)
 
     class Meta:
         indexes = [
-            models.Index(fields=['log']),
+            models.Index(fields=["log"]),
         ]
         verbose_name_plural = "XabslSymbolComplete"
 
+
 class XabslSymbolSparse(models.Model):
-    frame = models.ForeignKey(CognitionFrame,on_delete=models.CASCADE, related_name='xabsl_symbol_sparse')
+    frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="xabsl_symbol_sparse"
+    )
     data = models.JSONField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "XabslSymbolSparse"
         constraints = [
-            models.UniqueConstraint(fields=['frame'], name='unique_frame_id_xabslsymbolsparse')
+            models.UniqueConstraint(
+                fields=["frame"], name="unique_frame_id_xabslsymbolsparse"
+            )
         ]

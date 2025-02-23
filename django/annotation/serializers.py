@@ -5,4 +5,4 @@ from models import Annotation
 class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Annotation
-        fields = '__all__'
+        fields = "__all__"
