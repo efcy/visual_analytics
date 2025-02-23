@@ -1,8 +1,8 @@
-name: CI
-pull_request:
+name: Ruff Check
+on:
+  pull_request:
     branches:
       - main
-    paths: ['django/**']
 jobs:
   build:
     runs-on: ubuntu-latest
