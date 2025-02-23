@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 
-from django.db import transaction
 from django.db.models import Q,Count
 from django.db import connection
 from psycopg2.extras import execute_values

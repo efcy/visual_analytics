@@ -24,7 +24,7 @@ def import_global_tables():
         try:
             command = f"psql -h {os.getenv('VAT_POSTGRES_HOST')} -p {os.getenv('VAT_POSTGRES_PORT')} -U {os.getenv('VAT_POSTGRES_USER')} -d {os.getenv('VAT_POSTGRES_DB')} -f '{args.input}/{file}'"
             print(f"running {command}")
-            output_file = f"error.txt"
+            output_file = "error.txt"
             f = open(str(output_file), "w")
             proc = subprocess.Popen(command, shell=True, env={
                         'PGPASSWORD': os.environ.get("PGPASSWORD")
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             try:
                 command = f"psql -h {os.getenv('VAT_POSTGRES_HOST')} -p {os.getenv('VAT_POSTGRES_PORT')} -U {os.getenv('VAT_POSTGRES_USER')} -d {os.getenv('VAT_POSTGRES_DB')} -f '{file_path}'"
                 print(f"running {command}")
-                output_file = f"error.txt"
+                output_file = "error.txt"
                 f = open(str(output_file), "w")
                 proc = subprocess.Popen(command, shell=True, env={
                             'PGPASSWORD': os.environ.get("PGPASSWORD")

@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import *
+from .models import CognitionFrame, FrameFilter, BallModel, BallCandidates, BallCandidatesTop, \
+    CameraMatrix, CameraMatrixTop, OdometryData, FieldPercept, FieldPerceptTop, GoalPercept, GoalPerceptTop, \
+    MultiBallPercept, RansacLinePercept, ShortLinePercept, ScanLineEdgelPercept, ScanLineEdgelPerceptTop, \
+    RansacCirclePercept2018
+
 
 class FrameFilterAdmin(admin.ModelAdmin):
     list_display = ("get_log_id", "get_user")
@@ -13,7 +17,6 @@ class FrameFilterAdmin(admin.ModelAdmin):
     get_log_id.short_description = 'Log ID'
 
 
-
 class BallModelAdmin(admin.ModelAdmin):
     list_display = ('get_id', 'get_log_id', 'get_frame_number')
 
@@ -25,6 +28,7 @@ class BallModelAdmin(admin.ModelAdmin):
 
     def get_id(self, obj):
         return obj.id
+
 
 admin.site.register(CognitionFrame)
 admin.site.register(FrameFilter, FrameFilterAdmin)

@@ -1,11 +1,15 @@
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from .models import Annotation
+from .serializers import AnnotationSerializer
 
 
 class AnnotationViewSet(viewsets.ModelViewSet):
-    queryset = models.Annotation.objects.all()
-    serializer_class = serializers.AnnotationSerializer
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
     
     def get_queryset(self):
-        queryset = models.Annotation.objects.all()
+        queryset = Annotation.objects.all()
         
         query_params = self.request.query_params.copy()
         
@@ -40,7 +44,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
-        instance, created = models.Annotation.objects.get_or_create(
+        instance, created = Annotation.objects.get_or_create(
             image=validated_data.get('image_id'),
             annotation=validated_data.get('annotation'),
             defaults=validated_data

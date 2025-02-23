@@ -1,8 +1,7 @@
-from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-from common.models import Event, Game, Experiment, Log
+from common.models import Event
 
 
 class EventAPITests(APITestCase):

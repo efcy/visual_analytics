@@ -12,8 +12,7 @@ from django.db import transaction
 from django.db.models import Q,F
 from django.db import connection
 from psycopg2.extras import execute_values
-from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,inline_serializer,OpenApiExample
-from rest_framework import serializers as s
+from drf_spectacular.utils import extend_schema,extend_schema_view,OpenApiResponse,OpenApiExample
 from django.template import loader
 
 User = get_user_model()

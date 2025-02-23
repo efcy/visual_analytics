@@ -67,10 +67,7 @@ class XabslSymbolCompleteAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BehaviorOption)
-#admin.site.register(BehaviorOptionState, BehaviorOptionStateAdmin)
+admin.site.register(BehaviorOptionState)
 admin.site.register(BehaviorFrameOption, BehaviorFrameOptionAdmin)
-
-#admin.site.register(XabslSymbol, XabslSymbolAdmin)
-#admin.site.register(XabslSymbol2)
 admin.site.register(XabslSymbolComplete, XabslSymbolCompleteAdmin)
 admin.site.register(XabslSymbolSparse)
