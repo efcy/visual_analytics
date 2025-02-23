@@ -8,7 +8,7 @@ import json
 from common.models import Event, Game, Log, Experiment
 from image.models import NaoImage
 from annotation.models import Annotation
-from cognition.models import FrameFilter
+from cognition.models import CognitionFrame, FrameFilter
 from django.http import JsonResponse
 
 
@@ -43,7 +43,7 @@ class GameLogListView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["game_logs"] = Log.objects.filter(log_game=context["game"].id)
+        context["game_logs"] = Log.objects.filter(game=context["game"].id)
 
         return context
 
@@ -57,7 +57,7 @@ class ExperimentLogListView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["experiment_logs"] = Log.objects.filter(
-            log_experiment=context["experiment"].id
+            experiment=context["experiment"].id
         )
 
         return context
@@ -73,22 +73,24 @@ class ImageListView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        frames = FrameFilter.objects.filter(
+        # TODO fix the logic after db restructure
+
+        filtered_frames = FrameFilter.objects.filter(
             log_id=self.object,
             user=self.request.user,
         ).first()
 
-        if frames:
+        if filtered_frames:
             first_image = (
                 NaoImage.objects.filter(
-                    log_id=self.object, frame_number__in=frames.frames["frame_list"]
+                    log=self.object, frame_number__in=filtered_frames.frames["frame_list"]
                 )
                 .order_by("frame_number")
                 .first()
             )
         else:
             first_image = (
-                NaoImage.objects.filter(log_id=self.object)
+                NaoImage.objects.filter(log=self.object)
                 .order_by("frame_number")
                 .first()
             )
@@ -111,10 +113,10 @@ class ImageDetailView(View):
 
         current_frame = self.kwargs.get("bla")
         context["bottom_image"] = NaoImage.objects.filter(
-            log_id=log_id, camera="BOTTOM", frame_number=current_frame
+            log=log_id, camera="BOTTOM", frame_number=current_frame
         ).first()
         context["top_image"] = NaoImage.objects.filter(
-            log_id=log_id, camera="TOP", frame_number=current_frame
+            log=log_id, camera="TOP", frame_number=current_frame
         ).first()
         context["log_id"] = log_id
         context["current_frame"] = current_frame
@@ -127,7 +129,7 @@ class ImageDetailView(View):
         if frames:
             context["frame_numbers"] = (
                 NaoImage.objects.filter(
-                    log_id=log_id, frame_number__in=frames.frames["frame_list"]
+                    log=log_id, frame_number__in=frames.frames["frame_list"]
                 )
                 .order_by("frame_number")
                 .values_list("frame_number", flat=True)
@@ -135,7 +137,7 @@ class ImageDetailView(View):
             )
         else:
             context["frame_numbers"] = (
-                NaoImage.objects.filter(log_id=log_id)
+                NaoImage.objects.filter(log=log_id)
                 .order_by("frame_number")
                 .values_list("frame_number", flat=True)
                 .distinct()
