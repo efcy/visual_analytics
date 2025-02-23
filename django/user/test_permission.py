@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 import time
-from api.models import Event
+from common.models import Event
 
 #get VATUser model
 User = get_user_model()
