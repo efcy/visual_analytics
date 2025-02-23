@@ -10,9 +10,19 @@ if __name__ == "__main__":
     """
     Get FrameInfo from Cognition Process
     """
-    response = client.games.list(
-        event_id= 1,
+    response = client.cognition_repr.list(
+        log_id=168,
+        representation_name="FrameInfo",
     )
-    print(response)
+    print(response[0])
+
+    """
+    Get FrameInfo from Motion Process
+    """
+    response = client.motion_repr.list(
+        log_id=168,
+        representation_name="FrameInfo",
+    )
+    print(response[0])
 
     
