@@ -1,6 +1,6 @@
 from graphene import InputObjectType, String
 from django.core.exceptions import FieldDoesNotExist
-
+from django.db.models import Q 
 
 def apply_generic_filters(model, queryset, filters):
     if not filters:

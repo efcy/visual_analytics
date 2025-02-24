@@ -24,8 +24,7 @@ class CreateEvent(SerializerMutation):
 
         # Return the event instance
         return event
-        ImageInstance = Image.objects.get(id=image)
-        # raise ValueError(f"No Image Object found for ID{image}")
+    
 
 
 class Query(graphene.ObjectType):

@@ -1,13 +1,14 @@
 import graphene
 
-import api.schema
-
-class Query(api.schema.Query, graphene.ObjectType):
+import annotation.schema
+import common.schema
+import image.schema
+class Query(annotation.schema.Query, common.schema.Query,image.schema.Query,graphene.ObjectType):
     # Combine the queries from different apps
     pass
 
 
-class Mutation(api.schema.Mutation, graphene.ObjectType):
+class Mutation(annotation.schema.Mutation,common.schema.Mutation,image.schema.Mutation, graphene.ObjectType):
     # Combine the mutations from different apps
     pass
 
