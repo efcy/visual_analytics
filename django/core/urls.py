@@ -5,6 +5,12 @@ from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from .schema import schema
 
+#this is required to protect the graphql endpoint
+class LoginRequiredMiddleware:
+    def resolve(self, next, root, info, **args):
+        if info.context.user.is_anonymous:
+            raise Exception("Authentication credentials were not provided.")
+        return next(root, info, **args)
 
 urlpatterns = [
     path('', include('user.urls')),
