@@ -96,7 +96,7 @@ class ImageUpdateView(APIView):
 
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = models.Image.objects.all()
+    queryset = models.NaoImage.objects.all()
     serializer_class = serializers.ImageSerializer
 
     def get_queryset(self):
