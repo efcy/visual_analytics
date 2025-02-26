@@ -146,7 +146,8 @@ class ImageViewSet(viewsets.ModelViewSet):
             return self.bulk_create(request.data)
         else:
             return self.single_create(request.data)
-
+    
+    # FIXME combine with ImageUpdateView
     def update(self, request, *args, **kwargs):
         # Check if the data is a list (bulk update) or dict (single update)
         is_many = isinstance(request.data, list)
@@ -164,7 +165,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         update_fields = {
             k: v
             for k, v in data.items()
-            if k not in ["log_id", "camera", "type", "frame_number"]
+            if k not in ["frame", "camera", "type"]
         }
         updated = models.NaoImage.objects.filter(id=image_id).update(**update_fields)
 
@@ -177,10 +178,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
 
         instance, created = models.NaoImage.objects.get_or_create(
-            log_id=validated_data.get("log_id"),
+            frame=validated_data.get("frame"),
             camera=validated_data.get("camera"),
             type=validated_data.get("type"),
-            frame_number=validated_data.get("frame_number"),
             defaults=validated_data,
         )
 
@@ -194,10 +194,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         starttime = time.time()
         rows_tuples = [
             (
-                row["log_id"],
+                row["frame"],
                 row["camera"],
                 row["type"],
-                row["frame_number"],
                 row["image_url"],
                 row["blurredness_value"],
                 row["brightness_value"],
@@ -207,9 +206,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         ]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO image_image (log_id_id, camera, type, frame_number, image_url, blurredness_value, brightness_value, resolution)
+            INSERT INTO image_image (frame, camera, type, image_url, blurredness_value, brightness_value, resolution)
             VALUES %s
-            ON CONFLICT (log_id_id, camera, type, frame_number) DO NOTHING;
+            ON CONFLICT (frame, camera, type) DO NOTHING;
             """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=1000)
