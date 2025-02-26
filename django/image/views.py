@@ -7,6 +7,7 @@ from django.db.models import Q, Count
 from django.db import connection
 from psycopg2.extras import execute_values
 
+from common.models import Log
 from . import serializers
 from . import models
 
@@ -16,15 +17,15 @@ import time
 class ImageCountView(APIView):
     def get(self, request):
         # Get filter parameters from query string
-        log_id = request.query_params.get("log_id")
+        log_id = request.query_params.get("log")
         camera = request.query_params.get("camera")
         image_type = request.query_params.get("type")
 
-        # start with all images
-        queryset = models.NaoImage.objects.all()
+        # get log instance
+        log_instance = Log.objects.get(id=log_id)
 
         # apply filters if provided
-        queryset = queryset.filter(log_id=log_id, camera=camera, type=image_type)
+        queryset = models.NaoImage.objects.filter(frame__log=log_instance, camera=camera, type=image_type)
 
         # get the count
         count = queryset.count()
@@ -83,7 +84,7 @@ class ImageUpdateView(APIView):
         # Build the complete SQL query
         ids = [str(item["id"]) for item in data]
         sql = f"""
-            UPDATE image_image
+            UPDATE image_naoimage
             SET {", ".join(case_statements)}
             WHERE id IN ({",".join(ids)})
         """
@@ -206,9 +207,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         ]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO image_image (frame, camera, type, image_url, blurredness_value, brightness_value, resolution)
+            INSERT INTO image_naoimage (frame_id, camera, type, image_url, blurredness_value, brightness_value, resolution)
             VALUES %s
-            ON CONFLICT (frame, camera, type) DO NOTHING;
+            ON CONFLICT (frame_id, camera, type) DO NOTHING;
             """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=1000)
