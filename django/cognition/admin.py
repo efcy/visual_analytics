@@ -20,6 +20,18 @@ from .models import (
     RansacCirclePercept2018,
 )
 
+class CognitionFrameAdmin(admin.ModelAdmin):
+    list_display = ("get_log_id", "get_frame_id", "frame_number")
+
+    def get_log_id(self, obj):
+        return obj.log.id
+    
+    def get_frame_id(self, obj):
+        return obj.id
+
+    get_log_id.short_description = "Log ID"
+    get_frame_id.short_description = "Frame ID"
+
 
 class FrameFilterAdmin(admin.ModelAdmin):
     list_display = ("get_log_id", "get_user")
@@ -46,7 +58,7 @@ class BallModelAdmin(admin.ModelAdmin):
         return obj.id
 
 
-admin.site.register(CognitionFrame)
+admin.site.register(CognitionFrame, CognitionFrameAdmin)
 admin.site.register(FrameFilter, FrameFilterAdmin)
 admin.site.register(BallModel, BallModelAdmin)
 admin.site.register(BallCandidates)
