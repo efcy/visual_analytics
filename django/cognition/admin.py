@@ -1,4 +1,5 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import (
     CognitionFrame,
     FrameFilter,
@@ -45,7 +46,7 @@ class FrameFilterAdmin(admin.ModelAdmin):
     get_log_id.short_description = "Log ID"
 
 
-class BallModelAdmin(admin.ModelAdmin):
+class BallModelAdmin(ModelAdmin):
     list_display = ("get_id", "get_log_id", "get_frame_number")
 
     def get_log_id(self, obj):
