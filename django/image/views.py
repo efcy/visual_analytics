@@ -21,7 +21,7 @@ class ImageCountView(APIView):
         image_type = request.query_params.get("type")
 
         # start with all images
-        queryset = models.Image.objects.all()
+        queryset = models.NaoImage.objects.all()
 
         # apply filters if provided
         queryset = queryset.filter(log_id=log_id, camera=camera, type=image_type)
@@ -100,13 +100,13 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ImageSerializer
 
     def get_queryset(self):
-        queryset = models.Image.objects.all()
+        queryset = models.NaoImage.objects.all()
         # we use copy here so that the QueryDict object query_params become mutable
         query_params = self.request.query_params.copy()
 
         # This is a generic filter on the queryset, the supplied filter must be a field in the Image model
         filters = Q()
-        for field in models.Image._meta.fields:
+        for field in models.NaoImage._meta.fields:
             param_value = query_params.get(field.name)
             if param_value == "None" or param_value == "null":
                 filters &= Q(**{f"{field.name}__isnull": True})
@@ -166,7 +166,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             for k, v in data.items()
             if k not in ["log_id", "camera", "type", "frame_number"]
         }
-        updated = models.Image.objects.filter(id=image_id).update(**update_fields)
+        updated = models.NaoImage.objects.filter(id=image_id).update(**update_fields)
 
         status_code = status.HTTP_201_CREATED if updated else status.HTTP_200_OK
         return Response({}, status=status_code)
@@ -176,7 +176,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        instance, created = models.Image.objects.get_or_create(
+        instance, created = models.NaoImage.objects.get_or_create(
             log_id=validated_data.get("log_id"),
             camera=validated_data.get("camera"),
             type=validated_data.get("type"),
