@@ -6,9 +6,9 @@ from .models import (
     XabslSymbolSparse,
     XabslSymbolComplete,
 )
+from unfold.admin import ModelAdmin
 
-
-class BehaviorOptionAdmin(admin.ModelAdmin):
+class BehaviorOptionAdmin(ModelAdmin):
     list_display = ("get_log_id", "id", "xabsl_internal_option_id", "option_name")
 
     def get_log_id(self, obj):
@@ -17,7 +17,7 @@ class BehaviorOptionAdmin(admin.ModelAdmin):
     get_log_id.short_description = "Log ID"
 
 
-class BehaviorOptionStateAdmin(admin.ModelAdmin):
+class BehaviorOptionStateAdmin(ModelAdmin):
     list_display = (
         "get_log_id",
         "get_option_id",
@@ -46,7 +46,7 @@ class BehaviorOptionStateAdmin(admin.ModelAdmin):
     get_name.short_description = "State Name"
 
 
-class BehaviorFrameOptionAdmin(admin.ModelAdmin):
+class BehaviorFrameOptionAdmin(ModelAdmin):
     list_display = (
         "get_log_id",
         "get_option_id",
@@ -74,7 +74,7 @@ class BehaviorFrameOptionAdmin(admin.ModelAdmin):
     get_active_state.short_description = "Active State"
 
 
-class XabslSymbolCompleteAdmin(admin.ModelAdmin):
+class XabslSymbolCompleteAdmin(ModelAdmin):
     list_display = ["get_log_id"]
 
     def get_log_id(self, obj):
