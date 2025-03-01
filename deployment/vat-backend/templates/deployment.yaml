@@ -19,7 +19,6 @@ spec:
         - /bin/sh
         - -c
         - |
-          python manage.py makemigrations
           python manage.py migrate
         env:
         - name: USE_POSTGRES
