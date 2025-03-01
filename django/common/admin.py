@@ -10,6 +10,10 @@ from unfold.contrib.filters.admin import (
     MultipleDropdownFilter
 )
 
+from django.contrib.admin.sites import site
+from django.contrib.auth.models import Group
+site.unregister(Group)
+
 
 
 class GameAdmin(ModelAdmin):
