@@ -34,7 +34,7 @@ def replace_string_in_first_lines(file_path, old_string, new_string, num_lines):
 def get_all_log_ids():
     # Create a cursor object
     cur = conn.cursor()
-    query = sql.SQL("SELECT DISTINCT id FROM api_log;")
+    query = sql.SQL("SELECT DISTINCT id FROM common_log;")
     cur.execute(query)
 
     # Fetch all results
@@ -52,7 +52,7 @@ def create_temp_table(table, table_name, log_id):
     delete_temp_table(table_name)
 
     cur = conn.cursor()
-    query = sql.SQL(f"CREATE TABLE {table_name} AS SELECT * FROM {table} WHERE log_id_id = {log_id}")
+    query = sql.SQL(f"CREATE TABLE {table_name} AS SELECT * FROM {table} WHERE log_id = {log_id}")
     cur.execute(query)
     conn.commit()
     cur.close()
@@ -65,14 +65,32 @@ def delete_temp_table(table_name):
     cur.close()
 
 
+def create_cognition_temp_table(table, table_name, log_id):
+    delete_temp_table(table_name)
+    command = f"""
+    CREATE TABLE {table_name} AS
+    SELECT i.*
+    FROM common_log l
+    JOIN cognition_cognitionframe f ON l.id = f.log_id
+    JOIN {table} i ON f.id = i.frame_id
+    WHERE l.id = {log_id};
+    """
+    cur = conn.cursor()
+    cur.execute(sql.SQL(command))
+    conn.commit()
+    cur.close()
+
+
 def export_full_tables():
     tables = [
-        "api_event",
-        "api_game",
-        "api_log",
-        "api_logstatus",
-        "api_xabslsymbolcomplete",
-        "api_annotation",
+        "common_event",
+        "common_experiment",
+        "common_game",
+        "common_log",
+        "common_logstatus",
+        "common_videorecording",
+        "behavior_xabslsymbolcomplete",
+        "annotation_annotation",
     ]
     for table in tables:
         try:
@@ -91,15 +109,8 @@ def export_full_tables():
 
 def export_split_table(log_id, force=False, export_tables=None):
     tables = [
-        "api_behaviorframeoption",
-        "api_behavioroption",
-        "api_behavioroptionstate",
-        "api_cognitionframe",
-        "api_motionframe",
-        "api_cognitionrepresentation",
-        "api_motionrepresentation",
-        "api_image",
-        "api_xabslsymbolsparse"
+        "cognition_cognitionframe",
+        "motion_motionframe",
     ]
     # 
     if export_tables:
@@ -133,6 +144,35 @@ def export_split_table(log_id, force=False, export_tables=None):
         # change the table name in the sql files
         replace_string_in_first_lines(output_file, "temp_", "", 200)
 
+    cognition_tables = [
+        "image_naoimage",
+    ]
+    for table in cognition_tables:
+        output_file = Path(args.output) / f"{table}_{log_id}.sql"
+        if output_file.exists() and not force:
+            continue
+
+        try:
+            temp_table_name = f"temp_{table}"
+            create_cognition_temp_table(table, temp_table_name, log_id)
+            command = f"pg_dump -h {DB_HOST} -p {DB_PORT} -U {DB_USER} -d {DB_NAME} -t {temp_table_name} --data-only"
+            print(f"\trunning {command} > {table}_{log_id}.sql")
+
+            f = open(str(output_file), "w")
+
+            proc = subprocess.Popen(command, shell=True, env={
+                        'PGPASSWORD': os.environ.get("PGPASSWORD")
+                        },
+                        stdout=f)
+            proc.wait()
+
+            delete_temp_table(temp_table_name)
+        except Exception as e:
+            print('Exception happened during dump %s' %(e))
+            quit()
+        
+        # change the table name in the sql files
+        replace_string_in_first_lines(output_file, "temp_", "", 200)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
