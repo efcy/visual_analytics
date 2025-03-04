@@ -16,12 +16,14 @@ def natural_sort_key(s):
 
 def import_global_tables():
     sql_table = [
-        "api_event.sql",
-        "api_game.sql",
-        "api_log.sql",
-        "api_logstatus.sql",
-        "api_xabslsymbolcomplete.sql",
-        "api_annotation.sql",
+        "common_event.sql",
+        "common_experiment.sql",
+        "common_game.sql",
+        "common_log.sql",
+        "common_logstatus.sql",
+        "common_videorecording.sql",
+        "behavior_xabslsymbolcomplete.sql",
+        "annotation_annotation.sql",
     ]
 
     for file in sql_table:
@@ -72,15 +74,9 @@ if __name__ == "__main__":
     import_global_tables()
 
     sql_table = [
-        "api_behavioroption",
-        "api_behavioroptionstate",
-        "api_behaviorframeoption",
-        "api_xabslsymbolsparse",
-        "api_cognitionframe",
-        "api_motionframe",
-        "api_cognitionrepresentation",
-        "api_motionrepresentation",
-        "api_image",
+        "cognition_cognitionframe",
+        "motion_motionframe",
+        "image_naoimage",
     ]
     for table in sql_table:
         if args.table:
