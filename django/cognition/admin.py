@@ -21,7 +21,7 @@ from .models import (
     RansacCirclePercept2018,
 )
 
-class CognitionFrameAdmin(admin.ModelAdmin):
+class CognitionFrameAdmin(ModelAdmin):
     list_display = ("get_log_id", "get_frame_id", "frame_number")
 
     def get_log_id(self, obj):
@@ -34,11 +34,11 @@ class CognitionFrameAdmin(admin.ModelAdmin):
     get_frame_id.short_description = "Frame ID"
 
 
-class FrameFilterAdmin(admin.ModelAdmin):
+class FrameFilterAdmin(ModelAdmin):
     list_display = ("get_log_id", "get_user")
 
     def get_log_id(self, obj):
-        return obj.log_id.id
+        return obj.log.id
 
     def get_user(self, obj):
         return obj.user
